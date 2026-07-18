@@ -1,0 +1,356 @@
+// Event category colors
+:root {
+  --event-category-culture-color: #F20D5E;
+  --event-category-education-color: #ff7a53;
+  --event-category-sports-color: #f3b52a;
+  --event-category-leisure-color: #04c18d;
+  --event-category-family-color: #09baec;
+  --event-category-society-color: #1a71e4;
+}
+
+.kbts-event-view-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 2rem;
+  row-gap:2rem;
+  a {
+    font-weight: 400;
+  }
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kbts-event-view-layout-left {
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kbts-event-view-layout-right {
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kbts-event-view-image { order: 1; }
+.kbts-event-view-date { order: 2; }
+.kbts-event-view-venue { order: 3; }
+.kbts-event-view-organizer { order: 4; }
+.kbts-event-view-organizer-logo { order: 3; }
+.kbts-event-view-content { order: 6; }
+.kbts-event-view-links { order: 7; }
+.kbts-event-view-price { order: 8; }
+.kbts-event-view-participation { order: 9; }
+.kbts-event-view-online { order: 10; }
+.kbts-event-view-registration { order: 11; }
+.kbts-event-view-accessibility { order: 12; }
+.kbts-event-view-share { order: 13; }
+.kbts-event-view-map { order: 14; }
+.kbts-event-view-all-dates { order: 15; }
+
+.kbts-event-view-logo-image {
+  margin-top: 1rem;
+}
+
+.kbts-event-view-content {
+  margin-top: 2rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.kbts-event-view-label {
+  font-weight: 300;
+  color: #999;
+}
+
+.kbts-event-view-image {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 800px;
+  aspect-ratio: 16 / 9;
+  overflow: visible;
+}
+
+.kbts-event-view-image-caption {
+  font-size: 0.8rem;
+  padding-left: 0.5rem;
+}
+
+.kbts-event-view-title {
+  font-size: 3rem;
+  font-weight: 300;
+  margin: 0;
+}
+
+.kbts-event-view-subtitle {
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin: 0;
+  margin-top: 1rem;
+}
+
+.kbts-event-description {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  margin: 0;
+  margin-top: 2rem;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  p {
+    font-weight: 400;
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  :deep(p) {
+    margin-bottom: 1rem;
+  }
+
+  :deep(a) {
+    text-decoration: underline;
+  }
+
+  blockquote {
+    margin: 0;
+    padding-left: 0.8rem;
+    border-left: 0.2rem solid var(--kbts-blockquote-deco);
+  }
+}
+
+.kbts-event-view-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  min-width: 0;
+  max-width: 100%;
+  margin-bottom: 3rem;
+}
+
+.kbts-event-view-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.kbts-event-view-link__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+}
+
+.kbts-event-view-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.kbts-event-view-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.kbts-event-view-all-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  line-height: 1.4;
+}
+
+.kbts-event-view-date-row {
+  display: grid;
+  grid-template-columns: 5rem 5rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  padding: 0.4rem 0;
+  border-radius: 0.25rem;
+  border-bottom: 1px solid var(--kbts-border);
+
+  &:hover {
+  }
+
+  &.is-current {
+    font-weight: 700;
+  }
+}
+
+
+.kbts-event-view-date-time {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+
+  &__date {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 300;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.kbts-event-view-map {
+  width: 100%;
+  height: 300px;
+  max-width: 300px;
+  max-height: 300px;
+}
+
+.kbts-event-types-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .2rem;
+  margin: .25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kbts-event-types-list li {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 0 0.2rem 0;
+  padding: 0.2rem .8rem;
+  border-radius: 999px;
+  background: var(--kbts-chip-bg);
+  color: var(--kbts-chip-fg);
+
+  vertical-align: top;
+}
+
+.kbts-event-types-list__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kbts-event-price-badge {
+  position: absolute;
+  right: 0.5rem;
+  bottom: -1rem;
+  color: var(--kbts-fg);
+  background: var(--kbts-bg);
+  border-radius: 50%;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.kbts-accessibility summary {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.kbts-accessibility summary::-webkit-details-marker {
+  display: none;
+}
+
+.kbts-accessibility__chevron {
+  transition: transform .5s ease;
+}
+
+.kbts-accessibility[open] .kbts-accessibility__chevron {
+  transform: rotate(90deg);
+}
+
+.kbts-event-view-tiny-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 1;
+  border-radius: 0.3rem;
+  width: 300px;
+}
+
+.kbts-event-view-tiny-list li {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  padding: 0 0.2rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+@media (max-width: 960px) {
+  .kbts-event-view-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .kbts-event-view-layout-left,
+  .kbts-event-view-layout-right {
+    display: contents;
+  }
+
+  .kbts-event-view-image {
+    max-width: 100%;
+  }
+
+  .kbts-event-view-map {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .kbts-event-view-image { order: 1; }
+  .kbts-event-view-date { order: 2; }
+  .kbts-event-view-venue { order: 3; }
+  .kbts-event-view-content { order: 4; }
+
+  .kbts-event-view-organizer { order: 5; }
+  .kbts-event-view-organizer-logo { order: 6; }
+  .kbts-event-view-links { order: 7; }
+  .kbts-event-view-price { order: 8; }
+  .kbts-event-view-participation { order: 9; }
+  .kbts-event-view-online { order: 10; }
+  .kbts-event-view-registration { order: 11; }
+  .kbts-event-view-accessibility { order: 12; }
+  .kbts-event-view-share { order: 13; }
+  .kbts-event-view-map { order: 14; }
+  .kbts-event-view-all-dates { order: 15; }
+}

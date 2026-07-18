@@ -1,0 +1,370 @@
+<template>
+
+  <header class="navigation">
+
+    <div class="nav-inner">
+
+      <!-- Logo -->
+      <NuxtLink
+          :to="localePath('/')"
+          class="logo"
+      >
+        <AppLogo />
+      </NuxtLink>
+
+      <!-- Right actions -->
+      <div class="nav-actions">
+
+        <!-- Filter button -->
+        <button
+            v-if="hasFilters"
+            class="filter-button"
+            :aria-expanded="filtersOpen"
+            aria-label="Toggle filters"
+            @click="filtersOpen = !filtersOpen"
+        >
+          <SlidersHorizontal :size="18"/>{{ t('filter.button_label') }}
+        </button>
+
+        <!-- Mobile hamburger -->
+        <button
+            class="menu-toggle"
+            aria-label="Toggle navigation"
+            @click="open = !open"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+      </div>
+
+      <!-- Main navigation -->
+      <nav :class="{ open }">
+
+        <NuxtLink :to="localePath('/events')">
+          Events
+        </NuxtLink>
+
+        <NuxtLink :to="localePath('/venues')">
+          Venues
+        </NuxtLink>
+
+        <NuxtLink :to="localePath('/about')">
+          About
+        </NuxtLink>
+
+        <div class="language-switcher">
+          <NuxtLink
+              v-for="locale in locales"
+              :key="locale.code"
+              :to="switchLocalePath(locale.code)"
+              :class="{ active: locale.code === currentLocale }"
+          >
+            {{ locale.code.toLowerCase() }}
+          </NuxtLink>
+        </div>
+
+      </nav>
+
+    </div>
+
+
+    <!-- Filter panel -->
+    <Transition name="filters">
+      <div
+          v-if="filtersOpen && hasFilters"
+          class="filter-panel"
+      >
+        <div class="filter-inner">
+          <button
+              class="close-button"
+              aria-label="Close filters"
+              @click="filtersOpen = false"
+          >
+            ✕
+          </button>
+
+          <div class="filter-content">
+            <EventFilters
+                v-if="eventFilters.filterType === 'events'"
+            />
+            <VenueFilters
+                v-else-if="eventFilters.filterType === 'venues'"
+            />
+          </div>
+
+        </div>
+      </div>
+    </Transition>
+
+  </header>
+</template>
+
+
+<script setup lang="ts">
+import AppLogo from '~/components/ui/AppLogo.vue'
+import EventFilters from '~/components/filters/EventFilters.vue'
+import VenueFilters from '~/components/filters/VenueFilters.vue'
+import { SlidersHorizontal } from '@lucide/vue'
+import { useFiltersStore } from "~/stores/filtersStore";
+
+const { t } = useI18n()
+
+const route = useRoute()
+const open = ref(false)
+
+const filtersOpen = ref(false)
+const eventFilters = useFiltersStore()
+
+const {
+  locale: currentLocale,
+  locales
+} = useI18n()
+
+const switchLocalePath = useSwitchLocalePath()
+const localePath = useLocalePath()
+
+const hasFilters = computed(() => {
+  return Boolean(route.meta?.filters)
+})
+
+watch(
+    () => route.path,
+    () => {
+      open.value = false
+      filtersOpen.value = false
+    }
+)
+
+</script>
+
+
+<style scoped lang="scss">
+
+.navigation {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid var(--kbts-border);
+}
+
+/*
+ Header row
+*/
+.nav-inner {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  color: var(--kbts-fg);
+  text-decoration: none;
+}
+
+/*
+ Right side controls
+*/
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+/*
+ Filter button
+*/
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--kbts-border);
+  background: white;
+  border-radius: 8px;
+  padding: .45rem .85rem;
+  cursor: pointer;
+  font-size: .9rem;
+  transition: .2s;
+
+  &:hover {
+    background: #111;
+    color: white;
+  }
+}
+
+/*
+ Navigation
+*/
+nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: 2rem;
+
+  a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
+/*
+ Hamburger
+*/
+.menu-toggle {
+  display: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #111;
+    margin: 5px;
+  }
+}
+
+/*
+ Languages
+*/
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+
+  a {
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    font-size: .85rem;
+    color: #666;
+
+    &.active {
+      background: #111;
+      color: white;
+    }
+  }
+}
+
+/*
+ Filter panel
+*/
+.filter-panel {
+  background: white;
+  border-top: 1px solid var(--kbts-border);
+  max-height: calc(100vh - 72px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.filter-inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+}
+
+.close-button {
+  position: absolute;
+  right: 1rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.filter-content {
+  color: #666;
+}
+
+/*
+ Fade animation only
+*/
+.filters-enter-active,
+.filters-leave-active {
+  transition: opacity .25s ease;
+}
+
+.filters-enter-from,
+.filters-leave-to {
+  opacity: 0;
+}
+
+.filters-enter-to,
+.filters-leave-from {
+  opacity: 1;
+}
+
+/*
+ Mobile
+*/
+@media (max-width: 768px) {
+
+  .nav-inner {
+    padding: .75rem 1rem;
+  }
+
+  .nav-actions {
+    gap: .5rem;
+  }
+
+  .filter-button {
+    padding: .35rem .65rem;
+    font-size: .85rem;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-left: 0;
+
+    background: white;
+    padding: 1rem;
+
+    a {
+      padding: .75rem 0;
+    }
+
+    &.open {
+      display: flex;
+    }
+  }
+
+  .language-switcher {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,.08);
+  }
+
+  .filter-panel {
+    max-height: calc(100vh - 60px);
+  }
+}
+
+</style>

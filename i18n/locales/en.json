@@ -1,0 +1,121 @@
+{
+  "home": {
+    "title": "Events"
+  },
+  "nav": {
+    "events": "Events"
+  },
+  "download_ics": "Save date",
+  "copy_link": "Copy link",
+  "time": {
+    "time": "{time}",
+    "range": "{start} – {end}"
+  },
+  "event": {
+    "category": {
+      "culture": "Culture",
+      "education": "Education",
+      "sports": "Sports",
+      "leisure": "Leisure",
+      "family": "Family",
+      "society": "Society"
+    },
+    "search_placeholder": "What are you looking for?",
+    "date_span": {
+      "all": "All",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "weekend": "Weekend",
+      "next_week": "Next week",
+      "weekend_after": "Following weekend",
+      "range": "Date range"
+    },
+    "more_dates": "More dates",
+    "all_dates": "All dates",
+    "release_status": {
+      "draft": "Draft",
+      "review": "Under review",
+      "released": "Published",
+      "cancelled": "Cancelled",
+      "deferred": "Postponed",
+      "rescheduled": "Rescheduled"
+    },
+    "start_time_label": "Starts",
+    "end_time_label": "Ends",
+    "entry_time_label": "Doors open",
+    "venue": "Venue",
+    "space": "Space",
+    "meeting_point": "Meeting point",
+    "organizer": "Organizer",
+    "to_online_event": "Open online event",
+    "registration": {
+      "label": "Registration",
+      "link": "Go to online registration",
+      "email": "Register by email",
+      "phone": "Register by phone",
+      "deadline": "By"
+    },
+    "image_by": "Photo",
+    "price": "Price",
+    "price_free": "Free",
+    "price_donation": "Donation/voluntary amount",
+    "price_sentence": "{value} {currency}",
+    "price_from_sentence": "From {min} {currency}",
+    "price_until_sentence": "Up to {max} {currency}",
+    "price_between_sentence": "{min} to {max} {currency}",
+    "ticket_flags": {
+      "ticket_required": "Ticket required",
+      "advance_ticket": "Advance tickets available",
+      "presale_fee_applies": "Presale fee applies",
+      "on_site_ticket_sales": "Tickets available at the door",
+      "reduced_price_available": "Reduced prices available",
+      "registration_required": "Registration required"
+    },
+    "participation_info": "Participation information",
+    "ticket_link": "Tickets",
+    "ticket_info": "Ticket informations",
+    "age_range": "{min_age}–{max_age} years",
+    "age_from": "from {age} years",
+    "age_until": "up to {age} years",
+    "max_attendees": "Up to {count} participants"
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "topic": {
+      "physical": "",
+      "assistance_animals": "",
+      "hearing": "",
+      "visual": "",
+      "digital": "",
+      "cognitive": ""
+    },
+    "wheelchair_accessible": "",
+    "accessible_parking": "",
+    "elevator_available": "",
+    "ramp_available": "",
+    "step_free_access": "",
+    "accessible_restroom": "",
+    "reserved_seating": "",
+    "service_animals_allowed": "",
+    "sign_language_interpretation": "",
+    "captioning_available": "",
+    "hearing_loop": "",
+    "assistive_listening_devices": "",
+    "audio_description": "",
+    "braille_materials": "",
+    "high_contrast_signage": "",
+    "tactile_guides": "",
+    "easy_read_materials": "",
+    "quiet_space": "",
+    "clear_signage": "",
+    "trained_staff": "",
+    "low_light_environment": "",
+    "accessible_website": "",
+    "screen_reader_support": "",
+    "keyboard_navigation": "",
+    "voice_command_support": ""
+  },
+  "filter": {
+    "button_label": "Filter"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "home": {
+    "title": "Arrangementer"
+  },
+  "nav": {
+    "events": "Begivenheder"
+  },
+  "download_ics": "Gem dato",
+  "copy_link": "Kopiér link",
+  "time": {
+    "time": "kl. {time}",
+    "range": "kl. {start} – {end}"
+  },
+  "event": {
+    "category": {
+      "culture": "Kultur",
+      "education": "Uddannelse",
+      "sports": "Sport",
+      "leisure": "Fritid",
+      "family": "Familie",
+      "society": "Samfund"
+    },
+    "search_placeholder": "Hvad søger du?",
+    "date_span": {
+      "all": "Alle",
+      "today": "I dag",
+      "tomorrow": "I morgen",
+      "weekend": "Weekend",
+      "next_week": "Næste uge",
+      "weekend_after": "Weekenden efter",
+      "range": "Periode"
+    },
+    "more_dates": "Flere datoer",
+    "all_dates": "Alle datoer",
+    "release_status": {
+      "draft": "Kladde",
+      "review": "Til gennemgang",
+      "released": "Udgivet",
+      "cancelled": "Aflyst",
+      "deferred": "Udskudt",
+      "rescheduled": "Ny dato"
+    },
+    "start_time_label": "Start",
+    "end_time_label": "Slut",
+    "entry_time_label": "Dørene åbner",
+    "venue": "Sted",
+    "space": "Lokale",
+    "meeting_point": "Mødested",
+    "organizer": "Arrangør",
+    "to_online_event": "Åbn online begivenhed",
+    "registration": {
+      "label": "Tilmelding",
+      "link": "Gå til online tilmelding",
+      "email": "Tilmeld via e-mail",
+      "phone": "Tilmeld telefonisk",
+      "deadline": "Senest"
+    },
+    "image_by": "Foto",
+    "price": "Pris",
+    "price_free": "Gratis",
+    "price_donation": "Donation/frivilligt beløb",
+    "price_sentence": "{value} {currency}",
+    "price_from_sentence": "Fra {min} {currency}",
+    "price_until_sentence": "Op til {max} {currency}",
+    "price_between_sentence": "{min} til {max} {currency}",
+    "ticket_flags": {
+      "ticket_required": "Billet kræves",
+      "advance_ticket": "Forsalg tilgængeligt",
+      "presale_fee_applies": "Gebyr for forsalg tillægges",
+      "on_site_ticket_sales": "Dørsalg",
+      "reduced_price_available": "Reducerede priser",
+      "registration_required": "Tilmelding påkrævet"
+    },
+    "participation_info": "Informationer om deltagelse",
+    "ticket_link": "Køb billetter",
+    "ticket_info": "Billet informationer",
+    "age_range": "{min_age}–{max_age} år",
+    "age_from": "fra {age} år",
+    "age_until": "op til {age} år",
+    "max_attendees": "Maks. {count} deltagere"
+  },
+  "accessibility": {
+    "title": "Tilgængelighed",
+    "topic": {
+      "physical": "",
+      "assistance_animals": "",
+      "hearing": "",
+      "visual": "",
+      "digital": "",
+      "cognitive": ""
+    },
+    "wheelchair_accessible": "",
+    "accessible_parking": "",
+    "elevator_available": "",
+    "ramp_available": "",
+    "step_free_access": "",
+    "accessible_restroom": "",
+    "reserved_seating": "",
+    "service_animals_allowed": "",
+    "sign_language_interpretation": "",
+    "captioning_available": "",
+    "hearing_loop": "",
+    "assistive_listening_devices": "",
+    "audio_description": "",
+    "braille_materials": "",
+    "high_contrast_signage": "",
+    "tactile_guides": "",
+    "easy_read_materials": "",
+    "quiet_space": "",
+    "clear_signage": "",
+    "trained_staff": "",
+    "low_light_environment": "",
+    "accessible_website": "",
+    "screen_reader_support": "",
+    "keyboard_navigation": "",
+    "voice_command_support": ""
+  },
+  "filter": {
+    "button_label": "Filter"
+  }
+}

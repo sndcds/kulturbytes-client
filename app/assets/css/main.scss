@@ -1,0 +1,126 @@
+:root {
+    --kbts-font-ui:
+        "AlbertSans",
+        "Inter",
+        "Mulish",
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        sans-serif;
+
+    --kbts-fg: #333;
+    --kbts-bg: #fff;
+    --kbts-muted-fg: #999;
+    --kbts-border: #ecece9;
+    --kbts-input-border: #91918e;
+    --kbts-hover-fg: #3543eeff;
+    --kbts-select-fg: red;
+    --kbts-card-bg: #f8f8f6;
+    --kbts-chip-bg: #ecece9;
+    --kbts-chip-fg: #6e6e6b;
+    --kbts-chip-bg-active: #888;
+    --kbts-chip-fg-active: #fff;
+    --kbts-blockquote-deco: #ecece9;
+
+    // Event release status colors
+    --kbts-event-release-fg-draft: #ffffff;
+    --kbts-event-release-bg-draft: #ef4d4d;
+    --kbts-event-release-fg-review: #ffffff;
+    --kbts-event-release-bg-review: #ff9a60;
+    --kbts-event-release-fg-released: #ffffff;
+    --kbts-event-release-bg-released: #21bc63;
+    --kbts-event-release-fg-cancelled: #ffffff;
+    --kbts-event-release-bg-cancelled: #e11d9d;
+    --kbts-event-release-fg-deferred: #ffffff;
+    --kbts-event-release-bg-deferred: #44189c;
+    --kbts-event-release-fg-rescheduled: #ffffff;
+    --kbts-event-release-bg-rescheduled: #164db1;
+}
+
+html, body {
+    margin: 0;
+    background: #fff;
+}
+
+html {
+    scrollbar-gutter: stable;
+}
+
+* {
+    // outline: 1px dotted red;
+}
+
+body {
+    font-family: var(--kbts-font-ui);
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: var(--kbts-fg);
+    &:hover {
+        color: var(--kbts-hover-fg);
+    }
+}
+
+.kbts-flex-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.kbts-content {
+    h1 {
+        font-size: 2.4rem;
+        font-weight: 300;
+    }
+    h2 {
+        font-size: 1.6rem;
+        font-weight: 400;
+    }
+    p {
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.4;
+    }
+}
+
+.kbts-collapsible-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--kbts-fg);
+}
+
+.kbts-chip-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3rem;
+}
+
+.kbts-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: .35rem .75rem;
+    border: 1px solid var(--kbts-border);
+    border-radius: 999px;
+    background: var(--kbts-bg);
+    color: var(--kbts-fg);
+    font-size: .9rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    transition:
+            background .2s ease,
+            border-color .2s ease,
+            transform .15s ease;
+
+    &:hover {
+        border-color: var(--kbts-fg);
+    }
+
+    &.selected, &.active {
+        background: var(--kbts-chip-bg-active);
+        border-color: var(--kbts-chip-bg-active);
+        color: white;
+    }
+}

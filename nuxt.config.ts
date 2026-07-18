@@ -1,0 +1,48 @@
+export default defineNuxtConfig({
+  compatibilityDate: '2025-07-15',
+  devtools: { enabled: true },
+  css: [
+    '~/assets/css/fonts.scss',
+    '~/assets/css/event.scss',
+    '~/assets/css/main.scss',
+    'maplibre-gl/dist/maplibre-gl.css'
+  ],
+
+  ssr: true,
+
+  modules: [
+    '@nuxtjs/i18n',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt'
+  ],
+
+  i18n: {
+    strategy: 'prefix',
+    defaultLocale: 'de',
+    locales: [
+      {
+        code: 'de',
+        name: 'Deutsch',
+        file: 'de.json'
+      },
+      {
+        code: 'da',
+        name: 'Dansk',
+        file: 'da.json'
+      },
+      {
+        code: 'en',
+        name: 'English',
+        file: 'en.json'
+      }
+    ],
+
+    langDir: 'locales/',
+  },
+
+  runtimeConfig: {
+    public: {
+      apiUrl: 'https://api.kulturbytes.de/' // http://localhost:9090/, https://api.kulturbytes.de/
+    }
+  },
+})

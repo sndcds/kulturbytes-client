@@ -1,0 +1,121 @@
+{
+  "home": {
+    "title": "Veranstaltungen"
+  },
+  "nav": {
+    "events": "Events"
+  },
+  "download_ics": "Datum speichern",
+  "copy_link": "Link kopieren",
+  "time": {
+    "time": "{time} Uhr",
+    "range": "{start} – {end} Uhr"
+  },
+  "event": {
+    "category": {
+      "culture": "Kultur",
+      "education": "Bildung",
+      "sports": "Sport",
+      "leisure": "Freizeit",
+      "family": "Familie",
+      "society": "Gesellschaft"
+    },
+    "search_placeholder": "Wonach suchst du?",
+    "date_span": {
+      "all": "Alle",
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "weekend": "Wochenende",
+      "next_week": "Kommende Woche",
+      "weekend_after": "Wochenende danach",
+      "range": "Bereich"
+    },
+    "more_dates": "Weitere Termine",
+    "all_dates": "Alle Termine",
+    "release_status": {
+      "draft": "Entwurf",
+      "review": "Prüfung",
+      "released": "Veröffentlicht",
+      "cancelled": "Abgesagt",
+      "deferred": "Verschoben",
+      "rescheduled": "Neuer Termin"
+    },
+    "start_time_label": "Beginn",
+    "end_time_label": "Ende",
+    "entry_time_label": "Einlass",
+    "venue": "Ort",
+    "space": "Raum",
+    "meeting_point": "Treffpunkt",
+    "organizer": "Veranstalter",
+    "to_online_event": "Online Veranstaltung öffnen",
+    "registration": {
+      "label": "Anmeldung",
+      "link": "Zur Online-Anmeldung",
+      "email": "Anmelden via E-Mail",
+      "phone": "Telefonisch anmelden",
+      "deadline": "Bis zum"
+    },
+    "image_by": "Bild",
+    "price": "Preis",
+    "price_free": "Kostenlos",
+    "price_donation": "Spende/freiwilliger Betrag",
+    "price_sentence": "{value} {currency}",
+    "price_from_sentence": "Ab {min} {currency}",
+    "price_until_sentence": "Bis {max} {currency}",
+    "price_between_sentence": "{min} bis {max} {currency}",
+    "ticket_flags": {
+      "ticket_required": "Ticket erforderlich",
+      "advance_ticket": "Vorverkauf vorhanden",
+      "presale_fee_applies": "zzgl. Vorverkaufsgebühr",
+      "on_site_ticket_sales": "Einlasskasse vorhanden",
+      "reduced_price_available": "Ermäßigte Preise verfügbar",
+      "registration_required": "Anmeldung erforderlich"
+    },
+    "participation_info": "Infos zur Teilnahme",
+    "ticket_link": "Tickets",
+    "ticket_info": "Ticket Informationen",
+    "age_range": "{min_age}–{max_age} Jahre",
+    "age_from": "ab {age} Jahren",
+    "age_until": "bis {age} Jahre",
+    "max_attendees": "max. {count} Personen"
+  },
+  "accessibility": {
+    "title": "Barriereinfos",
+    "topic": {
+      "physical": "Physische Barrierefreiheit",
+      "assistance_animals": "Assistenztiere",
+      "hearing": "Hörbarrierefreiheit",
+      "visual": "Visuelle Barrierefreiheit",
+      "digital": "Digitale Barrierefreiheit",
+      "cognitive": "Kognitive Barrierefreiheit"
+    },
+    "wheelchair_accessible": "Rollstuhlgerecht",
+    "accessible_parking": "Barrierefreier Parkplatz",
+    "elevator_available": "Aufzug Verfügbar",
+    "ramp_available": "Rampe Verfügbar",
+    "step_free_access": "Stufenfreier Zugang",
+    "accessible_restroom": "Barrierefreies WC",
+    "reserved_seating": "Reservierte Sitzplätze",
+    "service_animals_allowed": "Assistenzhunde Erlaubt",
+    "sign_language_interpretation": "Gebärdensprachdolmetschen",
+    "captioning_available": "Untertitel Verfügbar",
+    "hearing_loop": "Hörschleife",
+    "assistive_listening_devices": "Hilfshörgeräte",
+    "audio_description": "Audio Beschreibung",
+    "braille_materials": "Braille Materialien",
+    "high_contrast_signage": "Hochkontrastbeschilderung",
+    "tactile_guides": "Taktilführer",
+    "easy_read_materials": "Letlæselige materialer",
+    "quiet_space": "Ruhiger Raum",
+    "clear_signage": "Klare Beschilderung",
+    "trained_staff": "Ausgebildetes Personal",
+    "low_light_environment": "Dämmerumgebung",
+    "accessible_website": "Barrierefreie Webseite",
+    "screen_reader_support": "Unterstützung für Bildschirmleser",
+    "keyboard_navigation": "Tastaturnavigation",
+    "voice_command_support": "Sprachsteuerung Unterstützung"
+  },
+  "filter": {
+    "button_label": "Filter"
+  }
+}
