@@ -11,6 +11,9 @@
     "time": "kl. {time}",
     "range": "kl. {start} – {end}"
   },
+  "filter": {
+    "button_label": "Filter"
+  },
   "event": {
     "category": {
       "culture": "Kultur",
@@ -29,6 +32,22 @@
       "next_week": "Næste uge",
       "weekend_after": "Weekenden efter",
       "range": "Periode"
+    },
+    "filter": {
+      "date_from": "Fra",
+      "date_to": "Til",
+      "city": "By/Sted",
+      "postal_code": "Postnummer",
+      "venue_name": "Arrangementsted (navn)",
+      "location": "Placering",
+      "location_radius": "Placering, radius i km",
+      "types": "Typer & genrer",
+      "age": "Alder",
+      "age_from": "Fra (år)",
+      "age_to": "Til (år)",
+      "price": "Pris",
+      "price_type": "Pristype",
+      "max_price": "Maksimal pris"
     },
     "more_dates": "Flere datoer",
     "all_dates": "Alle datoer",
@@ -57,8 +76,10 @@
     },
     "image_by": "Foto",
     "price": "Pris",
+    "price_not_specified": "Ikke angivet",
     "price_free": "Gratis",
     "price_donation": "Donation/frivilligt beløb",
+    "price_max": "Højeste pris",
     "price_sentence": "{value} {currency}",
     "price_from_sentence": "Fra {min} {currency}",
     "price_until_sentence": "Op til {max} {currency}",
@@ -114,8 +135,5 @@
     "screen_reader_support": "",
     "keyboard_navigation": "",
     "voice_command_support": ""
-  },
-  "filter": {
-    "button_label": "Filter"
   }
 }

@@ -19,17 +19,28 @@ const {
   eventPostalCode,
   eventVenue,
   eventLocationFlag,
-  eventLocationRadius
+  eventLocationRadius,
+  eventAgeFrom,
+  eventAgeTo,
+  eventPriceType,
+  eventPriceCurrency,
+  eventMaxPrice
 } = storeToRefs(eventFilters)
 
 const dateSpanOptions = [
-  { id: "all", label: "event.date_span.all" },
-  { id: "today", label: "event.date_span.today" },
-  { id: "tomorrow", label: "event.date_span.tomorrow" },
-  { id: "weekend", label: "event.date_span.weekend" },
-  { id: "next_week", label: "event.date_span.next_week" },
-  { id: "weekend_after", label: "event.date_span.weekend_after" },
-  { id: "range", label: "event.date_span.range" },
+  { id: "all", label: 'event.date_span.all' },
+  { id: "today", label: 'event.date_span.today' },
+  { id: "tomorrow", label: 'event.date_span.tomorrow' },
+  { id: "weekend", label: 'event.date_span.weekend' },
+  { id: "next_week", label: 'event.date_span.next_week' },
+  { id: "weekend_after", label: 'event.date_span.weekend_after' },
+  { id: "range", label: 'event.date_span.range' },
+]
+
+const priceTypeOptions = [
+  { id: 'free', label: 'event.price_free' },
+  { id: 'donation', label: 'event.price_donation' },
+  { id: 'max_price', label: 'event.price_max' }
 ]
 
 const { t } = useI18n()
@@ -56,7 +67,7 @@ const { t } = useI18n()
       <div class="input-fields-container">
         <div class="input-field">
           <label for="start-date">
-            Von
+            {{ t('event.filter.date_from') }}
           </label>
 
           <input
@@ -66,10 +77,9 @@ const { t } = useI18n()
           />
         </div>
 
-
         <div class="input-field">
           <label for="end-date">
-            Bis
+            {{ t('event.filter.date_to') }}
           </label>
 
           <input
@@ -84,13 +94,13 @@ const { t } = useI18n()
 
     <Collapsible v-model="open">
       <template #title>
-        <span class="kbts-collapsible-title">Ort</span>
+        {{ t('event.filter.location') }}
       </template>
 
       <div class="input-fields-container">
         <div class="input-field">
           <label for="city">
-            Ort/Stadt
+            {{ t('event.filter.city') }}
           </label>
           <input
               id="city"
@@ -100,7 +110,7 @@ const { t } = useI18n()
 
         <div class="input-field">
           <label for="postal-code">
-            PLZ
+            {{ t('event.filter.postal_code') }}
           </label>
           <input
               id="postal-code"
@@ -110,7 +120,7 @@ const { t } = useI18n()
 
         <div class="input-field">
           <label for="city">
-            Veranstaltungsort (Name)
+            {{ t('event.filter.venue_name') }}
           </label>
           <input
               id="city"
@@ -120,7 +130,7 @@ const { t } = useI18n()
 
         <div class="input-field">
           <label for="location">
-            Standort, Radius in km
+            {{ t('event.filter.location_radius') }}
           </label>
           <div style="display: flex; gap: 1rem;">
             <Checkbox
@@ -143,14 +153,88 @@ const { t } = useI18n()
 
     <Collapsible>
       <template #title>
-        <span class="kbts-collapsible-title">
-          Veranstaltungstyp
-        </span>
+        {{ t('event.filter.types') }}
       </template>
       <TypeGenreSelect
           @change="eventFilters.setEventTypes"
       />
     </Collapsible>
+
+    <Collapsible>
+      <template #title>
+          {{ t('event.filter.age') }}
+      </template>
+      <div class="input-fields-container">
+        <div class="input-field">
+          <label for="age_from">
+            {{ t('event.filter.age_from') }}
+          </label>
+          <input
+              id="age_from"
+              v-model.number="eventAgeFrom"
+              type="number"
+              min="0"
+              max="999"
+              step="1"
+          />
+        </div>
+        <div class="input-field">
+          <label for="age_to">
+            {{ t('event.filter.age_to') }}
+          </label>
+          <input
+              id="age_to"
+              v-model.number="eventAgeTo"
+              type="number"
+              min="0"
+              max="999"
+              step="1"
+          />
+        </div>
+      </div>
+
+    </Collapsible>
+
+    <Collapsible>
+      <template #title>
+        {{ t('event.filter.price') }}
+      </template>
+      <div class="input-fields-container">
+        <ChipSelect
+            v-model="eventPriceType"
+            :options="priceTypeOptions"
+        />
+        <template v-if="eventPriceType === 'max_price'">
+          <div class="input-field">
+            <label>
+              {{ t('event.filter.max_price') }}
+            </label>
+            <input
+                v-model.number="eventMaxPrice"
+                type="number"
+                min="0"
+                step="1"
+            />
+          </div>
+
+          <div class="input-field">
+            <label>
+              {{ t('event.filter.currency') }}
+            </label>
+            <!--select v-model="eventPriceCurrency">
+              <option
+                  v-for="currency in priceCurrencyOptions"
+                  :key="currency.id"
+                  :value="currency.id"
+              >
+                {{ currency.label }}
+              </option>
+            </select-->
+          </div>
+        </template>
+      </div>
+    </Collapsible>
+
   </div>
 
 </template>
@@ -198,6 +282,39 @@ label {
   font-size: 0.86rem;
   margin-left: 0.5rem;
   cursor: pointer;
+}
+
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+
+  padding: .45rem .9rem;
+  border-radius: 999px;
+
+  background: var(--kbts-card-bg);
+  color: var(--kbts-fg);
+  border: 1px solid var(--kbts-input-border);
+
+  transition:
+      background .15s ease,
+      color .15s ease,
+      border-color .15s ease;
+
+  user-select: none;
+}
+
+.radio-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-option:has(input:checked) {
+  background: var(--kbts-fg);
+  color: var(--kbts-bg);
+  border-color: var(--kbts-fg);
 }
 </style>
 

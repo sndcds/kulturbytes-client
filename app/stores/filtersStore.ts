@@ -16,9 +16,14 @@ export const useFiltersStore = defineStore(
         const eventPostalCode = ref('')
         const eventVenue = ref('')
         const eventLocationFlag = ref(false)
-        const eventLocationRadius = ref(3)
+        const eventLocationRadius = ref<number | null>(3)
         const eventTypeIds = ref<string[]>([])
         const eventGenreIds = ref<string[]>([])
+        const eventAgeFrom = ref<number | null>(null)
+        const eventAgeTo = ref<number | null>(null)
+        const eventPriceType = ref<string | null>(null)
+        const eventPriceCurrency = ref<string>('EUR')
+        const eventMaxPrice = ref<number | null>(10)
 
         function setFilter(type: string | null) {
             filterType.value = type
@@ -33,6 +38,11 @@ export const useFiltersStore = defineStore(
             eventDateEnd.value = ''
             eventTypeIds.value = []
             eventGenreIds.value = []
+            eventAgeFrom.value = null
+            eventAgeTo.value = null
+            eventPriceType.value = null,
+            eventPriceCurrency.value = 'EUR',
+            eventMaxPrice.value = 10
         }
 
         const eventDateRange = computed(() => {
@@ -84,6 +94,11 @@ export const useFiltersStore = defineStore(
             eventLocationRadius,
             eventTypeIds,
             eventGenreIds,
+            eventAgeFrom,
+            eventAgeTo,
+            eventPriceType,
+            eventPriceCurrency,
+            eventMaxPrice,
 
             eventDateRange,
             hasValidEvnetDateRange,

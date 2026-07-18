@@ -4,11 +4,10 @@
     <!--pre v-if="apiResponse">{{ apiResponse.data.last_event_date_uuid }}</pre>
     <pre v-if="apiResponse">{{ apiResponse.data.last_event_start_at }}</pre-->
 
-    <h1>{{ $t('home.title') }}</h1>
+    <h1>{{ summaryStore.totalEventCount }} {{ $t('home.title') }}</h1>
 
     <div
         class="kbts-events-view-grid"
-        :class="{ loading: filtering }"
     >
       <NuxtLink
           v-for="event in events"
@@ -68,18 +67,13 @@
 </template>
 
 <script setup lang="ts">
-import { useAsyncData, useNuxtApp } from '#app'
 import { imageUrl } from '~/utils/image'
-import { Heart, HandCoins } from '@lucide/vue'
-import { useFiltersStore } from "~/stores/filtersStore";
-import {getCurrentGeoPosition} from "~/utils/geoLocation";
+import { Heart } from '@lucide/vue'
+import { useFiltersStore } from '~/stores/filtersStore'
 
 const PAGE_SIZE = 20
 const { locale } = useI18n()
 const { $api } = useNuxtApp()
-
-const now = ref('')
-const filtering = ref(false)
 
 const eventFilters = useFiltersStore()
 
@@ -96,18 +90,16 @@ const {
   eventVenue,
   eventTypeIds,
   eventGenreIds,
+  eventAgeFrom,
+  eventAgeTo,
 } = storeToRefs(eventFilters)
 
 const events = ref<Event[]>([])
-
 const summaryStore = useEventSummaryStore()
-
 const {
-  totalEventCount,
-  typeSummary,
-  genreSummary,
-  loading: summaryLoading
-} = storeToRefs(summaryStore)
+  build,
+  watchedFilters
+} = useEventQueryParams()
 
 const loading = ref(false)
 const hasMore = ref(true)
@@ -143,11 +135,7 @@ function setupObserver() {
 const error = ref<string | null>(null)
 
 onMounted(async () => {
-  now.value = new Date().toLocaleString('de-DE')
-
-  await summaryStore.loadSummary()
   await loadEvents()
-
   setupObserver()
 })
 
@@ -177,22 +165,6 @@ interface Event {
   price_type: string
 }
 
-interface EventsResponse {
-  service: string
-  api_version: string
-  response_type: string
-  status: number
-  timestamp: string
-  metadata: {
-    response_time_ms: number
-  }
-  data: {
-    events: Event[],
-    last_event_date_uuid: string
-    last_event_start_at: string
-  }
-}
-
 function resetEvents() {
   events.value = []
   cursor.value = null
@@ -205,84 +177,13 @@ async function loadEvents() {
   loading.value = true
 
   try {
-    const params = new URLSearchParams()
-    params.append(
-        "limit",
-        PAGE_SIZE.toString()
-    )
+    const params = await build({
+      includePagination: true,
+      limit: PAGE_SIZE,
+      cursor: cursor.value
+    })
 
-    if (eventCategories.value?.length) {
-      params.append(
-          "categories",
-          eventCategories.value.join(",")
-      )
-    }
-
-    if (eventSearch.value) {
-      params.append(
-          "search",
-          eventSearch.value
-      )
-    }
-
-    const { eventDateRange } = storeToRefs(eventFilters)
-    if (eventDateRange.value.startDate) {
-      params.append('start', eventDateRange.value.startDate)
-    }
-    if (eventDateRange.value.endDate) {
-      params.append('end', eventDateRange.value.endDate)
-    }
-
-    if (eventCity.value) {
-      params.append(
-          "city",
-          eventCity.value + '*'
-      )
-    }
-
-    if (eventPostalCode.value) {
-      params.append(
-          "postal_code",
-          eventPostalCode.value + '*'
-      )
-    }
-
-    if (eventLocationFlag.value) {
-      try {
-        const position = await getCurrentGeoPosition();
-        const radiusMeter = eventLocationRadius.value * 1000
-        params.append("lat", position.coords.latitude.toString());
-        params.append("lon", position.coords.longitude.toString());
-        params.append("radius", radiusMeter.toString());
-      } catch (err) {
-        console.error("Failed to get location:", err);
-        // Handle the case where the user denies permission
-      }
-    }
-
-    if (eventTypeIds.value.length == 1) {
-      if (eventGenreIds.value.length) {
-        params.append("genres", eventGenreIds.value.join(","));
-      } else {
-        params.append("event_types", eventTypeIds.value.toString());
-      }
-    }
-
-    console.log(params.toString());
-
-    if (cursor.value) {
-      params.append(
-          "last_event_date_uuid",
-          cursor.value.date_uuid
-      )
-
-      params.append(
-          "last_event_start_at",
-          cursor.value.start_at
-      )
-    }
-
-    const url = `/api/events?${params.toString()}`
+    const url = `/api/events?${params}`
     const response = await $api<EventsResponse>(url)
 
     events.value.push(...response.data.events)
@@ -305,20 +206,7 @@ async function loadEvents() {
 }
 
 watch(
-    [
-      eventSearch,
-      eventCategories,
-      eventDateSpan,
-      eventDateStart,
-      eventDateEnd,
-      eventCity,
-      eventPostalCode,
-      eventLocationFlag,
-      eventLocationRadius,
-      eventVenue,
-      eventTypeIds,
-      eventGenreIds,
-   ],
+    watchedFilters,
     async () => {
       resetEvents()
       await loadEvents()

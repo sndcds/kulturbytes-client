@@ -65,7 +65,7 @@ function leave(el: Element) {
         />
       </span>
 
-      <span class="collapsible-title">
+      <span class="kbts-collapsible-title">
         <slot name="title" />
       </span>
     </button>
@@ -108,7 +108,7 @@ function leave(el: Element) {
   font: inherit;
 }
 
-.collapsible-title {
+.kbts-collapsible-title {
   flex: 1;
   font-size: 1rem;
   font-weight: 500;

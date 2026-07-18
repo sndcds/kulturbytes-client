@@ -56,17 +56,6 @@ interface Event {
   venue_city: string
 }
 
-
-interface EventsResponse {
-  data: {
-    events: Event[]
-    page: number
-    total_pages: number
-    total_events: number
-  }
-}
-
-
 /*
  * Fetch summary
  */
@@ -182,13 +171,8 @@ useSeoMeta({
 
 
 <template>
-
   <div class="region-events">
-
-    <AppNavigation />
-
     <header>
-
       <h1>
         Events in {{ region }}
       </h1>
@@ -201,12 +185,9 @@ useSeoMeta({
       <p>
         {{ totalEvents }} upcoming events
       </p>
-
     </header>
 
-
     <main>
-
       <article
           v-for="(event, index) in events"
           :key="event.uuid"
@@ -217,7 +198,6 @@ useSeoMeta({
           `/event/${event.uuid}/${event.date_slug}`
         )"
         >
-
           <img
               v-if="event.image_path"
               :src="imageUrl(event.image_path, 480, '16:9')"
@@ -244,17 +224,13 @@ useSeoMeta({
           </p>
 
         </NuxtLink>
-
       </article>
-
     </main>
-
 
     <nav
         v-if="totalPages > 1"
         aria-label="Event pages"
     >
-
       <NuxtLink
           v-if="page > 1"
           :to="pageLink(page - 1)"
@@ -262,11 +238,9 @@ useSeoMeta({
         Previous
       </NuxtLink>
 
-
       <span>
-      Page {{ page }} of {{ totalPages }}
-    </span>
-
+        Page {{ page }} of {{ totalPages }}
+      </span>
 
       <NuxtLink
           v-if="page < totalPages"
@@ -274,14 +248,11 @@ useSeoMeta({
       >
         Next
       </NuxtLink>
-
     </nav>
-
 
     <p v-if="error">
       Unable to load events.
     </p>
 
   </div>
-
 </template>

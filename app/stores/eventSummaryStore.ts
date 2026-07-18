@@ -4,8 +4,6 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useNuxtApp } from '#app'
-import { useFiltersStore } from '~/stores/filtersStore'
-import { getCurrentGeoPosition } from '~/utils/geoLocation'
 
 interface SummaryItem {
     id: number
@@ -23,20 +21,6 @@ interface EventSummaryResponse {
 export const useEventSummaryStore = defineStore('eventSummary', () => {
     const { $api } = useNuxtApp()
 
-    const filters = useFiltersStore()
-
-    const {
-        eventCategories,
-        eventSearch,
-        eventDateRange,
-        eventCity,
-        eventPostalCode,
-        eventLocationFlag,
-        eventLocationRadius,
-        eventTypeIds,
-        eventGenreIds,
-    } = storeToRefs(filters)
-
     const loading = ref(false)
     const error = ref<string | null>(null)
 
@@ -44,56 +28,13 @@ export const useEventSummaryStore = defineStore('eventSummary', () => {
     const typeSummary = ref<SummaryItem[]>([])
     const genreSummary = ref<SummaryItem[]>([])
 
+    const {
+        build,
+        watchedFilters
+    } = useEventQueryParams()
+
     async function buildParams() {
-        const params = new URLSearchParams()
-
-        if (eventCategories.value?.length) {
-            params.append('categories', eventCategories.value.join(','))
-        }
-
-        if (eventSearch.value) {
-            params.append('search', eventSearch.value)
-        }
-
-        if (eventDateRange.value.startDate) {
-            params.append('start', eventDateRange.value.startDate)
-        }
-
-        if (eventDateRange.value.endDate) {
-            params.append('end', eventDateRange.value.endDate)
-        }
-
-        if (eventCity.value) {
-            params.append('city', eventCity.value + '*')
-        }
-
-        if (eventPostalCode.value) {
-            params.append('postal_code', eventPostalCode.value + '*')
-        }
-
-        if (eventLocationFlag.value) {
-            try {
-                const position = await getCurrentGeoPosition()
-
-                params.append('lat', position.coords.latitude.toString())
-                params.append('lon', position.coords.longitude.toString())
-                params.append(
-                    'radius',
-                    (eventLocationRadius.value * 1000).toString()
-                )
-            } catch (e) {
-                console.error(e)
-            }
-        }
-
-        if (eventTypeIds.value.length) {
-            params.append('event_types', eventTypeIds.value.join(','))
-        }
-
-        if (eventGenreIds.value.length) {
-            params.append('genres', eventGenreIds.value.join(','))
-        }
-
+        const params = await build()
         return params
     }
 
@@ -103,9 +44,8 @@ export const useEventSummaryStore = defineStore('eventSummary', () => {
 
         try {
             const params = await buildParams()
-
             const response = await $api<EventSummaryResponse>(
-                `/api/events/type-summary?${params.toString()}`
+                `/api/events/type-summary?${params}`
             )
 
             totalEventCount.value = response.data.total_event_count
@@ -120,20 +60,11 @@ export const useEventSummaryStore = defineStore('eventSummary', () => {
     }
 
     watch(
-        [
-            eventSearch,
-            eventCategories,
-            eventDateRange,
-            eventCity,
-            eventPostalCode,
-            eventLocationFlag,
-            eventLocationRadius,
-            eventTypeIds,
-            eventGenreIds,
-        ],
+        watchedFilters,
         loadSummary,
         {
             deep: true,
+            immediate: true
         }
     )
 

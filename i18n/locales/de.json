@@ -11,6 +11,9 @@
     "time": "{time} Uhr",
     "range": "{start} – {end} Uhr"
   },
+  "filter": {
+    "button_label": "Filter"
+  },
   "event": {
     "category": {
       "culture": "Kultur",
@@ -29,6 +32,22 @@
       "next_week": "Kommende Woche",
       "weekend_after": "Wochenende danach",
       "range": "Bereich"
+    },
+    "filter": {
+      "date_from": "Von",
+      "date_to": "Bis",
+      "city": "Ort/Stadt",
+      "postal_code": "Postleitzahl/Postcode",
+      "venue_name": "Veranstaltungsort (Name)",
+      "location": "Ort",
+      "location_radius": "Standort, Radius in km",
+      "types": "Typen & Genres",
+      "age": "Alter",
+      "age_from": "Von (Jahre)",
+      "age_to": "Bis (Jahre)",
+      "price": "Preis",
+      "price_type": "Preisart",
+      "max_price": "Höchstpreis"
     },
     "more_dates": "Weitere Termine",
     "all_dates": "Alle Termine",
@@ -57,8 +76,10 @@
     },
     "image_by": "Bild",
     "price": "Preis",
+    "price_not_specified": "Nicht angegeben",
     "price_free": "Kostenlos",
     "price_donation": "Spende/freiwilliger Betrag",
+    "price_max": "Höchster Preis",
     "price_sentence": "{value} {currency}",
     "price_from_sentence": "Ab {min} {currency}",
     "price_until_sentence": "Bis {max} {currency}",
@@ -114,8 +135,5 @@
     "screen_reader_support": "Unterstützung für Bildschirmleser",
     "keyboard_navigation": "Tastaturnavigation",
     "voice_command_support": "Sprachsteuerung Unterstützung"
-  },
-  "filter": {
-    "button_label": "Filter"
   }
 }
