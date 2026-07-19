@@ -58,7 +58,7 @@
           Events
         </NuxtLink>
 
-        <NuxtLink :to="localePath('/venues')">
+        <NuxtLink :to="localePath('/venues/map')">
           Venues
         </NuxtLink>
 

@@ -57,18 +57,14 @@ export const useEventTypeStore = defineStore('eventTypes', () => {
             const response = await $api<EventTypeLookupResponse>(
                 '/api/event/type-genre-lookup'
             )
-
             types.value = mapLookup(response.data)
-
             loaded.value = true
-
         } catch (err) {
             error.value = 'Failed to load event types'
             console.error(
                 'Failed loading event type lookup:',
                 err
             )
-
         } finally {
             loading.value = false
         }

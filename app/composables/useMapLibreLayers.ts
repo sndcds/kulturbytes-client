@@ -3,7 +3,6 @@ import type {
     FeatureCollection,
 } from 'geojson'
 
-
 import type {
     Map as MapLibreMap,
     Popup,
@@ -11,11 +10,8 @@ import type {
 } from 'maplibre-gl'
 
 
-
 type MapLibreModule =
     typeof import('maplibre-gl')
-
-
 
 export type IconAnchor =
     | 'center'
@@ -27,8 +23,6 @@ export type IconAnchor =
     | 'top-right'
     | 'bottom-left'
     | 'bottom-right'
-
-
 
 export interface MapLayerConfig {
     data: FeatureCollection
@@ -231,51 +225,158 @@ export function useMapLibreLayers(
                 data: config.data,
                 cluster: config.cluster ?? false,
                 clusterRadius: 50,
+                clusterMaxZoom: 14,
             }
         )
+
+        /*
+         * CLUSTER CIRCLE LAYER
+         */
+        if (config.cluster) {
+            map.addLayer({
+                id:`${name}-clusters`,
+                type:'circle',
+                source:name,
+                filter:[
+                    'has',
+                    'point_count'
+                ],
+                paint:{
+
+                    'circle-color':
+                        config.clusterStyle?.circleColor
+                        ??
+                        '#2563eb',
+
+                    'circle-radius':
+                        config.clusterStyle?.circleRadius
+                        ??
+                        22,
+
+                    'circle-stroke-width':
+                        config.clusterStyle?.circleStrokeWidth
+                        ??
+                        2,
+
+                    'circle-stroke-color':
+                        config.clusterStyle?.circleStrokeColor
+                        ??
+                        '#ffffff'
+                }
+            })
+
+            /*
+             * CLUSTER NUMBER TEXT
+             */
+            map.addLayer({
+                id:`${name}-cluster-count`,
+                type:'symbol',
+                source:name,
+                filter:[
+                    'has',
+                    'point_count'
+                ],
+                layout:{
+                    'text-field':
+                        config.clusterStyle?.textField
+                        ??
+                        [
+                            'get',
+                            'point_count_abbreviated'
+                        ],
+
+                    'text-size':
+                        config.clusterStyle?.textSize
+                        ??
+                        13
+                },
+
+                paint:{
+                    'text-color':
+                        config.clusterStyle?.textColor
+                        ??
+                        '#ffffff'
+                }
+            })
+        }
 
         const style =
             config.unclusteredStyle
             ??
             {}
 
+        /*
+         * NORMAL MARKERS
+         */
         if (config.icon) {
             map.addLayer({
-                id: `${name}-unclustered`,
-                type: 'symbol',
-                source: name,
-                filter: [
+                id:`${name}-unclustered`,
+                type:'symbol',
+                source:name,
+                filter:[
                     '!',
                     [
                         'has',
                         'point_count'
                     ]
                 ],
-                layout: {
-                    'icon-image': name,
-                    'icon-size': style.iconSize ?? 1,
-                    'icon-anchor': style.iconAnchor ?? 'bottom',
-                    'icon-allow-overlap': style.iconAllowOverlap ?? true,
-                    'icon-ignore-placement': style.iconIgnorePlacement ?? true,
+                layout:{
+                    'icon-image':name,
+
+                    'icon-size':
+                        style.iconSize
+                        ??
+                        1,
+
+                    'icon-anchor':
+                        style.iconAnchor
+                        ??
+                        'bottom',
+
+                    'icon-allow-overlap':
+                        style.iconAllowOverlap
+                        ??
+                        true,
+
+                    'icon-ignore-placement':
+                        style.iconIgnorePlacement
+                        ??
+                        true,
                 }
             })
+
         } else {
             map.addLayer({
-                id: `${name}-unclustered`,
-                type: 'circle',
-                source: name,
-                filter: [
+                id:`${name}-unclustered`,
+                type:'circle',
+                source:name,
+                filter:[
                     '!',
                     [
                         'has',
                         'point_count'
                     ]
                 ],
-                paint: {
-                    'circle-radius': style.circleRadius ?? 8,
-                    'circle-color': style.circleColor ?? '#ff0000',
-                    'circle-stroke-width': style.circleStrokeWidth ?? 0,
-                    'circle-stroke-color': style.circleStrokeColor ?? '#ffffff',
+                paint:{
+                    'circle-radius':
+                        style.circleRadius
+                        ??
+                        8,
+
+                    'circle-color':
+                        style.circleColor
+                        ??
+                        '#ff0000',
+
+                    'circle-stroke-width':
+                        style.circleStrokeWidth
+                        ??
+                        0,
+
+                    'circle-stroke-color':
+                        style.circleStrokeColor
+                        ??
+                        '#ffffff'
                 }
             })
         }

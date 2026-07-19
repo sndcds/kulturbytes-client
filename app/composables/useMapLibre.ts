@@ -1,5 +1,4 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import type { LngLatLike, Map as MapLibreMap } from 'maplibre-gl'
 import { useThemeStore } from '~/stores/themeStore'
 import { useMapLibreLayers } from '~/composables/useMapLibreLayers'
 import type { MapLayerConfig } from '~/composables/useMapLibreLayers'
@@ -9,10 +8,20 @@ interface Props {
     layers: Record<string, MapLayerConfig>
     center?: LngLatLike
     zoom?: number
+    height?: string
     enablePopups?: boolean
     styleLight?: string
     styleDark?: string
 }
+
+const props = withDefaults(
+    defineProps<Props>(),
+    {
+        center: () => [9.43,54.78],
+        zoom: 12,
+        height: '100%'
+    }
+)
 
 export function useMapLibre(
     props: Props,

@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   ],
 
   ssr: true,
+  pages: true,
 
   modules: [
     '@nuxtjs/i18n',
@@ -16,12 +17,11 @@ export default defineNuxtConfig({
     'pinia-plugin-persistedstate/nuxt'
   ],
 
-  vite: {
-    optimizeDeps: {
-      include: [
-        'maplibre-gl', // CJS
-        'markdown-it',
-        'sanitize-html', // CJS
+  vite:{
+    optimizeDeps:{
+      include:[
+        'maplibre-gl',
+        'vue-maplibre-gl'
       ]
     }
   },

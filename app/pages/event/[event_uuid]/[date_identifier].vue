@@ -298,7 +298,7 @@
 <script setup lang="ts">
 import { imageUrl } from '~/utils/image'
 import { formatPrice } from '~/utils/formatPrice'
-import SinglePointMap from '~/components/map/SinglePointMap.vue'
+import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
 import ActionIcon from '~/components/ui/ActionIcon.vue'
 import EventOrgLogo from '~/components/event/EventOrgLogo.vue'
 import type { EventDate, Event, EventResponse } from '~/types/event'
