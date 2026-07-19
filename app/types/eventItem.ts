@@ -3,6 +3,28 @@ import type { Image } from '~/types/image'
 export type EventsDateRangeMode =
     'all' | 'today' | 'tomorrow' | 'weekend' | 'next_week' | 'weekend_after' | 'range'
 
+
+export interface CalendarEvent {
+    uuid: string
+    date_uuid: string
+    date_slug: string
+    image_path: string
+    title: string
+    subtitle: string
+    summary: string
+    start_date: string
+    start_time: string
+    end_date: string
+    end_time: string
+    all_day: boolean
+    space_uuid: string
+    space_name: string
+    venue_uuid: string
+    venue_name: string
+    venue_city: string
+    price_type: string
+}
+
 export interface EventDate {
     uuid: string
     slug: string
@@ -31,7 +53,7 @@ export interface EventDate {
     accessibility_labels: string[]
 }
 
-export interface Event {
+export interface EventItem {
     uuid: string
     release_status: string
     title: string

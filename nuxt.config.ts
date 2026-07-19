@@ -16,6 +16,16 @@ export default defineNuxtConfig({
     'pinia-plugin-persistedstate/nuxt'
   ],
 
+  vite: {
+    optimizeDeps: {
+      include: [
+        'maplibre-gl', // CJS
+        'markdown-it',
+        'sanitize-html', // CJS
+      ]
+    }
+  },
+
   i18n: {
     strategy: 'prefix',
     defaultLocale: 'de',

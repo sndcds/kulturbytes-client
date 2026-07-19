@@ -16,17 +16,29 @@
       <div class="nav-actions">
 
         <!-- Filter button -->
-        <button
-            v-if="hasFilters"
-            class="filter-button"
-            :aria-expanded="filtersOpen"
-            aria-label="Toggle filters"
-            @click="filtersOpen = !filtersOpen"
-        >
-          <SlidersHorizontal :size="18"/>{{ t('filter.button_label') }}
-        </button>
+        <div class="filter-button-group">
+          <button
+              v-if="hasFilters"
+              class="filter-button"
+              :aria-expanded="filtersOpen"
+              aria-label="Toggle filters"
+              @click="filtersOpen = !filtersOpen"
+          >
+            <SlidersHorizontal :size="18"/>{{ t('filter.button_label') }}
+          </button>
 
-        <!-- Mobile hamburger -->
+          <button
+              v-if="hasFilters"
+              class="filter-x"
+              aria-label="Reset filters"
+              @click="resetFilters"
+          >
+            <X :size="18"/>
+          </button>
+        </div>
+
+
+        <!-- Mobile menu -->
         <button
             class="menu-toggle"
             aria-label="Toggle navigation"
@@ -106,7 +118,7 @@
 import AppLogo from '~/components/ui/AppLogo.vue'
 import EventFilters from '~/components/filters/EventFilters.vue'
 import VenueFilters from '~/components/filters/VenueFilters.vue'
-import { SlidersHorizontal } from '@lucide/vue'
+import { SlidersHorizontal, X } from '@lucide/vue'
 import { useFiltersStore } from "~/stores/filtersStore";
 
 const { t } = useI18n()
@@ -128,6 +140,11 @@ const localePath = useLocalePath()
 const hasFilters = computed(() => {
   return Boolean(route.meta?.filters)
 })
+
+const resetFilters = () => {
+  eventFilters.resetFilters()
+  // filtersOpen.value = false // optional
+}
 
 watch(
     () => route.path,
@@ -183,23 +200,41 @@ watch(
 /*
  Filter button
 */
-.filter-button {
+.filter-button-group {
+  display: flex;
+  gap: 0;
+}
+
+.filter-button, .filter-x {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   border: 1px solid var(--kbts-border);
   background: white;
-  border-radius: 8px;
+  border-radius: 0;
   padding: .45rem .85rem;
   cursor: pointer;
   font-size: .9rem;
   transition: .2s;
 
   &:hover {
-    background: #111;
-    color: white;
+    background: var(--kbts-fg);
+    color: var(--kbts-bg);
+    border-color: var(--kbts-fg);
   }
 }
+
+.filter-button {
+  border-top-left-radius: 0.25rem !important;
+  border-bottom-left-radius: 0.25rem !important;
+}
+
+.filter-x {
+  border-top-right-radius: 0.25rem !important;
+  border-bottom-right-radius: 0.25rem !important;
+  border-left-width: 0;
+}
+
 
 /*
  Navigation

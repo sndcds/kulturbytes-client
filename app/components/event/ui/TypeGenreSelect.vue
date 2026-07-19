@@ -1,44 +1,56 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useEventTypeStore } from '~/stores/eventTypesStore'
 import { useEventSummaryStore } from '~/stores/eventSummaryStore'
+import { useFiltersStore } from '~/stores/filtersStore'
 
-const emit = defineEmits<{
-  change: [
-    {
-      typeIds: string[]
-      genreIds: string[]
-    }
-  ]
-}>()
-
+const filtersStore = useFiltersStore()
 const eventTypeStore = useEventTypeStore()
-
-const selectedTypeId = ref<string | null>(null)
-const selectedGenreIds = ref<string[]>([])
+const eventSummaryStore = useEventSummaryStore()
 
 const { locale } = useI18n()
-const filtersStore = useFiltersStore()
-const eventSummaryStore = useEventSummaryStore()
 
 const {
   typeSummary,
   genreSummary
 } = storeToRefs(eventSummaryStore)
 
+const {
+  eventTypeIds,
+  eventGenreIds
+} = storeToRefs(filtersStore)
+
 onMounted(async () => {
   await Promise.all([
     eventTypeStore.fetchTypes(),
     eventSummaryStore.loadSummary()
   ])
-
-  selectedTypeId.value =
-      filtersStore.eventTypeIds[0] ?? null
-
-  selectedGenreIds.value =
-      [...filtersStore.eventGenreIds]
 })
 
+/*
+ Single source of truth:
+ The UI reads/writes directly to Pinia
+*/
+
+const selectedTypeId = computed({
+  get() {
+    return eventTypeIds.value[0] ?? null
+  },
+
+  set(id: string | null) {
+    eventTypeIds.value = id ? [id] : []
+  }
+})
+
+const selectedGenreIds = computed({
+  get() {
+    return eventGenreIds.value
+  },
+
+  set(ids: string[]) {
+    eventGenreIds.value = ids
+  }
+})
 
 const types = computed(() =>
     eventTypeStore.getTypes(locale.value)
@@ -57,6 +69,7 @@ const visibleTypes = computed(() => {
   if (!selectedTypeId.value) {
     return types.value
   }
+
   return types.value.filter(
       type => type.id === selectedTypeId.value
   )
@@ -64,15 +77,15 @@ const visibleTypes = computed(() => {
 
 function selectType(id: string) {
   if (selectedTypeId.value === id) {
-    // unselect current type
+    // clear type
     selectedTypeId.value = null
+    // clear genres
     selectedGenreIds.value = []
   } else {
     selectedTypeId.value = id
+    // changing type resets genres
     selectedGenreIds.value = []
   }
-
-  emitChange()
 }
 
 function toggleGenre(id: string) {
@@ -82,21 +95,11 @@ function toggleGenre(id: string) {
             genreId => genreId !== id
         )
   } else {
-    selectedGenreIds.value.push(id)
+    selectedGenreIds.value = [
+      ...selectedGenreIds.value,
+      id
+    ]
   }
-
-  emitChange()
-}
-
-function emitChange() {
-  const payload = {
-    typeIds: selectedTypeId.value
-        ? [selectedTypeId.value]
-        : [],
-    genreIds: [...selectedGenreIds.value],
-  }
-  filtersStore.setEventTypes(payload)
-  emit("change", payload)
 }
 
 function isSelected(id: string) {
@@ -105,20 +108,25 @@ function isSelected(id: string) {
 
 const typeCountMap = computed(() =>
     Object.fromEntries(
-        typeSummary.value.map(x => [x.id, x.count])
+        typeSummary.value.map(x => [
+          x.id,
+          x.count
+        ])
     )
 )
 
 const genreCountMap = computed(() =>
     Object.fromEntries(
-        genreSummary.value.map(x => [x.id, x.count])
+        genreSummary.value.map(x => [
+          x.id,
+          x.count
+        ])
     )
 )
 
 function getTypeCount(id: string) {
   return typeCountMap.value[Number(id)] ?? 0
 }
-
 
 function getGenreCount(id: string) {
   return genreCountMap.value[Number(id)] ?? 0
@@ -128,7 +136,6 @@ watch(locale, () => {
   selectedTypeId.value = null
   selectedGenreIds.value = []
 })
-
 </script>
 
 
@@ -139,11 +146,16 @@ watch(locale, () => {
           v-for="type in visibleTypes"
           :key="type.id"
           class="kbts-chip"
-          :class="{ active: selectedTypeId === type.id }"
+          :class="{
+            active: selectedTypeId === type.id
+          }"
           @click="selectType(type.id)"
       >
         {{ type.name }}
-        <span v-if="getTypeCount(type.id) > 0" class="chip-count">
+        <span
+            v-if="getTypeCount(type.id) > 0"
+            class="chip-count"
+        >
           {{ getTypeCount(type.id) }}
         </span>
       </button>
@@ -157,14 +169,19 @@ watch(locale, () => {
           v-for="genre in selectedType.genres"
           :key="genre.id"
           class="kbts-chip"
-          :class="{ active: isSelected(genre.id) }"
+          :class="{
+            active: isSelected(genre.id)
+          }"
           @click="toggleGenre(genre.id)"
       >
         {{ genre.name }}
-          <span v-if="getGenreCount(genre.id) > 0" class="chip-count">
-            {{ getGenreCount(genre.id) }}
-          </span>
-        </button>
+        <span
+            v-if="getGenreCount(genre.id) > 0"
+            class="chip-count"
+        >
+          {{ getGenreCount(genre.id) }}
+        </span>
+      </button>
     </div>
   </div>
 </template>

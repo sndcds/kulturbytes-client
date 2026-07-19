@@ -4,8 +4,9 @@ import CategorySelector from '~/components/event/ui/CategorySelector.vue'
 import ChipSelect from '~/components/ui/ChipSelect.vue'
 import { useFiltersStore } from '~/stores/filtersStore'
 import Checkbox from '~/components/ui/Checkbox.vue'
-import TypeGenreSelect from "~/components/event/ui/TypeGenreSelect.vue";
+import TypeGenreSelect from '~/components/event/ui/TypeGenreSelect.vue'
 
+const { t } = useI18n()
 const open = ref(false)
 const eventFilters = useFiltersStore()
 
@@ -43,7 +44,33 @@ const priceTypeOptions = [
   { id: 'max_price', label: 'event.price_max' }
 ]
 
-const { t } = useI18n()
+const eventSearchInput = computed({
+  get: () => eventSearch.value,
+  set(value: string) {
+    eventSearch.value = value.replace(/^\s+/, '')
+  }
+})
+
+const eventCityInput = computed({
+  get: () => eventCity.value,
+  set(value: string) {
+    eventCity.value = value.replace(/^\s+/, '')
+  }
+})
+
+const eventPostalCodeInput = computed({
+  get: () => eventPostalCode.value,
+  set(value: string) {
+    eventPostalCode.value = value.replace(/^\s+/, '')
+  }
+})
+
+const eventVenueInput = computed({
+  get: () => eventVenue.value,
+  set(value: string) {
+    eventVenue.value = value.replace(/^\s+/, '')
+  }
+})
 </script>
 
 
@@ -54,7 +81,7 @@ const { t } = useI18n()
     />
 
     <input
-        v-model="eventSearch"
+        v-model="eventSearchInput"
         :placeholder="t('event.search_placeholder')"
     />
 
@@ -104,7 +131,7 @@ const { t } = useI18n()
           </label>
           <input
               id="city"
-              v-model="eventCity"
+              v-model="eventCityInput"
           />
         </div>
 
@@ -114,7 +141,7 @@ const { t } = useI18n()
           </label>
           <input
               id="postal-code"
-              v-model="eventPostalCode"
+              v-model="eventPostalCodeInput"
           />
         </div>
 
@@ -124,7 +151,7 @@ const { t } = useI18n()
           </label>
           <input
               id="city"
-              v-model="eventVenue"
+              v-model="eventVenueInput"
           />
         </div>
 

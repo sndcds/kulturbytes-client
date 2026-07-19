@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import type { EventDate, Event, EventResponse } from '~/types/event'
+import type { EventDate, EventItem, EventResponse } from '~/types/eventItem'
 import { getStartDateTime } from '@/utils/date'
 import {formatDate, formatTime} from '@/utils/formatDate'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'

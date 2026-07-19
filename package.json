@@ -27,6 +27,8 @@
     "@types/geojson": "^7946.0.16",
     "@types/markdown-it": "^14.1.2",
     "@types/sanitize-html": "^2.16.1",
-    "sass": "^1.101.0"
+    "sass": "^1.101.0",
+    "typescript": "^5.8.3",
+    "vue-tsc": "^3.3.7"
   }
 }

@@ -20,6 +20,7 @@ export function useEventQueryParams() {
         eventDateRange,
         eventCity,
         eventPostalCode,
+        eventVenue,
         eventLocationFlag,
         eventLocationRadius,
         eventTypeIds,
@@ -89,6 +90,10 @@ export function useEventQueryParams() {
 
         if (eventPostalCode.value) {
             params.append('postal_code', eventPostalCode.value + '*')
+        }
+
+        if (eventVenue.value) {
+            params.append('venue', eventVenue.value + '*')
         }
 
         if (eventLocationFlag.value) {

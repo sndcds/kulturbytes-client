@@ -30,18 +30,27 @@ export const useFiltersStore = defineStore(
         }
 
         function resetFilters() {
-            filterType.value = null
             eventCategories.value = null
             eventDateSpan.value = null
             eventSearch.value = ''
             eventDateStart.value = ''
             eventDateEnd.value = ''
+
+            eventCity.value = ''
+            eventPostalCode.value = ''
+            eventVenue.value = ''
+
+            eventLocationFlag.value = false
+            eventLocationRadius.value = 3
+
             eventTypeIds.value = []
             eventGenreIds.value = []
+
             eventAgeFrom.value = null
             eventAgeTo.value = null
-            eventPriceType.value = null,
-            eventPriceCurrency.value = 'EUR',
+
+            eventPriceType.value = null
+            eventPriceCurrency.value = 'EUR'
             eventMaxPrice.value = 10
         }
 
