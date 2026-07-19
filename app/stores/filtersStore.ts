@@ -1,4 +1,39 @@
 import type { PresetDateRangeMode } from '@/utils/eventDateRange'
+import { cleanObject } from '~/utils/cleanObject'
+
+type EventFilterPayload = {
+    categories?: number[] | null
+
+    date?: {
+        span?: PresetDateRangeMode | null
+        start?: string | null
+        end?: string | null
+    }
+
+    search?: string | null
+
+    location?: {
+        city?: string | null
+        postalCode?: string | null
+        venue?: string | null
+        useCurrentLocation?: boolean | null
+        radius?: number | null
+    }
+
+    types?: string[] | null
+    genres?: string[] | null
+
+    age?: {
+        from?: number | null
+        to?: number | null
+    }
+
+    price?: {
+        type?: string | null
+        currency?: string | null
+        max?: number | null
+    }
+}
 
 export const useFiltersStore = defineStore(
     'filters',
@@ -85,6 +120,101 @@ export const useFiltersStore = defineStore(
             eventGenreIds.value = payload.genreIds
         }
 
+        function buildEventFilterPayload() {
+            const payload = {
+                categories: eventCategories.value,
+
+                date: {
+                    span: eventDateSpan.value,
+                    start: eventDateStart.value,
+                    end: eventDateEnd.value,
+                },
+
+                search: eventSearch.value,
+
+                location: {
+                    city: eventCity.value,
+                    postalCode: eventPostalCode.value,
+                    venue: eventVenue.value,
+
+                    useCurrentLocation: eventLocationFlag.value,
+                    radius: eventLocationRadius.value,
+                },
+
+                types: eventTypeIds.value,
+                genres: eventGenreIds.value,
+
+                age: {
+                    from: eventAgeFrom.value,
+                    to: eventAgeTo.value,
+                },
+
+                price: {
+                    type: eventPriceType.value,
+                    currency: eventPriceCurrency.value,
+                    max: eventMaxPrice.value,
+                },
+            }
+
+
+            return cleanObject(payload)
+        }
+
+        function applyEventFilterPayload(
+            payload: EventFilterPayload
+        ) {
+            if ('categories' in payload) {
+                eventCategories.value = payload.categories ?? null
+            }
+
+            if (payload.date) {
+                eventDateSpan.value = payload.date.span ?? null
+                eventDateStart.value = payload.date.start ?? ''
+                eventDateEnd.value = payload.date.end ?? ''
+            }
+
+            if ('search' in payload) {
+                eventSearch.value = payload.search ?? ''
+            }
+
+            if (payload.location) {
+                eventCity.value = payload.location.city ?? ''
+                eventPostalCode.value = payload.location.postalCode ?? ''
+                eventVenue.value = payload.location.venue ?? ''
+
+                eventLocationFlag.value =
+                    payload.location.useCurrentLocation ?? false
+
+                eventLocationRadius.value =
+                    payload.location.radius ?? null
+            }
+
+            if ('types' in payload) {
+                eventTypeIds.value = [
+                    ...(payload.types ?? [])
+                ]
+            }
+
+            if ('genres' in payload) {
+                eventGenreIds.value = [
+                    ...(payload.genres ?? [])
+                ]
+            }
+
+            if (payload.age) {
+                eventAgeFrom.value = payload.age.from ?? null
+                eventAgeTo.value = payload.age.to ?? null
+            }
+
+            if (payload.price) {
+                eventPriceType.value = payload.price.type ?? null
+                eventPriceCurrency.value =
+                    payload.price.currency ?? 'EUR'
+                eventMaxPrice.value =
+                    payload.price.max ?? null
+            }
+        }
+
         return {
             // UI state
             filterType,
@@ -113,7 +243,10 @@ export const useFiltersStore = defineStore(
             hasValidEvnetDateRange,
             setEventTypes,
 
-            resetFilters
+            resetFilters,
+
+            buildEventFilterPayload,
+            applyEventFilterPayload
         }
     },
     {

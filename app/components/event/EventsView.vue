@@ -55,6 +55,9 @@ const {
   eventGenreIds,
   eventAgeFrom,
   eventAgeTo,
+  eventPriceType,
+  eventPriceCurrency,
+  eventMaxPrice
 } = storeToRefs(eventFilters)
 
 const events = ref<CalendarEvent[]>([])
@@ -174,7 +177,10 @@ watch(
       eventDateSpan,
       eventLocationFlag,
       eventTypeIds,
-      eventGenreIds
+      eventGenreIds,
+      eventPriceType,
+      eventPriceCurrency,
+      eventMaxPrice
     ],
     async () => {
       resetEvents()

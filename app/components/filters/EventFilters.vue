@@ -226,12 +226,14 @@ const eventVenueInput = computed({
       <template #title>
         {{ t('event.filter.price') }}
       </template>
-      <div class="input-fields-container">
-        <ChipSelect
-            v-model="eventPriceType"
-            :options="priceTypeOptions"
-        />
-        <template v-if="eventPriceType === 'max_price'">
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="input-fields-container">
+            <ChipSelect
+                v-model="eventPriceType"
+                :options="priceTypeOptions"
+            />
+        </div>
+        <div v-if="eventPriceType === 'max_price'" class="input-fields-container">
           <div class="input-field">
             <label>
               {{ t('event.filter.max_price') }}
@@ -258,7 +260,7 @@ const eventVenueInput = computed({
               </option>
             </select-->
           </div>
-        </template>
+        </div>
       </div>
     </Collapsible>
 
@@ -308,7 +310,6 @@ input {
 label {
   font-size: 0.86rem;
   margin-left: 0.5rem;
-  cursor: pointer;
 }
 
 .radio-option {
