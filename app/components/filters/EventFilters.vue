@@ -75,6 +75,7 @@ const eventVenueInput = computed({
 
 
 <template>
+
   <div class="filters">
     <CategorySelector
         v-model="eventCategories"

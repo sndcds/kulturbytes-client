@@ -3,6 +3,7 @@ import { Heart } from '@lucide/vue'
 import { imageUrl } from '~/utils/image'
 import { type EventItem } from '~/types/eventItem'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
+import EventTypesDisplay from '~/components/event/EventTypesDisplay.vue'
 
 const { locale } = useI18n()
 
@@ -53,15 +54,17 @@ const props = defineProps<{
     <div class="kbts-events-view-card-content">
       <h2>{{ event.title }}</h2>
 
-      {{ formatDate(locale, event.start_date, 'weekday') }}
-      /
-      {{ event.start_time }}
+      {{ formatDate(locale, event.start_date, 'weekday') }} / {{ event.start_time }}
+      <br>
+      {{ event.venue_name }} / {{ event.venue_city }}
       <br>
 
-      {{ event.venue_name }}
-      /
-      {{ event.venue_city }}
-      <br>
+      <EventTypesDisplay
+          v-if="event.event_types?.length"
+          :event-types="event.event_types"
+          :show-genres="false"
+          class="kbts-events-view-card-types"
+      />
     </div>
   </NuxtLink>
 </template>
@@ -69,13 +72,16 @@ const props = defineProps<{
 
 <style scoped lang="scss">
 .kbts-events-view-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
+
   border-radius: 8px;
   padding: 0;
   overflow: hidden;
   background: var(--kbts-card-bg);
   max-width: 600px;
 
+  height: 100%; // important if inside a grid
   color: inherit;
   text-decoration: none;
 
@@ -87,6 +93,27 @@ const props = defineProps<{
     color: inherit;
     text-decoration: none;
   }
+}
+
+.kbts-events-view-card-content {
+  flex: 1; // take remaining space
+  display: flex;
+  flex-direction: column;
+
+  padding: .5rem 1rem;
+  font-weight: 300;
+  font-size: .9rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin: .5rem 0;
+  }
+}
+
+.kbts-events-view-card-types {
+  margin-top: auto;
+  padding-top: 1rem;
 }
 
 .kbts-events-view-grid-image {
@@ -120,18 +147,6 @@ const props = defineProps<{
 
   &:hover {
     transform: scale(1.06);
-  }
-}
-
-.kbts-events-view-card-content {
-  padding: .5rem 1rem;
-  font-weight: 300;
-  font-size: .9rem;
-
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 300;
-    margin: .5rem 0;
   }
 }
 

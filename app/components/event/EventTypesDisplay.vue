@@ -14,9 +14,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useEventTypeStore } from '~/stores/eventTypesStore'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const eventTypeStore = useEventTypeStore()
+
+onMounted(() => {
+  eventTypeStore.fetchTypes()
+})
 
 interface EventType {
   type_id: number
@@ -28,9 +34,11 @@ interface EventType {
 const props = withDefaults(
     defineProps<{
       eventTypes?: EventType[]
+      showGenres?: boolean
     }>(),
     {
       eventTypes: () => [],
+      showGenres: true,
     }
 )
 
@@ -42,12 +50,25 @@ const groupedTypes = computed(() => {
   }>()
 
   for (const item of props.eventTypes) {
+    const type = eventTypeStore.getType(
+        String(item.type_id),
+        locale.value
+    )
+
+    const genre = props.showGenres && item.genre_id
+        ? eventTypeStore.getGenre(
+            String(item.type_id),
+            String(item.genre_id),
+            locale.value
+        )
+        : null
+
     let group = groups.get(item.type_id)
 
     if (!group) {
       group = {
         id: item.type_id,
-        name: item.type_name,
+        name: type?.name ?? String(item.type_id),
         genres: [],
       }
 
@@ -55,13 +76,33 @@ const groupedTypes = computed(() => {
     }
 
     if (
-        item.genre_name &&
-        !group.genres.includes(item.genre_name)
+        genre?.name &&
+        !group.genres.includes(genre.name)
     ) {
-      group.genres.push(item.genre_name)
+      group.genres.push(genre.name)
     }
   }
 
   return [...groups.values()]
+})
+
+const labels = computed(() => {
+  return props.eventTypes.map(item => {
+    const type = eventTypeStore.getType(
+        String(item.type_id),
+        locale.value
+    )
+    const genre = item.genre_id
+        ? eventTypeStore.getGenre(
+            String(item.type_id),
+            String(item.genre_id),
+            locale.value
+        )
+        : null
+    return {
+      type: type?.name,
+      genre: genre?.name,
+    }
+  })
 })
 </script>
