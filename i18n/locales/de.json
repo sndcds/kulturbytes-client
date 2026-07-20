@@ -3,7 +3,10 @@
     "title": "Veranstaltungen"
   },
   "nav": {
-    "events": "Events"
+    "events": "Veranstaltungen",
+    "venues": "Orte",
+    "map": "Karte",
+    "about": "Info"
   },
   "download_ics": "Datum speichern",
   "copy_link": "Link kopieren",

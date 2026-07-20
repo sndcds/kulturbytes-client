@@ -3,7 +3,10 @@
     "title": "Events"
   },
   "nav": {
-    "events": "Events"
+    "events": "Events",
+    "venues": "Venues",
+    "map": "Map",
+    "about": "About"
   },
   "download_ics": "Save date",
   "copy_link": "Copy link",

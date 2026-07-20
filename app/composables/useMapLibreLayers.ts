@@ -28,6 +28,9 @@ export interface MapLayerConfig {
     data: FeatureCollection
     cluster?: boolean
     icon?: string
+    iconProperty?: string
+    icons?: Record<string,string>
+    defaultIcon?: string
     minzoom?: number
     maxzoom?: number
 
@@ -53,14 +56,8 @@ export interface MapLayerConfig {
         iconIgnorePlacement?: boolean
     }
 
-    popupTitle?: (
-        feature: Feature
-    ) => string
-
-
-    popupContent?: (
-        feature: Feature
-    ) => string
+    popupTitle?: (feature: Feature) => string
+    popupContent?: (feature: Feature) => string
 }
 
 interface Props {
@@ -68,13 +65,9 @@ interface Props {
         Record<string, MapLayerConfig>
 }
 
-export function useMapLibreLayers(
-    props: Props,
-    maplibregl: MapLibreModule
-) {
+export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
 
-    let currentPopup:
-        Popup | null = null
+    let currentPopup: Popup | null = null
 
     const removePopup = () => {
         currentPopup?.remove()
@@ -83,36 +76,22 @@ export function useMapLibreLayers(
 
     const addIcon = async (
         map: MapLibreMap,
-        name: string,
-        url?: string
+        name:string,
+        url?:string
     ) => {
-
-        if (!url) {
+        if (!url)
             return
-        }
 
-        if (map.hasImage(name)) {
+        if (map.hasImage(name))
             return
+
+        try {
+            const image = await map.loadImage(url)
+            map.addImage(name, image.data, { pixelRatio:2 })
+            console.log('ICON REGISTERED:', name, map.hasImage(name))
+        } catch(error){
+            console.error('ICON FAILED:', name, url, error)
         }
-
-        const image =
-            new Image()
-
-        image.src = url
-
-        await new Promise<void>(
-            (resolve, reject) => {
-                image.onload =
-                    () => resolve()
-                image.onerror =
-                    reject
-            }
-        )
-
-        map.addImage(
-            name,
-            image
-        )
     }
 
     const addPopup = (
@@ -163,7 +142,6 @@ export function useMapLibreLayers(
                         .setHTML(
                             `
                         <div class="map-popup">
-
                         ${
                                 config.popupTitle
                                     ? `<strong>
@@ -171,19 +149,12 @@ export function useMapLibreLayers(
                                    </strong>`
                                     : ''
                             }
-
                         ${
                                 config.popupContent
                                 ??
                                 ''
                             }
-
-                        <button
-                            data-popup-close
-                        >
-                            ×
-                        </button>
-
+                        <button data-popup-close>×</button>
                         </div>
                         `
                         )
@@ -206,17 +177,43 @@ export function useMapLibreLayers(
         )
     }
 
+    const addCursor = (
+        map: MapLibreMap,
+        layerName: string
+    ) => {
+
+        const layerId = `${layerName}-unclustered`
+
+        map.on(
+            'mouseenter',
+            layerId,
+            () => {
+                map.getCanvas().style.cursor = 'pointer'
+            }
+        )
+
+        map.on(
+            'mouseleave',
+            layerId,
+            () => {
+                map.getCanvas().style.cursor = ''
+            }
+        )
+    }
+
     const addLayer = async (
         map: MapLibreMap,
         name: string,
         config: MapLayerConfig
     ) => {
 
-        await addIcon(
-            map,
-            name,
-            config.icon
-        )
+        if (config.icons) {
+            for (const [iconName, url] of Object.entries(config.icons)) {
+                await addIcon(map, iconName, url)
+            }
+        } else {
+            await addIcon(map, name, config.icon)
+        }
 
         map.addSource(
             name,
@@ -230,7 +227,7 @@ export function useMapLibreLayers(
         )
 
         /*
-         * CLUSTER CIRCLE LAYER
+         * Cluster circle layer
          */
         if (config.cluster) {
             map.addLayer({
@@ -266,7 +263,7 @@ export function useMapLibreLayers(
             })
 
             /*
-             * CLUSTER NUMBER TEXT
+             * Cluster number text
              */
             map.addLayer({
                 id:`${name}-cluster-count`,
@@ -300,15 +297,12 @@ export function useMapLibreLayers(
             })
         }
 
-        const style =
-            config.unclusteredStyle
-            ??
-            {}
+        const style = config.unclusteredStyle ?? {}
 
         /*
-         * NORMAL MARKERS
+         * Normal markers
          */
-        if (config.icon) {
+        if (config.icon || config.iconProperty) {
             map.addLayer({
                 id:`${name}-unclustered`,
                 type:'symbol',
@@ -320,31 +314,29 @@ export function useMapLibreLayers(
                         'point_count'
                     ]
                 ],
-                layout:{
-                    'icon-image':name,
-
-                    'icon-size':
-                        style.iconSize
-                        ??
-                        1,
-
-                    'icon-anchor':
-                        style.iconAnchor
-                        ??
-                        'bottom',
-
-                    'icon-allow-overlap':
-                        style.iconAllowOverlap
-                        ??
-                        true,
-
-                    'icon-ignore-placement':
-                        style.iconIgnorePlacement
-                        ??
-                        true,
+                layout: {
+                    'icon-image': [
+                        'case',
+                        [
+                            'has',
+                            config.iconProperty ?? 'marker_style'
+                        ],
+                        [
+                            'coalesce',
+                            [
+                                'get',
+                                config.iconProperty ?? 'marker_style'
+                            ],
+                            'default'
+                        ],
+                        'default'
+                    ],
+                    'icon-size': style.iconSize ?? 1,
+                    'icon-anchor': style.iconAnchor ?? 'bottom',
+                    'icon-allow-overlap': style.iconAllowOverlap ?? true,
+                    'icon-ignore-placement': style.iconIgnorePlacement ?? true,
                 }
             })
-
         } else {
             map.addLayer({
                 id:`${name}-unclustered`,
@@ -381,11 +373,8 @@ export function useMapLibreLayers(
             })
         }
 
-        addPopup(
-            map,
-            name,
-            config
-        )
+        addCursor(map, name)
+        addPopup(map, name, config)
     }
 
     const initializeLayers = async (

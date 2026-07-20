@@ -12,6 +12,37 @@
         <AppLogo />
       </NuxtLink>
 
+
+      <!-- Main navigation -->
+      <nav :class="{ open }">
+        <NuxtLink :to="localePath('/events')">
+          {{ t('nav.events') }}
+        </NuxtLink>
+
+        <NuxtLink :to="localePath('/venues/venues')">
+          {{ t('nav.venues') }}
+        </NuxtLink>
+
+        <NuxtLink :to="localePath('/venues/map')">
+          {{ t('nav.map') }}
+        </NuxtLink>
+
+        <NuxtLink :to="localePath('/about')">
+          {{ t('nav.about') }}
+        </NuxtLink>
+
+        <div class="language-switcher">
+          <NuxtLink
+              v-for="locale in locales"
+              :key="locale.code"
+              :to="switchLocalePath(locale.code)"
+              :class="{ active: locale.code === currentLocale }"
+          >
+            {{ locale.code.toLowerCase() }}
+          </NuxtLink>
+        </div>
+      </nav>
+
       <!-- Right actions -->
       <div class="nav-actions">
 
@@ -50,34 +81,6 @@
         </button>
 
       </div>
-
-      <!-- Main navigation -->
-      <nav :class="{ open }">
-
-        <NuxtLink :to="localePath('/events')">
-          Events
-        </NuxtLink>
-
-        <NuxtLink :to="localePath('/venues/map')">
-          Venues
-        </NuxtLink>
-
-        <NuxtLink :to="localePath('/about')">
-          About
-        </NuxtLink>
-
-        <div class="language-switcher">
-          <NuxtLink
-              v-for="locale in locales"
-              :key="locale.code"
-              :to="switchLocalePath(locale.code)"
-              :class="{ active: locale.code === currentLocale }"
-          >
-            {{ locale.code.toLowerCase() }}
-          </NuxtLink>
-        </div>
-
-      </nav>
 
     </div>
 
@@ -235,10 +238,6 @@ watch(
   border-left-width: 0;
 }
 
-
-/*
- Navigation
-*/
 nav {
   display: flex;
   align-items: center;
@@ -246,19 +245,21 @@ nav {
   margin-left: 2rem;
 
   a {
-    color: #333;
+    color: var(--kbts-fg);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 400;
+    border-bottom: 2px solid transparent;
 
     &:hover {
-      color: #000;
+      color: red;
+    }
+
+    &.router-link-active {
+      font-weight: 700;
     }
   }
 }
 
-/*
- Hamburger
-*/
 .menu-toggle {
   display: none;
   border: 0;
@@ -274,9 +275,6 @@ nav {
   }
 }
 
-/*
- Languages
-*/
 .language-switcher {
   display: flex;
   align-items: center;
@@ -284,20 +282,16 @@ nav {
 
   a {
     padding: .25rem .5rem;
-    border-radius: 4px;
     font-size: .85rem;
-    color: #666;
+    color: var(--kbts-fg);
+    border-bottom: 1px solid transparent;
 
     &.active {
-      background: #111;
-      color: white;
+      border-bottom: 1px solid var(--kbts-fg);
     }
   }
 }
 
-/*
- Filter panel
-*/
 .filter-panel {
   background: white;
   border-top: 1px solid var(--kbts-border);
@@ -344,11 +338,7 @@ nav {
   opacity: 1;
 }
 
-/*
- Mobile
-*/
 @media (max-width: 768px) {
-
   .nav-inner {
     padding: .75rem 1rem;
   }
@@ -366,24 +356,26 @@ nav {
     display: block;
   }
 
-
   nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
+    position: fixed;
+    top: 58px;
+    left: -32px;
     right: 0;
+    bottom: 0;
 
     display: none;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    margin-left: 0;
 
-    background: white;
-    padding: 1rem;
+    background: var(--kbts-bg);
+    padding: 2rem 2rem;
+
+    overflow-y: auto;
 
     a {
-      padding: .75rem 0;
+      padding: 1rem 0;
+      font-size: 1.2rem;
     }
 
     &.open {

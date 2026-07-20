@@ -1,5 +1,4 @@
 <template>
-
   <MapLibreMap
       class="venues-map"
       :center="center"
@@ -7,56 +6,28 @@
       :height="height"
       @map-loaded="onMapLoaded"
   />
-
 </template>
 
 
-
 <script setup lang="ts">
-
 import { ref, computed } from 'vue'
-
-import type {
-  Map as MapLibreMapType
-} from 'maplibre-gl'
-
-import type {
-  FeatureCollection
-} from 'geojson'
-
-
+import type { Map as MapLibreMapType } from 'maplibre-gl'
+import type { FeatureCollection } from 'geojson'
 import MapLibreMap from '~/components/map/MapLibreMap.client.vue'
-
-import venueIcon from '~/assets/map/marker.png'
-
-import {
-  useMapLibreLayers
-} from '~/composables/useMapLibreLayers'
-
-
+import { useMapLibreLayers } from '~/composables/useMapLibreLayers'
 
 const props =
     withDefaults(
         defineProps<{
-
           center?:[number,number]
-
           zoom?:number
-
           height?:string
-
         }>(),
         {
-          center:()=>[
-            9.5,
-            54.3
-          ],
-
+          center:()=>[9.5, 54.3],
           zoom:8,
-
           height:'500px'
         })
-
 
 const venues =
     ref<FeatureCollection>({
@@ -64,66 +35,45 @@ const venues =
       features:[]
     })
 
-
-
 const layers = computed(()=>({
+  venues: {
+    data: venues.value,
 
-  venues:{
+    cluster: true,
 
-    data:
-    venues.value,
+    iconProperty:'marker_style',
 
-
-    cluster:true,
-
-
-    icon:
-    venueIcon,
-
-
-    clusterStyle:{
-
-      circleColor:'#2563eb',
-
-      circleRadius:22,
-
-      circleStrokeWidth:2,
-
-      circleStrokeColor:'#ffffff',
-
-      textSize:13,
-
-      textColor:'#ffffff'
-
+    icons: {
+      default: '/map/markers/default.png',
+      "cultural_place": '/map/markers/cultural-place.png',
+      "outdoor_area": '/map/markers/outdoor-area.png',
+      "sacred_space": '/map/markers/sacred-space.png',
+      "city_district": '/map/markers/city-district.png',
     },
 
+    clusterStyle: {
+      circleColor: '#ffffff',
+      circleRadius: 16,
+      circleStrokeWidth: 2,
+      circleStrokeColor:' #243f6e',
+      textSize: 14,
+      textColor: '#243f6e'
+    },
 
-    unclusteredStyle:{
-
-      iconSize:0.75,
-
-      iconAnchor:'bottom',
-
-      iconAllowOverlap:true,
-
+    unclusteredStyle: {
+      iconSize: 2,
+      iconAnchor: 'bottom',
+      iconAllowOverlap: true,
       iconIgnorePlacement:true
-
     },
 
-
-    popupTitle(feature:any){
-
+    popupTitle(feature:any) {
       return String(
           feature.properties?.name ?? ''
       )
-
     }
-
   }
-
 }))
-
-
 
 const maplibregl =
     await import('maplibre-gl')
@@ -131,74 +81,30 @@ const maplibregl =
             m => m.default ?? m
         )
 
-
-
 const {
   initializeLayers,
   updateSources
-}
-    =
-    useMapLibreLayers(
-        {
-          get layers(){
+} = useMapLibreLayers
+(
+    {
+      get layers() {
+        return layers.value
+      }
+    } as any, maplibregl
+)
 
-            return layers.value
+const center = props.center
+const zoom = props.zoom
+const height = props.height
 
-          }
-
-        } as any,
-
-        maplibregl
-    )
-
-
-
-const center =
-    props.center
-
-
-const zoom =
-    props.zoom
-
-
-const height =
-    props.height
-
-
-
-async function onMapLoaded(
-    map:MapLibreMapType
-){
-
-  console.log(
-      'VENUES MAP READY'
-  )
-
-
-  await initializeLayers(
-      map
-  )
-
-
-  await loadVenues(
-      map
-  )
-
-
-  map.on(
-      'moveend',
-      ()=>loadVenues(map)
-  )
-
+async function onMapLoaded(map:MapLibreMapType) {
+  await initializeLayers(map)
+  await loadVenues(map)
+  map.on('moveend', () => loadVenues(map))
 }
 
-
-
-async function loadVenues(
-    map: MapLibreMapType
-) {
-  const bounds =
-      map.getBounds()
+async function loadVenues(map: MapLibreMapType) {
+  const bounds = map.getBounds()
 
   const bbox = [
     bounds.getWest(),
@@ -207,52 +113,23 @@ async function loadVenues(
     bounds.getNorth()
   ].join(',')
 
-
   const { $api } = useNuxtApp()
 
-
   try {
-    const response =
-        await $api<any>(
-            '/api/venues/geojson',
-            {
-              query: {
-                bbox
-              }
-            }
-        )
-
-
-    venues.value =
-        response.data ?? response
-
-
-    updateSources(
-        map,
-        layers.value
-    )
-
+    const response = await $api<any>('/api/venues/geojson', { query: { bbox } })
+    venues.value = response.data ?? response
+    updateSources(map, layers.value)
   } catch (error) {
-
-    console.error(
-        'Failed loading venues:',
-        error
-    )
-
+    console.error('Failed loading venues:', error)
   }
 }
-
-
 </script>
 
 
-
 <style scoped>
-
 .venues-map{
   width:100%;
   height:100%;
   min-height:400px;
 }
-
 </style>

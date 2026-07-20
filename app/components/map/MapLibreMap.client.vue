@@ -25,8 +25,8 @@ const props = withDefaults(
     {
       center: () => [9.43,54.78],
       zoom: 8,
-      height:'400px',
-      style:'/versatiles/versatiles-style.json'
+      height: '400px',
+      style: '/versatiles/versatiles-style.json'
     }
 )
 

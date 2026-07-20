@@ -3,7 +3,10 @@
     "title": "Arrangementer"
   },
   "nav": {
-    "events": "Begivenheder"
+    "events": "Begivenheder",
+    "venues": "Steder",
+    "map": "Kort",
+    "about": "Om"
   },
   "download_ics": "Gem dato",
   "copy_link": "Kopiér link",
