@@ -68,6 +68,7 @@ const {
         $api('/api/events/type-summary', {
           query: {
             start,
+            countries: "DEU"
           }
         }),
     {

@@ -59,7 +59,7 @@ const layers = computed(() => ({
 
         cluster: false,
         icons:{
-          default: '/map/markers/cultural-center.png'
+          default: '/map/markers/cultural-place.png'
         },
 
         iconProperty: 'marker_style',

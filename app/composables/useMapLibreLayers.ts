@@ -1,3 +1,6 @@
+import { createApp } from 'vue'
+import type { Component } from 'vue'
+
 import type {
     Feature,
     FeatureCollection,
@@ -8,6 +11,7 @@ import type {
     Popup,
     GeoJSONSource,
 } from 'maplibre-gl'
+
 
 
 type MapLibreModule =
@@ -56,8 +60,26 @@ export interface MapLayerConfig {
         iconIgnorePlacement?: boolean
     }
 
-    popupTitle?: (feature: Feature) => string
-    popupContent?: (feature: Feature) => string
+    label?: {
+        field: string
+        minzoom?: number
+        textSize?: number
+        textColor?: string
+        textHaloColor?: string
+        textHaloWidth?: number
+        textOffset?: [number, number]
+        textAnchor?: IconAnchor
+        allowOverlap?: boolean
+    }
+
+    popupStyle?: {
+        className?: string
+        maxWidth?: string
+        closeButton?: boolean
+        offset?: [number, number]
+    }
+
+    popupComponent?: Component
 }
 
 interface Props {
@@ -88,7 +110,6 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
         try {
             const image = await map.loadImage(url)
             map.addImage(name, image.data, { pixelRatio:2 })
-            console.log('ICON REGISTERED:', name, map.hasImage(name))
         } catch(error){
             console.error('ICON FAILED:', name, url, error)
         }
@@ -100,10 +121,7 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
         config: MapLayerConfig
     ) => {
 
-        if (
-            !config.popupTitle &&
-            !config.popupContent
-        ) {
+        if (!config.popupComponent) {
             return
         }
 
@@ -127,42 +145,25 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
 
                 removePopup()
 
+                const container = document.createElement('div')
+                createApp(config.popupComponent, {
+                    feature
+                }).mount(container)
+
                 currentPopup =
                     new maplibregl.Popup({
-                        closeButton: false,
-                        closeOnClick: false,
+                        closeButton: config.popupStyle?.closeButton ?? false,
+                        closeOnClick: true,
+                        maxWidth: config.popupStyle?.maxWidth ?? '320px',
+                        className: config.popupStyle?.className ?? '',
+                        offset: config.popupStyle?.offset ?? [0, -15]
                     })
-                        .setLngLat(
-                            feature.geometry.coordinates as [
-                                number,
-                                number
-                            ]
-                        )
-
-                        .setHTML(
-                            `
-                        <div class="map-popup">
-                        ${
-                                config.popupTitle
-                                    ? `<strong>
-                                    ${config.popupTitle(feature)}
-                                   </strong>`
-                                    : ''
-                            }
-                        ${
-                                config.popupContent
-                                ??
-                                ''
-                            }
-                        <button data-popup-close>×</button>
-                        </div>
-                        `
-                        )
-
+                        .setLngLat(feature.geometry.coordinates as [number, number])
+                        .setDOMContent(container)
                         .addTo(map)
 
-                currentPopup
-                    .getElement()
+
+                currentPopup.getElement()
                     ?.querySelector(
                         '[data-popup-close]'
                     )
@@ -239,26 +240,10 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
                     'point_count'
                 ],
                 paint:{
-
-                    'circle-color':
-                        config.clusterStyle?.circleColor
-                        ??
-                        '#2563eb',
-
-                    'circle-radius':
-                        config.clusterStyle?.circleRadius
-                        ??
-                        22,
-
-                    'circle-stroke-width':
-                        config.clusterStyle?.circleStrokeWidth
-                        ??
-                        2,
-
-                    'circle-stroke-color':
-                        config.clusterStyle?.circleStrokeColor
-                        ??
-                        '#ffffff'
+                    'circle-color': config.clusterStyle?.circleColor ?? '#2563eb',
+                    'circle-radius': config.clusterStyle?.circleRadius ?? 22,
+                    'circle-stroke-width': config.clusterStyle?.circleStrokeWidth ?? 2,
+                    'circle-stroke-color': config.clusterStyle?.circleStrokeColor ?? '#ffffff'
                 }
             })
 
@@ -369,6 +354,40 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
                         style.circleStrokeColor
                         ??
                         '#ffffff'
+                }
+            })
+        }
+
+        /*
+
+         * Venue labels
+
+         */
+
+        if (config.label) {
+            map.addLayer({
+                id: `${name}-labels`,
+                type: 'symbol',
+                source: name,
+                minzoom: config.label.minzoom ?? 12,
+                filter: [
+                    '!',
+                    [
+                        'has',
+                        'point_count'
+                    ]
+                ],
+                layout:{
+                    'text-field': ['get', config.label.field],
+                    'text-size': config.label.textSize ?? 12,
+                    'text-offset': config.label.textOffset ?? [0, 0.5],
+                    'text-anchor': config.label.textAnchor ?? 'top',
+                    'text-allow-overlap': config.label.allowOverlap ?? false
+                },
+                paint:{
+                    'text-color': config.label.textColor ?? '#243f6e',
+                    'text-halo-color': config.label.textHaloColor ?? '#ffffff',
+                    'text-halo-width': config.label.textHaloWidth ?? 1
                 }
             })
         }

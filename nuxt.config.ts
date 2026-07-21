@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: [
     '~/assets/css/fonts.scss',
+    '~/assets/css/map.scss',
     '~/assets/css/event.scss',
     '~/assets/css/main.scss',
     'maplibre-gl/dist/maplibre-gl.css'
@@ -52,7 +53,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: 'https://api.kulturbytes.de/' // http://localhost:9090/, https://api.kulturbytes.de/
+      apiUrl: 'http://localhost:9090/' // http://localhost:9090/, https://api.kulturbytes.de/
     }
   },
 })

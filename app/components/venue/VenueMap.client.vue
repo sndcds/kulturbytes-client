@@ -15,6 +15,7 @@ import type { Map as MapLibreMapType } from 'maplibre-gl'
 import type { FeatureCollection } from 'geojson'
 import MapLibreMap from '~/components/map/MapLibreMap.client.vue'
 import { useMapLibreLayers } from '~/composables/useMapLibreLayers'
+import VenuePopup from '~/components/venue/VenuePopup.vue'
 
 const props =
     withDefaults(
@@ -47,8 +48,11 @@ const layers = computed(()=>({
       default: '/map/markers/default.png',
       "cultural_place": '/map/markers/cultural-place.png',
       "outdoor_area": '/map/markers/outdoor-area.png',
+      "public_place": '/map/markers/public-place.png',
       "sacred_space": '/map/markers/sacred-space.png',
       "city_district": '/map/markers/city-district.png',
+      "museum": '/map/markers/museum.png',
+      "education": '/map/markers/education.png',
     },
 
     clusterStyle: {
@@ -67,11 +71,22 @@ const layers = computed(()=>({
       iconIgnorePlacement:true
     },
 
-    popupTitle(feature:any) {
-      return String(
-          feature.properties?.name ?? ''
-      )
-    }
+    label: {
+      field: 'name',
+      textSize: 12,
+      textOffset: [0, 0.5],
+      textAnchor: 'top',
+      textColor: '#243f6e',
+      allowOverlap: false
+    },
+
+    popupStyle: {
+      className: 'venue-popup',
+      maxWidth: '350px',
+      offset: [0, -22]
+    },
+
+    popupComponent: VenuePopup,
   }
 }))
 
