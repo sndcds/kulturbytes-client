@@ -163,9 +163,9 @@ watch(
       eventLocationRadius,
       eventVenue,
       eventAgeFrom,
-      eventAgeTo
-      // eventDateStart,
-      // eventDateEnd,
+      eventAgeTo,
+      eventDateStart,
+      eventDateEnd,
     ],
     () => reloadEvents(),
     { deep: true }

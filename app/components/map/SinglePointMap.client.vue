@@ -91,7 +91,6 @@ const { initializeLayers } = useMapLibreLayers({
 
 
 async function onMapLoaded(map:MapLibreMapType) {
-  console.log('Map loaded', map)
   await initializeLayers(map)
 }
 </script>

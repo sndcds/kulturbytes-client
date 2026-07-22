@@ -1,4 +1,9 @@
-import { computed, type Ref } from 'vue'
+import {
+    computed,
+    type MaybeRef,
+    unref,
+} from 'vue'
+
 
 interface UseImageUrlOptions {
     width?: number
@@ -7,13 +12,14 @@ interface UseImageUrlOptions {
     quality?: number
 }
 
-export function useImageUrl(
-    sourceUrl: Ref<string | null | undefined>,
+
+export function useOptimizedImageUrl(
+    sourceUrl: MaybeRef<string | null | undefined>,
     options: UseImageUrlOptions = {},
 ) {
 
-    const imageUrl = computed(() => {
-        const url = sourceUrl.value
+    const optimizedImageUrl = computed(() => {
+        const url = unref(sourceUrl)
 
         if (!url) {
             return null
@@ -23,7 +29,7 @@ export function useImageUrl(
     })
 
     return {
-        imageUrl,
+        optimizedImageUrl,
     }
 }
 
@@ -33,16 +39,22 @@ function buildImageUrl(
     options: UseImageUrlOptions,
 ): string {
 
-    const url = new URL(sourceUrl)
+    let url: URL
 
-    if (options.width) {
+    try {
+        url = new URL(sourceUrl)
+    } catch {
+        return sourceUrl
+    }
+
+    if (options.width !== undefined) {
         url.searchParams.set(
             'width',
             String(options.width),
         )
     }
 
-    if (options.height) {
+    if (options.height !== undefined) {
         url.searchParams.set(
             'height',
             String(options.height),
@@ -56,7 +68,7 @@ function buildImageUrl(
         )
     }
 
-    if (options.quality) {
+    if (options.quality !== undefined) {
         url.searchParams.set(
             'quality',
             String(options.quality),

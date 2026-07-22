@@ -6,6 +6,7 @@ import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
 import EventTypesDisplay from '~/components/event/EventTypesDisplay.vue'
 
 const { locale } = useI18n()
+const localePath = useLocalePath()
 
 const props = defineProps<{
   event: EventItem
@@ -15,7 +16,7 @@ const props = defineProps<{
 
 <template>
   <NuxtLink
-      :to="`/event/${event.uuid}/${event.date_slug}`"
+      :to="localePath(`/event/${event.uuid}/${event.date_slug}`)"
       class="kbts-events-view-card"
   >
     <div class="kbts-events-view-grid-image">

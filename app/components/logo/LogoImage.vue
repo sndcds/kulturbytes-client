@@ -1,16 +1,17 @@
 <template>
+
   <div
-      v-if="src"
       class="logo-container"
       :style="containerStyle"
   >
     <component
+        v-if="themeLogoSrc"
         :is="linkUrl ? 'a' : 'div'"
         v-bind="linkAttrs"
         class="logo-inner"
     >
       <img
-          :src="src"
+          :src="optimizedImageUrl"
           :alt="alt"
           class="logo-image"
           :class="{ loaded: isLoaded }"
@@ -21,96 +22,91 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
-
-import { useLogoUrl } from '@/composables/useLogoUrl'
-import { useImageUrl } from '@/composables/useImageUrl'
+import { useThemeLogoSrc } from '@/composables/useThemeLogoSrc'
+import { useOptimizedImageUrl } from '@/composables/useOptimizedImageUrl'
 import { useImageSize } from '@/composables/useImageSize'
+
 
 const DEFAULT_MAX_PIXELS = 320 * 40
 
 interface Props {
-  logoUrl?: string | null
-  lightThemeLogoUrl?: string | null
-  darkThemeLogoUrl?: string | null
-
+  mainSrc?: string | null
+  lightSrc?: string | null
+  darkSrc?: string | null
   theme: string
-
   alt?: string
-
   maxWidth?: number
   maxHeight?: number
   pixelCount?: number
-
   type?: string
   quality?: number
-
   linkUrl?: string | null
   linkTarget?: string
   rel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  logoUrl: null,
-  lightThemeLogoUrl: null,
-  darkThemeLogoUrl: null,
-
+  mainSrc: null,
+  lightSrc: null,
+  darkSrc: null,
   alt: 'Logo',
-
   maxWidth: 240,
   maxHeight: 100,
   pixelCount: DEFAULT_MAX_PIXELS,
-
   type: 'png',
   quality: 80,
-
   linkUrl: null,
   linkTarget: '_self',
   rel: 'noopener noreferrer',
 })
 
 const {
-  logoUrl,
-  lightThemeLogoUrl,
-  darkThemeLogoUrl,
+  mainSrc,
+  lightSrc,
+  darkSrc,
   theme,
 } = toRefs(props)
 
-
-// Select correct logo for theme
-const {
-  logoUrl: selectedLogo,
-} = useLogoUrl({
-  logoURL: logoUrl,
-  lightThemeLogoURL: lightThemeLogoUrl,
-  darkThemeLogoURL: darkThemeLogoUrl,
+/**
+ * Select correct logo according to theme
+ */
+const { themeLogoSrc } = useThemeLogoSrc({
+  mainSrc,
+  lightSrc,
+  darkSrc,
   theme,
 })
 
-
-// Create optimized image URL
+/**
+ * Create optimized image URL
+ */
 const {
-  imageUrl: src,
-} = useImageUrl(selectedLogo, {
+  optimizedImageUrl,
+} = useOptimizedImageUrl(themeLogoSrc, {
   width: props.maxWidth,
   type: props.type,
   quality: props.quality,
 })
 
-
-// Calculate rendered size + loading state
+/**
+ * Calculate display size and loading state
+ */
 const {
   containerStyle,
   isLoaded,
   onLoad,
-} = useImageSize(src, {
+} = useImageSize(optimizedImageUrl, {
   maxWidth: props.maxWidth,
   maxHeight: props.maxHeight,
   pixelCount: props.pixelCount,
 })
 
-
+/**
+ * Optional external link
+ */
 const linkAttrs = computed(() =>
     props.linkUrl
         ? {
@@ -150,11 +146,11 @@ const linkAttrs = computed(() =>
   object-fit: contain;
   object-position: center;
 
-  opacity: 0;
+  opacity: 1;
   transition: opacity .2s ease;
 }
 
-.logo-image.loaded {
-  opacity: 1;
+.logo-image:not(.loaded) {
+  opacity: 0;
 }
 </style>

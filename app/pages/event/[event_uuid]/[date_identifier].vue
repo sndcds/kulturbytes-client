@@ -64,7 +64,7 @@
         <IconTextLink
             v-if="event.source_link"
             key="org-web-link"
-            :url="ensureHttpOrHttps(event.source_link)"
+            :url="localePath(ensureHttpOrHttps(event.source_link))"
             type="web"
             size="22px"
             class="kbts-event-view-link"
@@ -73,7 +73,7 @@
         <IconTextLink
             v-for="(link, index) in event.event_links"
             :key="index"
-            :url="ensureHttpOrHttps(link.url!)"
+            :url="localePath(ensureHttpOrHttps(link.url!))"
             :type="link.type"
             :label="link.label"
             size="22px"
@@ -119,7 +119,7 @@
         </template>
       </div>
 
-      <EventOrgLogo
+      <EventOrganizerLogo
           v-if="eventOrg"
           class="kbts-event-view-organizer-logo"
           :event-org="eventOrg"
@@ -300,7 +300,7 @@ import { imageUrl } from '~/utils/image'
 import { formatPrice } from '~/utils/formatPrice'
 import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
 import ActionIcon from '~/components/ui/ActionIcon.vue'
-import EventOrgLogo from '~/components/event/EventOrgLogo.vue'
+import EventOrganizerLogo from '~/components/event/EventOrganizerLogo.vue'
 import type { EventDate, Event, EventResponse } from '~/types/event'
 import EventAllDatesList from '~/components/event/EventAllDatesList.vue'
 import IconTextLink from '~/components/ui/IconTextLink.vue'
@@ -319,9 +319,11 @@ import {
   Coins
 } from '@lucide/vue'
 
-const { renderMarkdown } = useMarkdown()
 const route = useRoute()
 const { locale, t } = useI18n()
+const localePath = useLocalePath()
+
+const { renderMarkdown } = useMarkdown()
 const { isDownloadingIcs, downloadIcs } = useIcsDownload()
 
 const eventUuid = route.params.event_uuid as string

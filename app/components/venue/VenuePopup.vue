@@ -12,17 +12,21 @@
 
     <div class="action">
       <a
-          v-if="venue.web_link"
           class="link"
+          v-if="venue.web_link"
           :href="venue.web_link"
           target="_blank"
           rel="noopener noreferrer"
       >
         Website
       </a>
-      <NuxtLink class="link">
+
+      <a
+          class="link"
+          :href="localePath(`/venue/${venue.uuid}`)"
+      >
         Details
-      </NuxtLink>
+      </a>
     </div>
 
   </div>
@@ -31,6 +35,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+const localePath = useLocalePath()
 
 const props = defineProps<{
   feature?: any
@@ -47,6 +52,7 @@ const venue = computed(() =>
   display: flex;
   flex-direction: column;
   min-width: 240px;
+  pointer-events: auto;
 
   .content {
     padding: .5rem 1rem;

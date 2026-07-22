@@ -19,11 +19,11 @@
           {{ t('nav.events') }}
         </NuxtLink>
 
-        <NuxtLink :to="localePath('/venues/venues')">
+        <!--NuxtLink :to="localePath('/venues/venues')"> TODO: ?
           {{ t('nav.venues') }}
-        </NuxtLink>
+        </NuxtLink-->
 
-        <NuxtLink :to="localePath('/venues/map')">
+        <NuxtLink :to="localePath('/venues/venue-map')">
           {{ t('nav.map') }}
         </NuxtLink>
 
@@ -64,7 +64,7 @@
               aria-label="Reset filters"
               @click="resetFilters"
           >
-            <X :size="18"/>
+            <FunnelX :size="18"/>
           </button>
         </div>
 
@@ -121,7 +121,7 @@
 import AppLogo from '~/components/ui/AppLogo.vue'
 import EventFilters from '~/components/filters/EventFilters.vue'
 import VenueFilters from '~/components/filters/VenueFilters.vue'
-import { SlidersHorizontal, X } from '@lucide/vue'
+import { SlidersHorizontal, FunnelX } from '@lucide/vue'
 import { useFiltersStore } from "~/stores/filtersStore";
 
 const { t } = useI18n()

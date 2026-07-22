@@ -9,7 +9,7 @@
         :key="date.uuid"
         class="kbts-event-view-date-row"
         :class="{ 'is-current': date.uuid === currentDate?.uuid }"
-        :to="`/event/${date.event_uuid}/${date.slug}`"
+        :to="localePath(`/event/${date.event_uuid}/${date.slug}`)"
     >
       <span>{{ formatDate(locale, date.start_date ?? '', 'numeric') }}</span>
       <span>{{ formatTime(locale, date.start_time) }}</span>
@@ -35,6 +35,7 @@ import { getStartDateTime } from '@/utils/date'
 import {formatDate, formatTime} from '@/utils/formatDate'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
 
+const localePath = useLocalePath()
 const { t, locale } = useI18n({ useScope: 'global' })
 
 const props = withDefaults(defineProps<{
