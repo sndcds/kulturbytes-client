@@ -41,6 +41,7 @@
 .kbts-event-view-venue { order: 3; }
 .kbts-event-view-organizer { order: 4; }
 .kbts-event-view-organizer-logo { order: 3; }
+.kbts-event-view-venue-logo { order: 3; }
 .kbts-event-view-content { order: 6; }
 .kbts-event-view-links { order: 7; }
 .kbts-event-view-price { order: 8; }
@@ -88,6 +89,7 @@
   font-size: 3rem;
   font-weight: 300;
   margin: 0;
+  margin-top: 2rem;
 }
 
 .kbts-event-view-subtitle {
@@ -345,6 +347,7 @@
 
   .kbts-event-view-organizer { order: 5; }
   .kbts-event-view-organizer-logo { order: 6; }
+  .kbts-event-view-venue-logo { order: 6; }
   .kbts-event-view-links { order: 7; }
   .kbts-event-view-price { order: 8; }
   .kbts-event-view-participation { order: 9; }

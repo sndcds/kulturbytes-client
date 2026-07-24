@@ -124,3 +124,21 @@ a {
         color: white;
     }
 }
+
+.kbts-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem;
+    padding: 0;
+    padding-left: .5rem;
+    margin: 0;
+    list-style: none;
+
+    &__item {
+        display: inline-flex;
+        align-items: center;
+        font-size: .875rem;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+}

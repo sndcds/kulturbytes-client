@@ -37,7 +37,17 @@
         <EventTypesDisplay
             v-if="event?.event_types"
             :event-types="event?.event_types ?? []"
-            style="margin-bottom: 2rem;"
+            style="margin-bottom: .5rem;"
+        />
+
+        <TagList
+            :tags="event.tags"
+            style="margin-bottom: .5rem;"
+        />
+
+        <LanguageList
+            :languages="event.languages"
+            style="margin-bottom: .5rem;"
         />
 
         <h1 class="kbts-event-view-title">
@@ -98,6 +108,21 @@
       />
 
       <!-- Venue -->
+
+      <LogoImage
+          v-if="event.logo_mode & 0x2 && venueLogos"
+          class="kbts-event-view-venue-logo"
+          :main-src="venueLogos.main_logo?.url"
+          :light-src="venueLogos.light_theme_logo?.url"
+          :dark-src="venueLogos.dark_theme_logo?.url"
+          :theme="themeStore.theme"
+          :link-url="event.date.venue_web_link"
+          :pixel-count="240 * 80"
+          :max-width="240"
+          :max-height="120"
+          link-target="_blank"
+      />
+
       <div class="kbts-event-view-venue kbts-flex-col">
         <span class="kbts-event-view-label">{{ t('event.venue') }}</span>
         <span>{{ event.date.venue_name }}</span>
@@ -119,30 +144,40 @@
         </template>
       </div>
 
-      <EventOrganizerLogo
-          v-if="eventOrg"
-          class="kbts-event-view-organizer-logo"
-          :event-org="eventOrg"
-      />
 
       <!-- Organizer -->
+
+      <LogoImage
+          v-if="event.logo_mode & 0x1 && eventOrganizer?.logos"
+          class="kbts-event-view-organizer-logo"
+          :main-src="eventOrganizer.logos.main_logo?.url"
+          :light-src="eventOrganizer.logos.light_theme_logo?.url"
+          :dark-src="eventOrganizer.logos.dark_theme_logo?.url"
+          :theme="themeStore.theme"
+          :link-url="eventOrganizer?.webLink"
+          :pixel-count="120 * 80"
+          :max-width="240"
+          :max-height="120"
+          link-target="_blank"
+      />
+
       <div
-          v-if="eventOrg?.name"
+          v-if="eventOrganizer?.name"
           class="kbts-event-view-organizer"
        >
         <span class="kbts-event-view-label">
           {{ t('event.organizer') }}
         </span><br>
         <a
-            v-if="eventOrg?.webLink"
-            :href="eventOrg.webLink"
+            v-if="eventOrganizer?.webLink"
+            :href="eventOrganizer.webLink"
             target="_blank"
             rel="noopener noreferrer"
         >
-          {{ eventOrg.name }} ↗
+          {{ eventOrganizer.name }} ↗
         </a>
         <span v-else>
-          {{ eventOrg.name }}
+          {{ eventOrganizer.name }}
         </span>
       </div>
 
@@ -261,7 +296,8 @@
         </ul>
       </Accordion>
 
-      <div class="kbts-event-view-share kbts-flex-col">
+      <div class="kbts-event-view-share">
+        <div class="kbts-flex-col">
         <ActionIcon
             v-if="event.uuid"
             :label="t('download_ics')"
@@ -274,7 +310,15 @@
             :icon="CopySlash"
             @click="onCopyLink"
         />
+        </div>
+
+        <FacebookShareButton
+            :quote="event.title"
+            hashtag="#kulturbytes"
+            style="margin-top: .5rem;"
+        />
       </div>
+
 
       <SinglePointMap
           v-if="event.date.venue_lat && event.date.venue_lon"
@@ -300,12 +344,15 @@ import { imageUrl } from '~/utils/image'
 import { formatPrice } from '~/utils/formatPrice'
 import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
 import ActionIcon from '~/components/ui/ActionIcon.vue'
-import EventOrganizerLogo from '~/components/event/EventOrganizerLogo.vue'
 import type { EventDate, Event, EventResponse } from '~/types/event'
 import EventAllDatesList from '~/components/event/EventAllDatesList.vue'
 import IconTextLink from '~/components/ui/IconTextLink.vue'
 import Accordion from '~/components/ui/Accordion.vue'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
+import TagList from '~/components/ui/TagList.vue'
+import LanguageList from '~/components/ui/LanguageList.vue'
+import FacebookShareButton from '~/components/ui/FacebookShareButton.vue'
+import LogoImage  from '~/components/ui/LogoImage'
 import {
   Info,
   CalendarArrowDown,
@@ -318,10 +365,12 @@ import {
   Link,
   Coins
 } from '@lucide/vue'
+import { useThemeStore } from "~/stores/themeStore";
 
 const route = useRoute()
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
+const themeStore = useThemeStore()
 
 const { renderMarkdown } = useMarkdown()
 const { isDownloadingIcs, downloadIcs } = useIcsDownload()
@@ -365,6 +414,11 @@ const imageCredit = computed(() => {
 
   return `${t('event.image_by')}: ${creditParts.join(', ')}`
 })
+
+const venueLogos = computed(() => {
+  return event.value?.date?.venue_logos
+})
+
 
 const visibleTicketFlags = computed(() =>
     (event.value?.ticket_flags ?? []).filter(flag =>
@@ -440,7 +494,7 @@ const descriptionHtml = computed(() =>
         : ''
 )
 
-const eventOrg = computed(() => {
+const eventOrganizer = computed(() => {
   if (!event.value) return null
   return {
     name: event.value.org_name,

@@ -14,6 +14,8 @@
     "time": "{time}",
     "range": "{start} – {end}"
   },
+  "address": "Address",
+  "organization": "Organization",
   "filter": {
     "button_label": "Filter"
   },
@@ -102,6 +104,9 @@
     "age_from": "from {age} years",
     "age_until": "up to {age} years",
     "max_attendees": "Up to {count} participants"
+  },
+  "venue": {
+    "image_by": "Photo"
   },
   "accessibility": {
     "title": "Accessibility",

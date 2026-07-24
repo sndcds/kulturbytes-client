@@ -173,6 +173,7 @@ useSeoMeta({
 
 <template>
   <div class="region-events">
+
     <header>
       <h1>
         Events in {{ region }}

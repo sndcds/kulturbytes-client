@@ -14,6 +14,8 @@
     "time": "{time} Uhr",
     "range": "{start} – {end} Uhr"
   },
+  "address": "Adresse",
+  "organization": "Organisation",
   "filter": {
     "button_label": "Filter"
   },
@@ -103,6 +105,9 @@
     "age_until": "bis {age} Jahre",
     "max_attendees": "max. {count} Personen"
   },
+  "venue": {
+    "image_by": "Bild"
+  },
   "accessibility": {
     "title": "Barriereinfos",
     "topic": {
@@ -138,5 +143,21 @@
     "screen_reader_support": "Unterstützung für Bildschirmleser",
     "keyboard_navigation": "Tastaturnavigation",
     "voice_command_support": "Sprachsteuerung Unterstützung"
+  },
+  "geo" : {
+    "country": {
+      "deutschland": {
+        "name": "Deutschland",
+        "choose_state": "Wähle ein Bundesland"
+      },
+      "danmark": {
+        "name": "Dänemark",
+        "choose_state": "Wähle eine Region"
+      }
+    },
+    "list_by_countries": "Veranstaltungen und Orte nach Ländern",
+    "countries_description": "Durchsuche kulturbytes nach Veranstaltungen und Orten in verschiedenen Ländern. Von dort aus gelangst du zu Regionen und lokalen Kulturveranstaltungen.",
+    "countries": "Länder",
+    "choose_country": "Wähle ein Land"
   }
 }

@@ -1,0 +1,53 @@
+.kbts-geolist-layout {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.kbts-geolist-content {
+    max-width: 1024px;
+    h1, h2, h3 {
+        font-size: 2.4rem;
+        font-weight: 300;
+        margin: 0;
+        margin-bottom: 1rem;
+    }
+    h2 {
+        font-size: 1.8rem;
+    }
+    p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin-bottom: 2rem;
+    }
+}
+
+.kbts-geolist-list {
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    ul {
+        background: palegreen;
+    }
+
+    li {
+        display: block;
+        padding: .4rem 1rem;
+        border-radius: .5rem;
+        color: var(--kbts-fg);
+        background: var(--kbts-bg);
+        text-decoration: none;
+        transition:
+                background .2s ease,
+                transform .2s ease;
+
+        &:hover {
+            transform: translateX(.25rem);
+            color: var(--kbts-fg);
+            background: var(--kbts-card-bg);
+        }
+    }
+}

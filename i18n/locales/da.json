@@ -14,6 +14,8 @@
     "time": "kl. {time}",
     "range": "kl. {start} – {end}"
   },
+  "address": "Adresse",
+  "organization": "Organisation",
   "filter": {
     "button_label": "Filter"
   },
@@ -102,6 +104,9 @@
     "age_from": "fra {age} år",
     "age_until": "op til {age} år",
     "max_attendees": "Maks. {count} deltagere"
+  },
+  "venue": {
+    "image_by": "Foto"
   },
   "accessibility": {
     "title": "Tilgængelighed",

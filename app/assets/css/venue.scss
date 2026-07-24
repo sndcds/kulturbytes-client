@@ -1,0 +1,144 @@
+.kbts-venue-view-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 2rem;
+  row-gap:2rem;
+  a {
+    font-weight: 400;
+  }
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kbts-venue-view-layout-left {
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kbts-venue-view-layout-right {
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kbts-venue-view-image { order: 1; }
+.kbts-venue-view-content { order: 2; }
+
+.kbts-venue-view-logo-image {
+  margin-top: 1rem;
+}
+
+.kbts-venue-view-content {
+  margin-top: 2rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.kbts-venue-view-label {
+  font-weight: 300;
+  color: #999;
+}
+
+.kbts-venue-view-image {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 800px;
+  aspect-ratio: 16 / 9;
+  overflow: visible;
+}
+
+.kbts-venue-view-image-caption {
+  font-size: 0.8rem;
+  padding-left: 0.5rem;
+}
+
+.kbts-venue-view-title {
+  font-size: 3rem;
+  font-weight: 300;
+  margin: 0;
+  margin-top: 2rem;
+}
+
+.kbts-venue-view-subtitle {
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin: 0;
+  margin-top: 1rem;
+}
+
+.kbts-venue-description {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  margin: 0;
+  margin-top: 2rem;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  p {
+    font-weight: 400;
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  :deep(p) {
+    margin-bottom: 1rem;
+  }
+
+  :deep(a) {
+    text-decoration: underline;
+  }
+
+  blockquote {
+    margin: 0;
+    padding-left: 0.8rem;
+    border-left: 0.2rem solid var(--kbts-blockquote-deco);
+  }
+}
+
+@media (max-width: 960px) {
+  .kbts-venue-view-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .kbts-venue-view-layout-left,
+  .kbts-venue-view-layout-right {
+    display: contents;
+  }
+
+  .kbts-venue-view-image {
+    max-width: 100%;
+  }
+
+  .kbts-venue-view-map {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .kbts-venue-view-image { order: 1; }
+  .kbts-venue-view-date { order: 2; }
+  .kbts-venue-view-content { order: 4; }
+  .kbts-venue-view-map { order: 14; }
+}
