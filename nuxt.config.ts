@@ -62,7 +62,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: 'http://localhost:9090/' // http://localhost:9090/, https://api.kulturbytes.de/
+      apiUrl: 'https://api.kulturbytes.de/' // 'http://localhost:9090/'
     }
   },
 })

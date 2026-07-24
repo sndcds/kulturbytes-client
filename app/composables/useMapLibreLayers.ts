@@ -180,10 +180,8 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
 
     const addCursor = (
         map: MapLibreMap,
-        layerName: string
+        layerId: string
     ) => {
-
-        const layerId = `${layerName}-unclustered`
 
         map.on(
             'mouseenter',
@@ -200,6 +198,63 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
                 map.getCanvas().style.cursor = ''
             }
         )
+    }
+
+    const addClusterZoom = (
+        map: MapLibreMap,
+        layerName: string
+    ) => {
+
+        const zoomToCluster = async (event: any) => {
+            const feature =
+                event.features?.[0]
+
+            if (!feature || feature.geometry.type !== 'Point') {
+                return
+            }
+
+            const clusterId =
+                feature.properties?.cluster_id
+
+            if (clusterId === undefined) {
+                return
+            }
+
+            const source =
+                map.getSource(layerName) as GeoJSONSource | undefined
+
+            if (!source) {
+                return
+            }
+
+            const zoom =
+                await source.getClusterExpansionZoom(
+                    Number(clusterId)
+                )
+
+            removePopup()
+
+            map.easeTo({
+                center: feature.geometry.coordinates as [number, number],
+                zoom,
+            })
+        }
+
+        for (const layerId of [
+            `${layerName}-clusters`,
+            `${layerName}-cluster-count`
+        ]) {
+            map.on(
+                'click',
+                layerId,
+                zoomToCluster
+            )
+
+            addCursor(
+                map,
+                layerId
+            )
+        }
     }
 
     const addLayer = async (
@@ -392,7 +447,11 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
             })
         }
 
-        addCursor(map, name)
+        if (config.cluster) {
+            addClusterZoom(map, name)
+        }
+
+        addCursor(map, `${name}-unclustered`)
         addPopup(map, name, config)
     }
 
