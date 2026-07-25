@@ -81,27 +81,33 @@
     </main>
 
     <nav
-        v-if="totalPages > 1"
+        v-if="page > 1 || hasNextPage"
         aria-label="Event pages"
+        class="event-list__pagination"
     >
       <NuxtLink
           v-if="page > 1"
-          :to="pageLink(page - 1)"
+          :to="firstPageLink"
       >
-        Previous
+        First page
       </NuxtLink>
 
       <span>
-        Page {{ page }} of {{ totalPages }}
+        Page {{ page }}
       </span>
 
       <NuxtLink
-          v-if="page < totalPages"
-          :to="pageLink(page + 1)"
+          v-if="hasNextPage"
+          :to="nextPageLink"
+          rel="next"
       >
         Next
       </NuxtLink>
     </nav>
+
+    <p v-if="pending">
+      Loading events...
+    </p>
 
     <p v-if="error">
       Unable to load events.
@@ -113,7 +119,9 @@
 
 <script setup lang="ts">
 import { imageUrl } from '~/utils/image'
-import type { GeoListRegion, GeoListRegionResponse } from '~/types/geo'
+import type {
+  CalendarEventsResponse
+} from '~/types/calendarEvent'
 
 const route = useRoute()
 const { $api } = useNuxtApp()
@@ -122,24 +130,71 @@ const localePath = useLocalePath()
 
 const PAGE_SIZE = 20
 
-const regionName = computed(() => regionData.value.data?.region?.name)
 const start = new Date().toISOString().slice(0, 10)
 
-const page = computed(() => {
-  const value = Number(route.query.page ?? 1)
-  return value > 0 ? value : 1
-})
+interface GeoListRegionResponse {
+  data: {
+    region?: {
+      name?: string
+    }
+  }
+}
 
-const offset = computed(() =>
-    (page.value - 1) * PAGE_SIZE
-)
+interface TypeSummaryResponse {
+  data: {
+    summary: {
+      type_id: number
+      count: number
+    }[]
+    total_event_count: number
+  }
+}
 
 const countrySlug = computed(() => route.params.country as string)
 const stateSlug = computed(() => route.params.state as string)
 const regionSlug = computed(() => route.params.region as string)
+const geolistRegion = computed(() =>
+    `${countrySlug.value},${stateSlug.value},${regionSlug.value}`
+)
 
-async function fetchRegion() {
-  return $api(`/api/geolist/region/${countrySlug.value}/${stateSlug.value}/${regionSlug.value}`)
+function stringQueryParam(name: string) {
+  const value = route.query[name]
+
+  if (Array.isArray(value)) {
+    return value[0] ?? ''
+  }
+
+  return value ? String(value) : ''
+}
+
+const currentCursor = computed(() => {
+  const dateUuid = stringQueryParam('last_event_date_uuid')
+  const startAt = stringQueryParam('last_event_start_at')
+
+  if (!dateUuid || !startAt) {
+    return null
+  }
+
+  return {
+    date_uuid: dateUuid,
+    start_at: startAt
+  }
+})
+
+const page = computed(() => {
+  const value = Number(route.query.page ?? 1)
+
+  if (!currentCursor.value) {
+    return 1
+  }
+
+  return value > 0 ? value : 1
+})
+
+async function fetchRegion(): Promise<GeoListRegionResponse> {
+  return $api<GeoListRegionResponse>(
+      `/api/geolist/region/${countrySlug.value}/${stateSlug.value}/${regionSlug.value}`
+  )
 }
 
 const { data: regionData } = await useAsyncData<GeoListRegionResponse>(
@@ -155,33 +210,9 @@ const { data: regionData } = await useAsyncData<GeoListRegionResponse>(
     }
 )
 
-/*
- * Types
- */
-
-interface TypeSummaryResponse {
-  data: {
-    summary: {
-      type_id: number
-      count: number
-    }[]
-    total_event_count: number
-  }
-}
-
-
-interface Event {
-  uuid: string
-  date_slug: string
-  title: string
-  subtitle: string
-  summary: string
-  image_path: string
-  start_date: string
-  start_time: string
-  venue_name: string
-  venue_city: string
-}
+const regionName = computed(() =>
+    regionData.value?.data?.region?.name
+)
 
 /*
  * Fetch summary
@@ -195,21 +226,13 @@ const {
         $api('/api/events/type-summary', {
           query: {
             start,
-            geolist_region: `${countrySlug.value},${stateSlug.value},${regionSlug.value}`,
+            geolist_region: geolistRegion.value,
           }
         }),
     {
-      watch: [countrySlug, stateSlug, regionName]
+      watch: [countrySlug, stateSlug, regionSlug]
     }
 )
-/*
-  country: country.value,
-  region: region.value
- */
-
-
-
-
 
 /*
  * Fetch events
@@ -217,20 +240,41 @@ const {
 
 const {
   data: eventsData,
-  error
-} = await useAsyncData<EventsResponse>(
+  error,
+  pending
+} = await useAsyncData<CalendarEventsResponse>(
     () =>
-        `events-${countrySlug.value}-${stateSlug.value}-${regionSlug.value}-${page.value}`,
+        [
+          'events',
+          countrySlug.value,
+          stateSlug.value,
+          regionSlug.value,
+          currentCursor.value?.date_uuid ?? 'start',
+          currentCursor.value?.start_at ?? 'start'
+        ].join('-'),
     () =>
-        $api('/api/events', {
-          query: {
-            geolist_region: `${countrySlug.value},${stateSlug.value},${regionSlug.value}`,
-            offset: offset.value,
-            limit: PAGE_SIZE
-          }
-        }),
+        $api<CalendarEventsResponse>(
+            '/api/events',
+            {
+              query: {
+                geolist_region: geolistRegion.value,
+                limit: PAGE_SIZE,
+                ...(currentCursor.value
+                    ? {
+                      last_event_date_uuid: currentCursor.value.date_uuid,
+                      last_event_start_at: currentCursor.value.start_at
+                    }
+                    : {})
+              }
+            }
+        ),
     {
-      watch: [page, countrySlug, stateSlug, regionSlug]
+      watch: [
+        countrySlug,
+        stateSlug,
+        regionSlug,
+        currentCursor
+      ]
     }
 )
 
@@ -238,27 +282,60 @@ const events = computed(() =>
     eventsData.value?.data.events ?? []
 )
 
+const nextCursor = computed(() => {
+  const data = eventsData.value?.data
+
+  if (!data?.last_event_date_uuid || !data.last_event_start_at) {
+    return null
+  }
+
+  return {
+    date_uuid: data.last_event_date_uuid,
+    start_at: data.last_event_start_at
+  }
+})
+
+const hasNextPage = computed(() =>
+    events.value.length === PAGE_SIZE && !!nextCursor.value
+)
+
+const firstPageLink = computed(() =>
+    localePath({
+      path: `/eventlist/${countrySlug.value}/${stateSlug.value}/${regionSlug.value}`
+    })
+)
+
+const nextPageLink = computed(() => {
+  if (!nextCursor.value) {
+    return firstPageLink.value
+  }
+
+  return localePath({
+    path: `/eventlist/${countrySlug.value}/${stateSlug.value}/${regionSlug.value}`,
+    query: {
+      page: page.value + 1,
+      last_event_date_uuid: nextCursor.value.date_uuid,
+      last_event_start_at: nextCursor.value.start_at
+    }
+  })
+})
+
+useHead(() => ({
+  link: [
+    ...(hasNextPage.value
+        ? [
+          {
+            rel: 'next',
+            href: nextPageLink.value
+          }
+        ]
+        : [])
+  ]
+}))
+
 const totalEvents = computed(() =>
     summaryData.value?.data.total_event_count ?? 0
 )
-
-const totalPages = computed(() =>
-    Math.ceil(totalEvents.value / PAGE_SIZE)
-)
-
-/*
- * Pagination
- */
-
-function pageLink(pageNumber: number) {
-  return localePath({
-    path: `/eventlist/${countrySlug.value}/${stateSlug.value}/${regionSlug.value}`,
-    query:
-        pageNumber > 1
-            ? { page: pageNumber }
-            : undefined
-  })
-}
 
 /*
  * SEO
