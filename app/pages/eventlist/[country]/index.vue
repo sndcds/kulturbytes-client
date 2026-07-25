@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { GeoListState, GeoListStatesResponse } from '~/types/geo'
+import type { GeoListState, GeoListStatesResponse } from '~/types/geolist'
 
 
 const route = useRoute()

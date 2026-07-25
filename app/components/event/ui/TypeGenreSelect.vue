@@ -37,17 +37,17 @@ const selectedTypeId = computed({
     return eventTypeIds.value[0] ?? null
   },
 
-  set(id: string | null) {
+  set(id: number | null) {
     eventTypeIds.value = id ? [id] : []
   }
 })
 
 const selectedGenreIds = computed({
-  get() {
-    return eventGenreIds.value
+  get(): number[] {
+    return eventGenreIds.value ?? []
   },
 
-  set(ids: string[]) {
+  set(ids: number[]) {
     eventGenreIds.value = ids
   }
 })
@@ -75,7 +75,7 @@ const visibleTypes = computed(() => {
   )
 })
 
-function selectType(id: string) {
+function selectType(id: number) {
   if (selectedTypeId.value === id) {
     // clear type
     selectedTypeId.value = null
@@ -88,7 +88,7 @@ function selectType(id: string) {
   }
 }
 
-function toggleGenre(id: string) {
+function toggleGenre(id: number) {
   if (selectedGenreIds.value.includes(id)) {
     selectedGenreIds.value =
         selectedGenreIds.value.filter(
@@ -102,7 +102,7 @@ function toggleGenre(id: string) {
   }
 }
 
-function isSelected(id: string) {
+function isSelected(id: number) {
   return selectedGenreIds.value.includes(id)
 }
 
@@ -124,11 +124,11 @@ const genreCountMap = computed(() =>
     )
 )
 
-function getTypeCount(id: string) {
+function getTypeCount(id: number) {
   return typeCountMap.value[Number(id)] ?? 0
 }
 
-function getGenreCount(id: string) {
+function getGenreCount(id: number) {
   return genreCountMap.value[Number(id)] ?? 0
 }
 

@@ -2,7 +2,8 @@ import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useThemeStore } from '~/stores/themeStore'
 import { useMapLibreLayers } from '~/composables/useMapLibreLayers'
 import type { MapLayerConfig } from '~/composables/useMapLibreLayers'
-
+import type { LngLatLike } from 'maplibre-gl'
+import type { Map as MapLibreMap } from 'maplibre-gl'
 
 interface Props {
     layers: Record<string, MapLayerConfig>
@@ -13,15 +14,6 @@ interface Props {
     styleLight?: string
     styleDark?: string
 }
-
-const props = withDefaults(
-    defineProps<Props>(),
-    {
-        center: () => [9.43,54.78],
-        zoom: 12,
-        height: '100%'
-    }
-)
 
 export function useMapLibre(
     props: Props,
@@ -48,9 +40,7 @@ export function useMapLibre(
          * Important:
          * use default export, not module namespace
          */
-        const maplibregl = await import('maplibre-gl').then(
-            m => m.default
-        )
+        const maplibregl = await import('maplibre-gl')
 
         layersApi =
             useMapLibreLayers(

@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useEventTypeStore } from '~/stores/eventTypesStore'
+import { type EventType } from '~/types/eventItem'
 
 const { t, locale } = useI18n()
 const eventTypeStore = useEventTypeStore()
@@ -23,13 +24,6 @@ const eventTypeStore = useEventTypeStore()
 onMounted(() => {
   eventTypeStore.fetchTypes()
 })
-
-interface EventType {
-  type_id: number
-  type_name: string
-  genre_id: number
-  genre_name: string
-}
 
 const props = withDefaults(
     defineProps<{
@@ -51,14 +45,14 @@ const groupedTypes = computed(() => {
 
   for (const item of props.eventTypes) {
     const type = eventTypeStore.getType(
-        String(item.type_id),
+        item.type_id,
         locale.value
     )
 
     const genre = props.showGenres && item.genre_id
         ? eventTypeStore.getGenre(
-            String(item.type_id),
-            String(item.genre_id),
+            item.type_id,
+            item.genre_id,
             locale.value
         )
         : null
@@ -89,13 +83,13 @@ const groupedTypes = computed(() => {
 const labels = computed(() => {
   return props.eventTypes.map(item => {
     const type = eventTypeStore.getType(
-        String(item.type_id),
+        item.type_id,
         locale.value
     )
     const genre = item.genre_id
         ? eventTypeStore.getGenre(
-            String(item.type_id),
-            String(item.genre_id),
+            item.type_id,
+            item.genre_id,
             locale.value
         )
         : null

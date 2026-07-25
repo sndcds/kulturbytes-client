@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { useFiltersStore } from '~/stores/filtersStore'
-import type { CalendarEventsResponse } from '~/types/calendarEvent'
+import type { CalendarEvent, CalendarEventsResponse } from '~/types/calendarEvent'
 import { debounce } from '~/utils/debounce'
 
 const PAGE_SIZE = 20

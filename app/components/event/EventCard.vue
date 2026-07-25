@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Heart } from '@lucide/vue'
 import { imageUrl } from '~/utils/image'
-import { type EventItem } from '~/types/eventItem'
+import { type CalendarEvent } from '~/types/calendarEvent'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
 import EventTypesDisplay from '~/components/event/EventTypesDisplay.vue'
 
@@ -9,7 +9,7 @@ const { locale } = useI18n()
 const localePath = useLocalePath()
 
 const props = defineProps<{
-  event: EventItem
+  event: CalendarEvent
 }>()
 </script>
 

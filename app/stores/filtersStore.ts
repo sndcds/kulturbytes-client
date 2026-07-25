@@ -20,8 +20,8 @@ type EventFilterPayload = {
         radius?: number | null
     }
 
-    types?: string[] | null
-    genres?: string[] | null
+    types?: number[] | null
+    genres?: number[] | null
 
     age?: {
         from?: number | null
@@ -52,8 +52,8 @@ export const useFiltersStore = defineStore(
         const eventVenue = ref('')
         const eventLocationFlag = ref(false)
         const eventLocationRadius = ref<number | null>(3)
-        const eventTypeIds = ref<string[]>([])
-        const eventGenreIds = ref<string[]>([])
+        const eventTypeIds = ref<number[]>([])
+        const eventGenreIds = ref<number[]>([])
         const eventAgeFrom = ref<number | null>(null)
         const eventAgeTo = ref<number | null>(null)
         const eventPriceType = ref<string | null>(null)
@@ -113,8 +113,8 @@ export const useFiltersStore = defineStore(
         })
 
         function setEventTypes(payload: {
-            typeIds: string[],
-            genreIds: string[]
+            typeIds: number[],
+            genreIds: number[]
         }) {
             eventTypeIds.value = payload.typeIds
             eventGenreIds.value = payload.genreIds

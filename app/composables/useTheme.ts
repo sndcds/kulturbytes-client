@@ -1,53 +1,84 @@
 // composables/useTheme.ts
 
-export type ThemeMode = 'light' | 'dark'
+export type ThemeName = 'light' | 'dark'
 
-const THEME_KEY = 'theme'
+const STORAGE_KEY = 'theme'
+const DEFAULT_THEME: ThemeName = 'light'
+
+
+const isValidTheme = (
+    value: unknown
+): value is ThemeName =>
+    value === 'light' ||
+    value === 'dark'
+
 
 export const useTheme = () => {
-    const theme = useState<ThemeMode>('theme', () => 'light')
 
-    const applyTheme = (mode: ThemeMode) => {
-        theme.value = mode
+    const theme = useState<ThemeName>(
+        'app-theme',
+        () => DEFAULT_THEME
+    )
+
+
+    function applyTheme(
+        value: ThemeName
+    ) {
+        theme.value = value
 
         if (import.meta.client) {
-            document.documentElement.dataset.theme = mode
+            document.documentElement.dataset.theme = value
         }
     }
 
-    const loadTheme = () => {
-        if (import.meta.server) return
-
-        const stored = localStorage.getItem(THEME_KEY)
-
-        if (stored === 'light' || stored === 'dark') {
-            applyTheme(stored)
-        } else {
-            applyTheme('light')
-        }
+    function getTheme(): ThemeName {
+        return theme.value
     }
 
-    const saveTheme = () => {
-        if (import.meta.client) {
-            localStorage.setItem(THEME_KEY, theme.value)
+    function saveTheme() {
+        if (!import.meta.client) {
+            return
         }
+        localStorage.setItem(STORAGE_KEY, theme.value)
     }
 
-    const toggleTheme = () => {
-        applyTheme(theme.value === 'dark' ? 'light' : 'dark')
+    function setTheme(value: ThemeName) {
+        applyTheme(value)
         saveTheme()
     }
 
-    const isLight = computed(() => theme.value === 'light')
-    const isDark = computed(() => theme.value === 'dark')
+    function loadTheme() {
+        if (!import.meta.client) {
+            return
+        }
+        const stored = localStorage.getItem(STORAGE_KEY)
+        applyTheme(isValidTheme(stored) ? stored : DEFAULT_THEME)
+    }
+
+    function toggleTheme() {
+        setTheme(theme.value === 'dark' ? 'light' : 'dark')
+    }
+
+    const isLight = computed(
+        () =>
+            theme.value === 'light'
+    )
+
+    const isDark = computed(
+        () =>
+            theme.value === 'dark'
+    )
 
     return {
         theme,
+
         isLight,
         isDark,
-        applyTheme,
-        loadTheme,
-        saveTheme,
+
+        getTheme,
+
+        setTheme,
         toggleTheme,
+        loadTheme,
     }
 }

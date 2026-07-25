@@ -344,7 +344,7 @@ import { imageUrl } from '~/utils/image'
 import { formatPrice } from '~/utils/formatPrice'
 import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
 import ActionIcon from '~/components/ui/ActionIcon.vue'
-import type { EventDate, Event, EventResponse } from '~/types/event'
+import type { EventDate, EventItem, EventResponse } from '~/types/eventItem'
 import EventAllDatesList from '~/components/event/EventAllDatesList.vue'
 import IconTextLink from '~/components/ui/IconTextLink.vue'
 import Accordion from '~/components/ui/Accordion.vue'
@@ -352,7 +352,7 @@ import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
 import TagList from '~/components/ui/TagList.vue'
 import LanguageList from '~/components/ui/LanguageList.vue'
 import FacebookShareButton from '~/components/ui/FacebookShareButton.vue'
-import LogoImage  from '~/components/ui/LogoImage'
+import LogoImage  from '~/components/ui/LogoImage.vue'
 import {
   Info,
   CalendarArrowDown,

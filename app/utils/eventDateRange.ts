@@ -1,4 +1,4 @@
-import type { EventsDateRangeMode } from '@/types/event'
+import type { EventsDateRangeMode } from '~/types/eventItem'
 
 export type PresetDateRangeMode = Exclude<EventsDateRangeMode, 'custom'>
 

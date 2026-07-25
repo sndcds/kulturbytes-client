@@ -3,50 +3,46 @@
 */
 
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { useTheme, type ThemeMode } from '~/composables/useTheme'
+import { computed } from 'vue'
+import { useTheme, type ThemeName } from '~/composables/useTheme'
+
 
 export const useThemeStore = defineStore(
     'theme',
     () => {
 
-        const theme = ref<ThemeMode>('light')
-
         const {
-            applyTheme,
-            saveTheme,
-            getStoredTheme
+            theme,
+            setTheme,
+            toggleTheme,
+            loadTheme,
         } = useTheme()
 
+        const isLight =
+            computed(
+                () =>
+                    theme.value === 'light'
+            )
 
-        function setTheme(newTheme: ThemeMode) {
-            theme.value = newTheme
-
-            if (import.meta.client) {
-                applyTheme(newTheme)
-                saveTheme(newTheme)
-            }
-        }
-
+        const isDark =
+            computed(
+                () =>
+                    theme.value === 'dark'
+            )
 
         function initTheme() {
-            if (import.meta.client) {
-                const stored = getStoredTheme()
-
-                theme.value = stored
-                applyTheme(stored)
-            }
+            loadTheme()
         }
-
 
         return {
             theme,
-            setTheme,
-            initTheme
-        }
 
-    },
-    {
-        persist: true
+            isLight,
+            isDark,
+
+            setTheme,
+            toggleTheme,
+            initTheme,
+        }
     }
 )

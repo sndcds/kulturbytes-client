@@ -104,8 +104,9 @@
 import { computed } from 'vue'
 import { imageUrl } from '~/utils/image'
 import { useThemeStore } from "~/stores/themeStore";
-import LogoImage  from '~/components/ui/LogoImage'
+import LogoImage  from '~/components/ui/LogoImage.vue'
 import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
+import type { Venue, VenueResponse } from '~/types/venue'
 
 
 const route = useRoute()
@@ -117,8 +118,8 @@ const { renderMarkdown } = useMarkdown()
 
 const venueUuid = route.params.venue_uuid as string
 
-async function fetchVenue() {
-  return $api(
+async function fetchVenue(): Promise<VenueResponse> {
+  return await $api<VenueResponse>(
       `/api/venue/${venueUuid}`,
       {
         query: {
@@ -136,7 +137,10 @@ const { data: venueResponse } = await useAsyncData(
     }
 )
 
-const venue = computed(() => venueResponse.value?.data)
+const venue = computed<Venue | undefined>(
+    () => venueResponse.value?.data
+)
+
 const venueImage = computed(() => venue.value?.images?.main_photo)
 const venueLogos = computed(() => {
   return venue.value?.logos

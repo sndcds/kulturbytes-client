@@ -37,7 +37,7 @@
 import type {
   GeoListCountry,
   GeoListCountriesResponse
-} from '~/types/geo'
+} from '~/types/geolist'
 
 
 const route = useRoute()

@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { GeoListRegion, GeoListRegionResponse } from '~/types/geo'
+import type { GeoListRegion, GeoListRegionsResponse } from '~/types/geolist'
 
 
 const route = useRoute()

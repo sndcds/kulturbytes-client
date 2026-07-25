@@ -11,7 +11,7 @@
         class="logo-inner"
     >
       <img
-          :src="optimizedImageUrl"
+          :src="optimizedImageUrl ?? undefined"
           :alt="alt"
           class="logo-image"
           :class="{ loaded: isLoaded }"

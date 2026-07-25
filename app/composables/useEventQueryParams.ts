@@ -102,20 +102,31 @@ export function useEventQueryParams() {
 
                 params.append('lat', position.coords.latitude.toString())
                 params.append('lon', position.coords.longitude.toString())
-                params.append(
-                    'radius',
-                    String(eventLocationRadius.value * 1000)
-                )
+                if (eventLocationRadius.value) {
+                    params.append(
+                        'radius', String(eventLocationRadius.value * 1000)
+                    )
+                }
             } catch (err) {
                 console.error(err)
             }
         }
 
         if (eventTypeIds.value.length === 1) {
-            if (eventGenreIds.value.length) {
-                params.append('genres', eventGenreIds.value.join(','))
-            } else {
-                params.append('event_types', eventTypeIds.value[0])
+            const typeId = eventTypeIds.value[0]
+
+            if (typeId !== undefined) {
+                if (eventGenreIds.value.length) {
+                    params.append(
+                        'genres',
+                        eventGenreIds.value.join(',')
+                    )
+                } else {
+                    params.append(
+                        'event_types',
+                        String(typeId)
+                    )
+                }
             }
         }
 
@@ -125,7 +136,7 @@ export function useEventQueryParams() {
                 : eventAgeFrom.value || eventAgeTo.value
 
         if (age) {
-            params.append('age', age)
+            params.append('age', String(age))
         }
 
         if (eventPriceType.value === 'max_price') {

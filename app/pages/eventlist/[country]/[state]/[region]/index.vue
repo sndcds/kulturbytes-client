@@ -119,9 +119,8 @@
 
 <script setup lang="ts">
 import { imageUrl } from '~/utils/image'
-import type {
-  CalendarEventsResponse
-} from '~/types/calendarEvent'
+import type { CalendarEventsResponse } from '~/types/calendarEvent'
+import type { GeoListRegionResponse } from '~/types/geolist'
 
 const route = useRoute()
 const { $api } = useNuxtApp()
@@ -131,14 +130,6 @@ const localePath = useLocalePath()
 const PAGE_SIZE = 20
 
 const start = new Date().toISOString().slice(0, 10)
-
-interface GeoListRegionResponse {
-  data: {
-    region?: {
-      name?: string
-    }
-  }
-}
 
 interface TypeSummaryResponse {
   data: {
@@ -342,13 +333,10 @@ const totalEvents = computed(() =>
  */
 
 useSeoMeta({
-
   title: () =>
       `Events in ${regionName.value}`,
-
   description: () =>
       `Upcoming concerts, workshops and events in ${regionName.value}.`
-
 })
 
 </script>

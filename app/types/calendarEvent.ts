@@ -1,9 +1,7 @@
 // types/event.ts
 
-export interface CalendarEventType {
-    type_id: number
-    genre_id: number
-}
+import type { EventType } from "./eventItem"
+
 
 export interface CalendarEvent {
     uuid: string
@@ -41,7 +39,7 @@ export interface CalendarEvent {
     org_name: string
 
     categories: number[]
-    event_types: CalendarEventType[]
+    event_types: EventType[]
     languages: string[]
     tags: string[]
 

@@ -3,26 +3,11 @@ import type { Image } from '~/types/image'
 export type EventsDateRangeMode =
     'all' | 'today' | 'tomorrow' | 'weekend' | 'next_week' | 'weekend_after' | 'range'
 
-
-export interface CalendarEvent {
-    uuid: string
-    date_uuid: string
-    date_slug: string
-    image_path: string
-    title: string
-    subtitle: string
-    summary: string
-    start_date: string
-    start_time: string
-    end_date: string
-    end_time: string
-    all_day: boolean
-    space_uuid: string
-    space_name: string
-    venue_uuid: string
-    venue_name: string
-    venue_city: string
-    price_type: string
+export interface EventType {
+    type_id: number
+    genre_id: number
+    type_name?: string // Optional
+    genre_name?: string // Optional
 }
 
 export interface EventDate {
@@ -48,7 +33,23 @@ export interface EventDate {
     venue_state: string
     venue_lon: number
     venue_lat: number
+    venue_web_link: string
     space_name: string
+
+    venue_logos: {
+        main_logo: {
+            uuid: string
+            url: string
+        },
+        light_theme_logo: {
+            uuid: string
+            url: string
+        },
+        dark_theme_logo: {
+            uuid: string
+            url: string
+        }
+    }
 
     accessibility_labels: string[]
 }
@@ -61,12 +62,22 @@ export interface EventItem {
     description: string
     summary: string
     tags: string[]
+    languages: string[]
+    logo_mode: number
 
     org_uuid: string
     org_name: string
     org_web_link: string
     org_logos: {
         main_logo: {
+            uuid: string
+            url: string
+        },
+        light_theme_logo: {
+            uuid: string
+            url: string
+        },
+        dark_theme_logo: {
             uuid: string
             url: string
         }
@@ -76,12 +87,7 @@ export interface EventItem {
         main: Image
     }
 
-    event_types: {
-        type_id: number
-        type_name: string
-        genre_id: number
-        genre_name: string
-    }[]
+    event_types: EventType[]
 
     online_link: string
     meeting_point: string
@@ -130,5 +136,5 @@ export interface EventResponse {
         response_time_ms: number
     }
 
-    data: Event
+    data: EventItem
 }

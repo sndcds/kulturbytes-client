@@ -2,12 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export interface EventGenre {
-    id: string
+    id: number
     name: string
 }
 
 export interface EventType {
-    id: string
+    id: number
     name: string
     genres: EventGenre[]
 }
@@ -22,10 +22,10 @@ export interface EventTypeLookupResponse {
     data: {
         [locale: string]: {
             types: {
-                [typeId: string]: {
+                [typeId: number]: {
                     name: string
                     genres: {
-                        [genreId: string]: string
+                        [genreId: number]: string
                     }
                 }
             }
@@ -70,36 +70,39 @@ export const useEventTypeStore = defineStore('eventTypes', () => {
         }
     }
 
+
     function mapLookup(
         data: EventTypeLookupResponse['data']
     ): Record<string, EventType[]> {
+
         const result: Record<string, EventType[]> = {}
 
         Object.entries(data).forEach(([locale, localeData]) => {
 
-            result[locale] = Object.entries(localeData.types)
-                .map(([typeId, type]) => ({
-                    id: typeId,
-                    name: type.name,
-
-                    genres: Object.entries(type.genres ?? {})
-                        .map(([genreId, name]) => ({
-                            id: genreId,
-                            name
-                        }))
-                        .sort((a, b) =>
-                            a.name.localeCompare(
-                                b.name,
-                                locale
-                            )
+            result[locale] =
+                Object.entries(localeData.types)
+                    .map(([typeId, type]) => ({
+                        id: Number(typeId),
+                        name: type.name,
+                        genres:
+                            Object.entries(type.genres ?? {})
+                                .map(([genreId, name]) => ({
+                                    id: Number(genreId),
+                                    name
+                                }))
+                                .sort((a, b) =>
+                                    a.name.localeCompare(
+                                        b.name,
+                                        locale
+                                    )
+                                )
+                    }))
+                    .sort((a, b) =>
+                        a.name.localeCompare(
+                            b.name,
+                            locale
                         )
-                }))
-                .sort((a, b) =>
-                    a.name.localeCompare(
-                        b.name,
-                        locale
                     )
-                )
         })
 
         return result
@@ -110,7 +113,7 @@ export const useEventTypeStore = defineStore('eventTypes', () => {
     }
 
     function getType(
-        typeId: string,
+        typeId: number,
         locale = 'en'
     ): EventType | undefined {
         return getTypes(locale)
@@ -118,8 +121,8 @@ export const useEventTypeStore = defineStore('eventTypes', () => {
     }
 
     function getGenre(
-        typeId: string,
-        genreId: string,
+        typeId: number,
+        genreId: number,
         locale = 'en'
     ): EventGenre | undefined {
         return getType(typeId, locale)
