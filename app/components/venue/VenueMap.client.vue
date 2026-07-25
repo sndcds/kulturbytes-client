@@ -4,6 +4,7 @@
       :center="center"
       :zoom="zoom"
       :height="height"
+      :fade-duration="0"
       @map-loaded="onMapLoaded"
   />
 </template>
@@ -14,7 +15,10 @@ import { ref, computed } from 'vue'
 import type { Map as MapLibreMapType } from 'maplibre-gl'
 import type { FeatureCollection } from 'geojson'
 import MapLibreMap from '~/components/map/MapLibreMap.client.vue'
-import { useMapLibreLayers } from '~/composables/useMapLibreLayers'
+import {
+  useMapLibreLayers,
+  type MapLayerConfig
+} from '~/composables/useMapLibreLayers'
 import VenuePopup from '~/components/venue/VenuePopup.vue'
 
 const props =
@@ -36,7 +40,7 @@ const venues =
       features:[]
     })
 
-const layers = computed(()=>({
+const layers = computed<Record<string, MapLayerConfig>>(()=>({
   venues: {
     data: venues.value,
 

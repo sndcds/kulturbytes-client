@@ -20,12 +20,14 @@ const props = withDefaults(
       center?: [number,number]
       zoom?: number
       height?: string
+      fadeDuration?: number
       style?: string
     }>(),
     {
       center: () => [9.43,54.78],
       zoom: 8,
       height: '400px',
+      fadeDuration: 300,
       style: '/versatiles/versatiles-style.json'
     }
 )
@@ -56,7 +58,8 @@ onMounted(async()=>{
         container: container.value,
         style: props.style,
         center: props.center,
-        zoom: props.zoom
+        zoom: props.zoom,
+        fadeDuration: props.fadeDuration
       })
 
   map.addControl(

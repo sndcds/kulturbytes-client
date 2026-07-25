@@ -125,6 +125,9 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
             return
         }
 
+        const popupComponent =
+            config.popupComponent
+
         map.on(
             'click',
             `${layerName}-unclustered`,
@@ -146,7 +149,7 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
                 removePopup()
 
                 const container = document.createElement('div')
-                createApp(config.popupComponent, {
+                createApp(popupComponent, {
                     feature
                 }).mount(container)
 
@@ -325,7 +328,10 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
                     'text-size':
                         config.clusterStyle?.textSize
                         ??
-                        13
+                        13,
+
+                    'text-allow-overlap': true,
+                    'text-ignore-placement': true
                 },
 
                 paint:{
