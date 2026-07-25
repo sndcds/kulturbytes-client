@@ -1,24 +1,20 @@
 <!--
-  Geolist, list of regions in country
+  Geolist, list of states in country
 -->
 
 <template>
   <div
       class="kbts-geolist-layout"
   >
-
     <!--pre>{{ JSON.stringify(states, null, 2) }}</pre-->
 
     <div class="kbts-geolist-content">
-
       <h1>
-        {{ countryName }}
+        {{ t(`geolist.country.${countrySlug}.name`) }}
       </h1>
-
       <p>
-        {{ t(`geo.country.${countrySlug}.choose_state`) }}
+        {{ t(`geolist.country.${countrySlug}.choose_state`) }}
       </p>
-
       <ul
           v-if="states.length"
           class="kbts-geolist-list"
@@ -30,7 +26,7 @@
         >
           <NuxtLink
               :to="localePath(
-                `/events/${countrySlug}/${state.slug}`
+                `/eventlist/${countrySlug}/${state.slug}`
               )"
               class="kbts-geo-link-list__link"
           >
@@ -38,9 +34,7 @@
           </NuxtLink>
         </li>
       </ul>
-
     </div>
-
   </div>
 </template>
 
@@ -49,8 +43,8 @@
 import { computed } from 'vue'
 import type { GeoListState, GeoListStatesResponse } from '~/types/geo'
 
-const route = useRoute()
 
+const route = useRoute()
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const { $api } = useNuxtApp()
@@ -62,7 +56,7 @@ const countrySlug = computed(
 
 async function fetchStates() {
   return $api<GeoListStatesResponse>(
-      `/api/geo/countries/${countrySlug.value}/states`,
+      `/api/geolist/states/${countrySlug.value}`,
       {
         query: {
           lang: locale.value
@@ -99,9 +93,9 @@ const countryName = computed(
     }
 )
 
+// TODO:
 useHead(() => ({
-  title:
-      `${countryName.value} - ${t('events.title')}`,
+  title: t('geolist.states_title'),
   meta: [
     {
       name: 'description',

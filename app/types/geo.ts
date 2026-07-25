@@ -11,6 +11,14 @@ interface GeoListState {
     slug: string
 }
 
+interface GeoListRegion {
+    code: string
+    country_code: string
+    state_code: string
+    name: string
+    slug: string
+}
+
 export interface GeoListCountriesResponse {
     meta_date: any
     data: GeoListCountry[]
@@ -19,4 +27,9 @@ export interface GeoListCountriesResponse {
 interface GeoListGeoStatesResponse {
     meta_data: any
     data: GeoListState[]
+}
+
+
+interface GeoListRegionsResponse {
+    data: GeoListRegion[]
 }

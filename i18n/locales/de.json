@@ -20,6 +20,7 @@
     "button_label": "Filter"
   },
   "event": {
+    "no_events_found": "Es wurden keine Events gefunden",
     "category": {
       "culture": "Kultur",
       "education": "Bildung",
@@ -144,7 +145,7 @@
     "keyboard_navigation": "Tastaturnavigation",
     "voice_command_support": "Sprachsteuerung Unterstützung"
   },
-  "geo" : {
+  "geolist" : {
     "country": {
       "deutschland": {
         "name": "Deutschland",
@@ -156,8 +157,13 @@
       }
     },
     "list_by_countries": "Veranstaltungen und Orte nach Ländern",
-    "countries_description": "Durchsuche kulturbytes nach Veranstaltungen und Orten in verschiedenen Ländern. Von dort aus gelangst du zu Regionen und lokalen Kulturveranstaltungen.",
+    "countries_description": "Durchsuche kulturbytes nach Veranstaltungen und Orten in verschiedenen Ländern. Von dort aus gelangst du zu Regionen, Kommunen und lokalen Kulturveranstaltungen.",
     "countries": "Länder",
-    "choose_country": "Wähle ein Land"
+    "choose_country": "Wähle ein Land",
+    "choose_region": "Wähle eine Stadt, Gemeinde oder Kommune",
+    "countries_title": "kulturbytes ⏐ Länder",
+    "countries_content:": "Entdecke Veranstaltungen und kulturelle Orte. Finde lokale Kulturveranstaltungen, Regionen und Veranstaltungsorte auf kulturbytes.",
+    "states_title": "kulturbytes ⏐ Bundesländer und Regionen",
+    "regions_title": "kulturbytes ⏐ Städte und Kommunen"
   }
 }

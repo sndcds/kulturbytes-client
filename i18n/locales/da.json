@@ -20,6 +20,7 @@
     "button_label": "Filter"
   },
   "event": {
+    "no_events_found": "Ingen begivenheder fundet",
     "category": {
       "culture": "Kultur",
       "education": "Uddannelse",
@@ -143,5 +144,25 @@
     "screen_reader_support": "",
     "keyboard_navigation": "",
     "voice_command_support": ""
+  },
+  "geolist": {
+    "country": {
+      "deutschland": {
+        "name": "Tyskland",
+        "choose_state": "Vælg en delstat"
+      },
+      "danmark": {
+        "name": "Danmark",
+        "choose_state": "Vælg en region"
+      }
+    },
+    "list_by_countries": "Begivenheder og steder efter land",
+    "countries_description": "Gennemse kulturbytes for begivenheder og steder i forskellige lande. Herfra kan du udforske regioner, kommuner og lokale kulturarrangementer.",
+    "countries": "Lande",
+    "choose_country": "Vælg et land",
+    "choose_region": "Vælg en by, kommune eller lokalområde",
+    "countries_title": "kulturbytes ⏐ Lande",
+    "states_title": "kulturbytes ⏐ Regioner og områder",
+    "regions_title": "kulturbytes ⏐ Byer og kommuner"
   }
 }

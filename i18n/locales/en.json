@@ -20,6 +20,7 @@
     "button_label": "Filter"
   },
   "event": {
+    "no_events_found": "No events found",
     "category": {
       "culture": "Culture",
       "education": "Education",
@@ -143,5 +144,25 @@
     "screen_reader_support": "",
     "keyboard_navigation": "",
     "voice_command_support": ""
+  },
+  "geolist": {
+    "country": {
+      "deutschland": {
+        "name": "Germany",
+        "choose_state": "Choose a state"
+      },
+      "danmark": {
+        "name": "Denmark",
+        "choose_state": "Choose a region"
+      }
+    },
+    "list_by_countries": "Events and venues by country",
+    "countries_description": "Browse kulturbytes for events and venues in different countries. From there, you can explore regions, municipalities and local cultural events.",
+    "countries": "Countries",
+    "choose_country": "Choose a country",
+    "choose_region": "Choose a city, town or municipality",
+    "countries_title": "kulturbytes ⏐ Countries",
+    "states_title": "kulturbytes ⏐ States and Regions",
+    "regions_title": "kulturbytes ⏐ Cities and Municipalities"
   }
 }
