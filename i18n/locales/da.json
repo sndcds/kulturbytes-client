@@ -1,7 +1,8 @@
 {
   "home": {
     "title": "Kulturbytes – Oplev events og kultur",
-    "description": "Oplev arrangementer, koncerter og kulturelle tilbud i din region."
+    "description": "Oplev arrangementer, koncerter og kulturelle tilbud i din region.",
+    "logo_label": "Kulturbytes startside"
   },
   "nav": {
     "events": "Begivenheder",

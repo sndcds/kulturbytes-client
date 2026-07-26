@@ -1,7 +1,8 @@
 {
   "home": {
     "title": "Kulturbytes – Discover events and culture",
-    "description": "Discover events, concerts and cultural activities in your region."
+    "description": "Discover events, concerts and cultural activities in your region.",
+    "logo_label": "Kulturbytes homepage"
   },
   "nav": {
     "events": "Events",

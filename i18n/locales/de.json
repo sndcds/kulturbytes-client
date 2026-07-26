@@ -1,7 +1,8 @@
 {
   "home": {
     "title": "Kulturbytes – Events und Kultur entdecken",
-    "description": "Entdecke Veranstaltungen, Konzerte und kulturelle Angebote in deiner Region."
+    "description": "Entdecke Veranstaltungen, Konzerte und kulturelle Angebote in deiner Region.",
+    "logo_label": "Kulturbytes Startseite"
   },
   "nav": {
     "events": "Veranstaltungen",
