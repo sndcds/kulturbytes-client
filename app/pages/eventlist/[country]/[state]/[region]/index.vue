@@ -463,8 +463,7 @@ useSeoMeta(seoData.value)
 
   border-radius: .35rem;
 
-  background: var(--kbts-accent-color);
-  color: white;
+  color: var(--kbts-fg);
   text-decoration: none;
   white-space: nowrap;
 
