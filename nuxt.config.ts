@@ -1,6 +1,21 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'preload',
+          href: '/fonts/AlbertSans-VariableFont_wght.ttf',
+          as: 'font',
+          type: 'font/ttf',
+          crossorigin: 'anonymous'
+        }
+      ]
+    }
+  },
+
   css: [
     '~/assets/css/fonts.scss',
     '~/assets/css/map.scss',
