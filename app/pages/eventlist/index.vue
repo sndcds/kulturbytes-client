@@ -119,7 +119,7 @@ const headData = computed(() => ({
           {
             "@type": "ListItem",
             "position": 1,
-            "name": t('events.title'),
+            "name": t('geolist.list_by_countries'),
             "item": `${config.public.siteUrl}${localePath('/events')}`
           },
           {

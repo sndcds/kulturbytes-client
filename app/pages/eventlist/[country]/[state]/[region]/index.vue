@@ -332,9 +332,6 @@ const headData = computed(() => ({
   ]
 }))
 
-console.log('useHead data:', headData.value)
-console.log(JSON.stringify(headData.value, null, 2))
-
 useHead(() => headData.value)
 
 
@@ -352,9 +349,6 @@ const seoData = computed(() => ({
 
   robots: 'index,follow'
 }))
-
-console.log('useSeoMeta data:', seoData.value)
-console.log(JSON.stringify(seoData.value, null, 2))
 
 useSeoMeta(seoData.value)
 

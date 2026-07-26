@@ -22,6 +22,34 @@
 <script setup lang="ts">
 const localePath = useLocalePath()
 const { locale, t } = useI18n()
+
+const title = computed(() =>
+    t('home.title', 'Kulturbytes – Events und Kultur entdecken')
+)
+
+const description = computed(() =>
+    t(
+        'home.description',
+        'Entdecke Veranstaltungen, Konzerte und kulturelle Angebote in deiner Region.'
+    )
+)
+
+useHead({
+  htmlAttrs: {
+    lang: locale
+  },
+  title
+})
+
+useSeoMeta({
+  description,
+  ogTitle: title,
+  ogDescription: description,
+  ogType: 'website',
+  twitterCard: 'summary',
+  twitterTitle: title,
+  twitterDescription: description
+})
 </script>
 
 
