@@ -6,14 +6,14 @@
         :to="localePath('/events/')"
         class="button"
     >
-      {{ t(`events`) }}
+      Events
     </NuxtLink>
 
     <NuxtLink
         :to="localePath('/eventlist')"
         class="button"
     >
-      {{ t(`eventlist`) }}
+      Event list
     </NuxtLink>
   </div>
 </template>

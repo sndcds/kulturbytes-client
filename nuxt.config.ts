@@ -7,7 +7,7 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'preload',
-          href: '/fonts/AlbertSans-VariableFont_wght.ttf',
+          href: '/fonts/Albert_Sans/AlbertSans-VariableFont_wght.ttf',
           as: 'font',
           type: 'font/ttf',
           crossorigin: 'anonymous'
