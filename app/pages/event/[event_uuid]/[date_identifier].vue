@@ -1,7 +1,7 @@
 <template>
 
-  <pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
-  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre>
+  <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
+  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre-->
 
   <div
       v-if="event"
