@@ -3,6 +3,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
+        <loc>https://kulturbytes.de/</loc>
+        <lastmod>2026-07-25</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/events</loc>
+        <lastmod>2026-07-25</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/eventlist</loc>
+        <lastmod>2026-07-25</lastmod>
+    </url>
+
+    <url>
         <loc>http://kulturbytes.de/eventlist/deutschland</loc>
         <lastmod>2026-07-25</lastmod>
     </url>
