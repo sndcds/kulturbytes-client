@@ -5,6 +5,10 @@
 <template>
   <div class="kbts-region-event-view">
 
+    <pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
+    <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre>
+
+
     <header>
       <h1>
         Events in {{ regionName }}
@@ -311,7 +315,11 @@ const nextPageLink = computed(() => {
   })
 })
 
-useHead(() => ({
+const totalEvents = computed(() =>
+    summaryData.value?.data.total_event_count ?? 0
+)
+
+const headData = computed(() => ({
   link: [
     ...(hasNextPage.value
         ? [
@@ -324,20 +332,31 @@ useHead(() => ({
   ]
 }))
 
-const totalEvents = computed(() =>
-    summaryData.value?.data.total_event_count ?? 0
-)
+console.log('useHead data:', headData.value)
+console.log(JSON.stringify(headData.value, null, 2))
 
-/*
- * SEO
- */
+useHead(() => headData.value)
 
-useSeoMeta({
-  title: () =>
-      `Events in ${regionName.value}`,
-  description: () =>
-      `Upcoming concerts, workshops and events in ${regionName.value}.`
-})
+
+const seoData = computed(() => ({
+  title: `Events in ${regionName.value}`,
+  description: `Upcoming concerts, workshops and events in ${regionName.value}.`,
+
+  ogTitle: `Events in ${regionName.value}`,
+  ogDescription: `Discover upcoming events in ${regionName.value}.`,
+  ogType: 'website',
+
+  twitterCard: 'summary_large_image',
+  twitterTitle: `Events in ${regionName.value}`,
+  twitterDescription: `Discover upcoming events in ${regionName.value}.`,
+
+  robots: 'index,follow'
+}))
+
+console.log('useSeoMeta data:', seoData.value)
+console.log(JSON.stringify(seoData.value, null, 2))
+
+useSeoMeta(seoData.value)
 
 </script>
 

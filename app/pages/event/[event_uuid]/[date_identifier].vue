@@ -1,5 +1,8 @@
 <template>
 
+  <pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
+  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre>
+
   <div
       v-if="event"
       class="kbts-event-view-layout"
@@ -587,7 +590,7 @@ const eventSchema = computed(() => {
   // TODO: add price_type: and offers:
 })
 
-useHead(() => ({
+const headData = computed(() => ({
   script: eventSchema.value
       ? [
         {
@@ -597,6 +600,35 @@ useHead(() => ({
       ]
       : []
 }))
+
+useHead(() => headData.value)
+
+const seoData = computed(() => ({
+  title: `${event.value.title} | kulturbytes`,
+
+  description: event.value.summary || event.description,
+
+  ogTitle: event.value.title,
+  ogDescription: event.value.summary || event.description,
+  ogType: 'article',
+  ogImage:
+      event.value?.images?.main?.url
+          ? imageUrl(event.value.images.main.url, 1200, '16:9')
+          : undefined,
+
+  twitterCard: 'summary_large_image',
+  twitterTitle: event.value.title,
+  twitterDescription: event.value.summary || event.description,
+  twitterImage:
+      event.value?.images?.main?.url
+          ? imageUrl(event.value.images.main.url, 1200, '16:9')
+          : undefined,
+
+  robots: 'index,follow'
+}))
+
+useSeoMeta(() => seoData.value)
+
 
 const onDownloadIcs = () => {
   if (!event.value?.uuid || !event.value?.date?.uuid) {
@@ -628,6 +660,7 @@ const onCopyLink = async () => {
   }
 }
 </script>
+
 
 <style lang="scss">
 .kbts-event-view-content {

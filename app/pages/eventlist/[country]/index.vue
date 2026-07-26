@@ -3,6 +3,10 @@
 -->
 
 <template>
+
+  <pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
+  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre>
+
   <div
       class="kbts-geolist-layout"
   >
@@ -93,16 +97,37 @@ const countryName = computed(
     }
 )
 
-// TODO:
-useHead(() => ({
-  title: t('geolist.states_title'),
-  meta: [
+const headData = computed(() => ({
+  title:
+      `${countryName.value} – Events nach Bundesländern | kulturbytes`,
+
+  link: [
     {
-      name: 'description',
-      content:
-          `${t('events.title')} ${countryName.value}`
+      rel: 'canonical',
+      href: localePath(
+          `/eventlist/${countrySlug.value}`
+      )
     }
   ]
 }))
+
+useHead(() => headData.value)
+
+const seoData = computed(() => ({
+  title: `${countryName.value} – Events nach Bundesländern | kulturbytes`,
+  description: `Entdecke Veranstaltungen, Konzerte und Kulturangebote in ${countryName.value}. Wähle ein Bundesland aus und finde passende Events in deiner Region.`,
+
+  ogTitle: `${countryName.value} – Veranstaltungen entdecken`,
+  ogDescription: `Finde Konzerte, Workshops und kulturelle Veranstaltungen in ${countryName.value}.`,
+  ogType: 'website',
+
+  twitterCard: 'summary_large_image',
+  twitterTitle: `${countryName.value} – Events entdecken`,
+  twitterDescription: `Kulturelle Veranstaltungen und Events in ${countryName.value}.`,
+
+  robots: 'index,follow'
+}))
+
+useSeoMeta(() => seoData.value)
 
 </script>

@@ -1,2 +1,3 @@
 User-Agent: *
-Disallow:
+Allow: /
+Sitemap: https://kulturbytes.de/sitemap.xml

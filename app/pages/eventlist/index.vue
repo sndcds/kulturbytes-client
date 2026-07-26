@@ -3,6 +3,10 @@
 -->
 
 <template>
+
+  <pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
+  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre>
+
   <div class="kbts-geolist-layout">
     <div class="kbts-geolist-content">
       <h1>
@@ -87,83 +91,67 @@ const pageUrl = computed(
         `${config.public.siteUrl}${route.fullPath}`
 )
 
-useHead(() => {
-  const head = {
-    title: t('geolist.countries_title'),
-    meta: [
-      {
-        name: 'description',
-        content: t('geolist.countries_description')
-      },
-      {
-        property: 'og:title',
-        content: t('geolist.countries_title')
-      },
-      {
-        property: 'og:description',
-        content: t('geolist.countries_description')
-      },
-      {
-        property: 'og:type',
-        content: 'website'
-      },
-      {
-        property: 'og:url',
-        content: pageUrl.value
-      }
-    ],
-    link: [
-      {
-        rel: 'canonical',
-        href:
-        pageUrl.value
-      }
-    ],
-    script: [
-      /**
-       * Collection page schema
-       */
-      {
-        type: 'application/ld+json',
-        children:
-            JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "CollectionPage",
-              "name": t('geolist.countries_title'),
-              "description": t('geolist.countries_description'),
-              "url": pageUrl.value
-            })
-      },
-      /**
-       * Breadcrumb schema
-       */
-      {
-        type: 'application/ld+json',
-        children:
-            JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": t('events.title'),
-                  "item": `${config.public.siteUrl}${localePath('/events')}`
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "name": t('geolist.countries_title'),
-                  "item":
-                  pageUrl.value
-                }
-              ]
-            })
-      }
-    ]
-  }
-  console.log('useHead:', JSON.stringify(head, null, 2))
-  return head
-})
+const headData = computed(() => ({
+  link: [
+    {
+      rel: 'canonical',
+      href: pageUrl.value
+    }
+  ],
+
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": t('geolist.countries_title'),
+        "description": t('geolist.countries_description'),
+        "url": pageUrl.value
+      })
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": t('events.title'),
+            "item": `${config.public.siteUrl}${localePath('/events')}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": t('geolist.countries_title'),
+            "item": pageUrl.value
+          }
+        ]
+      })
+    }
+  ]
+}))
+
+useHead(() => headData.value)
+
+const seoData = computed(() => ({
+  title: t('geolist.countries_title'),
+  description: t('geolist.countries_description'),
+
+  ogTitle: t('geolist.countries_title'),
+  ogDescription: t('geolist.countries_description'),
+  ogType: 'website',
+  ogUrl: pageUrl.value,
+
+  twitterCard: 'summary_large_image',
+  twitterTitle: t('geolist.countries_title'),
+  twitterDescription: t('geolist.countries_description'),
+
+  robots: 'index,follow'
+}))
+
+useSeoMeta(() => seoData.value)
 
 </script>
