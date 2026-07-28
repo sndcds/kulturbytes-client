@@ -5,9 +5,9 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
+        { rel: 'shortcut icon', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
         {
@@ -78,7 +78,7 @@ export default defineNuxtConfig({
       cookieKey: 'kulturbytes_locale',
       redirectOn: 'root',
       fallbackLocale: 'de'
-    },
+      },
 
     langDir: 'locales/'
   },
@@ -86,7 +86,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       siteUrl: 'https://kulturbytes.de',
-      apiUrl: 'https://api.kulturbytes.de/' // http://localhost:9090/, https://api.kulturbytes.de/
+      apiUrl: 'http://localhost:9090/' // http://localhost:9090/, https://api.kulturbytes.de/
     }
   },
 })

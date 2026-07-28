@@ -245,18 +245,46 @@ nav {
   gap: 2rem;
   margin-left: 2rem;
 
-  a {
+  > a {
+    position: relative;
+    padding: 0.25rem;
     color: var(--kbts-fg);
     text-decoration: none;
     font-weight: 400;
-    border-bottom: 2px solid transparent;
+    transition: color 0.25s ease;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 10%;
+      bottom: -0.3rem;
+      width: 80%;
+      height: 2px;
+
+      background: var(--kbts-muted-fg-light);
+      border-radius: 99px;
+
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.25s ease;
+    }
 
     &:hover {
-      color: red;
+      color: var(--kbts-fg);
+
+      &::after {
+        transform: scaleX(1);
+      }
     }
 
     &.router-link-active {
+      color: var(--kbts-fg);
       font-weight: 700;
+
+      &::after {
+        transform: scaleX(1);
+        background: var(--kbts-fg);
+      }
     }
   }
 }
@@ -279,16 +307,24 @@ nav {
 .language-switcher {
   display: flex;
   align-items: center;
-  gap: .5rem;
+  gap: .75rem;
+  margin-left: 1rem;
 
   a {
-    padding: .25rem .5rem;
-    font-size: .85rem;
-    color: var(--kbts-fg);
-    border-bottom: 1px solid transparent;
+    color: var(--kbts-muted-fg);
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 400;
+    transition: color .2s ease;
+    padding: .25rem;
+
+    &:hover {
+      color: var(--kbts-fg);
+    }
 
     &.active {
-      border-bottom: 1px solid var(--kbts-fg);
+      color: var(--kbts-fg);
+      font-weight: 700;
     }
   }
 }
@@ -387,7 +423,7 @@ nav {
   .language-switcher {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(0,0,0,.08);
+    border-top: 1px solid rgba(1,0,0,1);
   }
 
   .filter-panel {
