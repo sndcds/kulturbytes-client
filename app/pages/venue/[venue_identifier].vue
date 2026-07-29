@@ -100,6 +100,20 @@
 
     </div>
   </div>
+
+  <section
+      v-if="venue"
+      class="kbts-venue-view-events"
+  >
+    <h2 class="kbts-venue-view-events-title">
+      {{ t('events') }}
+    </h2>
+
+    <EventsView
+        :venue-uuid="venue.uuid"
+        :use-filters="false"
+    />
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -108,6 +122,7 @@ import { imageUrl } from '~/utils/image'
 import { useThemeStore } from "~/stores/themeStore";
 import LogoImage  from '~/components/ui/LogoImage.vue'
 import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
+import EventsView from '~/components/event/EventsView.vue'
 import type { Venue, VenueResponse } from '~/types/venue'
 
 defineI18nRoute({
@@ -189,6 +204,16 @@ const imageCredit = computed(() => {
 <style lang="scss">
 .kbts-venue-view-content {
   grid-area: content;
+}
+
+.kbts-venue-view-events {
+  margin-top: 3rem;
+}
+
+.kbts-venue-view-events-title {
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0 0 1rem;
 }
 
 .kbts-venue-view-image {

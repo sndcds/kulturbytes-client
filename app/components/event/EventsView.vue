@@ -35,6 +35,16 @@ import type { CalendarEvent, CalendarEventsResponse } from '~/types/calendarEven
 import { debounce } from '~/utils/debounce'
 
 const PAGE_SIZE = 20
+const props = withDefaults(
+    defineProps<{
+      venueUuid?: string
+      useFilters?: boolean
+    }>(),
+    {
+      useFilters: true
+    }
+)
+
 const { locale } = useI18n()
 const { $api } = useNuxtApp()
 
@@ -123,6 +133,8 @@ async function loadEvents() {
   try {
     const params = await build({
       includePagination: true,
+      includeFilters: props.useFilters,
+      venueUuids: props.venueUuid,
       limit: PAGE_SIZE,
       cursor: cursor.value
     })
@@ -167,7 +179,11 @@ watch(
       eventDateStart,
       eventDateEnd,
     ],
-    () => reloadEvents(),
+    () => {
+      if (props.useFilters) {
+        reloadEvents()
+      }
+    },
     { deep: true }
 )
 
@@ -183,10 +199,22 @@ watch(
       eventMaxPrice
     ],
     async () => {
+      if (!props.useFilters) {
+        return
+      }
+
       resetEvents()
       await loadEvents()
     },
     { deep: true }
+)
+
+watch(
+    () => props.venueUuid,
+    async () => {
+      resetEvents()
+      await loadEvents()
+    }
 )
 </script>
 

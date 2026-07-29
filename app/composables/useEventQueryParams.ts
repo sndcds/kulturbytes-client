@@ -4,6 +4,8 @@ import { getCurrentGeoPosition } from '~/utils/geoLocation'
 
 interface BuildOptions {
     includePagination?: boolean
+    includeFilters?: boolean
+    venueUuids?: string
     limit?: number
     cursor?: {
         date_uuid: string
@@ -38,6 +40,7 @@ export function useEventQueryParams() {
         eventDateRange: eventDateRange.value,
         eventCity: eventCity.value,
         eventPostalCode: eventPostalCode.value,
+        eventVenue: eventVenue.value,
         eventLocationFlag: eventLocationFlag.value,
         eventLocationRadius: eventLocationRadius.value,
         eventTypeIds: eventTypeIds.value,
@@ -66,6 +69,14 @@ export function useEventQueryParams() {
                     options.cursor.start_at
                 )
             }
+        }
+
+        if (options.venueUuids) {
+            params.append('venue_uuids', options.venueUuids)
+        }
+
+        if (options.includeFilters === false) {
+            return params
         }
 
         if (eventCategories.value?.length) {
