@@ -21,12 +21,13 @@
         Website
       </a>
 
-      <a
+      <NuxtLink
           class="link"
-          :href="localePath(`/venue/${venue.uuid}`)"
+          href="#"
+          @click.prevent.stop="openVenue"
       >
         Details
-      </a>
+      </NuxtLink>
     </div>
 
   </div>
@@ -37,6 +38,11 @@
 import { computed } from 'vue'
 const localePath = useLocalePath()
 
+const router = useRouter()
+console.log(
+    JSON.stringify(router.getRoutes().filter(r => r.name?.includes('venue')), null, 2)
+)
+
 const props = defineProps<{
   feature?: any
 }>()
@@ -44,6 +50,17 @@ const props = defineProps<{
 const venue = computed(() =>
     props.feature?.properties ?? {}
 )
+
+function openVenue() {
+  navigateTo(
+      localePath({
+        name: 'venue-venue_identifier',
+        params: {
+          venue_identifier: venue.value.uuid
+        }
+      })
+  )
+}
 </script>
 
 

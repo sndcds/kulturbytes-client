@@ -370,6 +370,14 @@ import {
 } from '@lucide/vue'
 import { useThemeStore } from "~/stores/themeStore";
 
+defineI18nRoute({
+  paths: {
+    de: '/veranstaltung/[event_uuid]/[date_identifier]',
+    da: '/begivenhed/[event_uuid]/[date_identifier]',
+    en: '/event/[event_uuid]/[date_identifier]'
+  }
+})
+
 const route = useRoute()
 const { locale, t } = useI18n()
 const localePath = useLocalePath()

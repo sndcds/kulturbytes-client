@@ -1,4 +1,6 @@
 <template>
+
+<br>
   <div
       v-if="venue"
       class="kbts-venue-view-layout"
@@ -108,15 +110,23 @@ import LogoImage  from '~/components/ui/LogoImage.vue'
 import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
 import type { Venue, VenueResponse } from '~/types/venue'
 
+defineI18nRoute({
+  paths: {
+    de: '/ort/[venue_identifier]',
+    da: '/sted/[venue_identifier]',
+    en: '/venue/[venue_identifier]'
+  }
+})
 
 const route = useRoute()
+const localePath = useLocalePath()
 const { locale, t } = useI18n()
 const { $api } = useNuxtApp()
 const themeStore = useThemeStore()
 
 const { renderMarkdown } = useMarkdown()
 
-const venueUuid = route.params.venue_uuid as string
+const venueUuid = route.params.venue_identifier as string
 
 async function fetchVenue(): Promise<VenueResponse> {
   return await $api<VenueResponse>(

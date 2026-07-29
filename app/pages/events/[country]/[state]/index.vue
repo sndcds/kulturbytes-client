@@ -26,9 +26,14 @@
             :key="region.code"
         >
           <NuxtLink
-              :to="localePath(
-                `/eventlist/${countrySlug}/${stateSlug}/${region.slug}`
-              )"
+              :to="localePath({
+                  name: 'events-country-state-region',
+                  params: {
+                      country: countrySlug,
+                      state: stateSlug,
+                      region: region.slug
+                  }
+                })"
           >
             {{ region.name }}
           </NuxtLink>
@@ -49,6 +54,13 @@
 import { computed } from 'vue'
 import type { GeoListRegion, GeoListRegionsResponse } from '~/types/geolist'
 
+defineI18nRoute({
+  paths: {
+    de: '/veranstaltungen/[country]/[state]',
+    da: '/begivenheder/[country]/[state]',
+    en: '/events/[country]/[state]'
+  }
+})
 
 const route = useRoute()
 const { locale, t } = useI18n()
@@ -102,12 +114,17 @@ const headData = computed(() => ({
   link: [
     {
       rel: 'canonical',
-      href: localePath(
-          `/eventlist/${countrySlug.value}/${stateSlug.value}`
-      )
+      href: localePath({
+        name: 'events-country-state',
+        params: {
+          country: countrySlug.value,
+          state: stateSlug.value
+        }
+      })
     }
   ]
 }))
+
 
 useHead(() => headData.value)
 

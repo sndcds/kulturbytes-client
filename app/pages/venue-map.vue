@@ -6,6 +6,14 @@
 <script setup lang="ts">
 import VenueMap from '~/components/venue/VenueMap.client.vue'
 
+defineI18nRoute({
+  paths: {
+    de: '/orte/karte',
+    da: '/steder/kort',
+    en: '/venues/map'
+  }
+})
+
 definePageMeta({
   layout: 'map'
 })

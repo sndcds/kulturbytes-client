@@ -29,10 +29,13 @@
             class="kbts-geo-link-list__item"
         >
           <NuxtLink
-              :to="localePath(
-                `/eventlist/${countrySlug}/${state.slug}`
-              )"
-              class="kbts-geo-link-list__link"
+              :to="localePath({
+                  name: 'events-country-state',
+                  params: {
+                      country: countrySlug,
+                      state: state.slug
+                  }
+                })"
           >
             {{ state.name }}
           </NuxtLink>
@@ -47,6 +50,13 @@
 import { computed } from 'vue'
 import type { GeoListState, GeoListStatesResponse } from '~/types/geolist'
 
+defineI18nRoute({
+  paths: {
+    de: '/veranstaltungen/[country]',
+    da: '/begivenheder/[country]',
+    en: '/events/[country]'
+  }
+})
 
 const route = useRoute()
 const { locale, t } = useI18n()
@@ -100,12 +110,11 @@ const countryName = computed(
 const headData = computed(() => ({
   title:
       `${countryName.value} – Events nach Bundesländern | kulturbytes`,
-
   link: [
     {
       rel: 'canonical',
       href: localePath(
-          `/eventlist/${countrySlug.value}`
+          `events-${countrySlug.value}`
       )
     }
   ]

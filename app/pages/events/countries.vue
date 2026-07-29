@@ -25,7 +25,12 @@
             class="kbts-geolist-list__item"
         >
           <NuxtLink
-              :to="localePath(`/eventlist/${country.slug}`)"
+              :to="localePath({
+                  name: 'events-country',
+                  params: {
+                      country: country.slug
+                  }
+              })"
               class="kbts-geolist-list__link"
           >
             {{ t(`geolist.country.${country.slug}.name`) }}
@@ -43,13 +48,19 @@ import type {
   GeoListCountriesResponse
 } from '~/types/geolist'
 
+defineI18nRoute({
+  paths: {
+    de: '/veranstaltungen/laender',
+    da: '/begivenheder/lande',
+    en: '/events/countries',
+  }
+})
 
 const route = useRoute()
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const { $api } = useNuxtApp()
 const config = useRuntimeConfig()
-
 
 /**
  * Load countries
@@ -120,7 +131,7 @@ const headData = computed(() => ({
             "@type": "ListItem",
             "position": 1,
             "name": t('geolist.list_by_countries'),
-            "item": `${config.public.siteUrl}${localePath('/events')}`
+            "item": `${config.public.siteUrl}${localePath('/')}`
           },
           {
             "@type": "ListItem",

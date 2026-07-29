@@ -7,14 +7,21 @@ import EventsView from '~/components/event/EventsView.vue'
 import { useFiltersStore } from "~/stores/filtersStore";
 
 const { setFilter } = useFiltersStore()
-
 setFilter('events')
 
-onUnmounted(() => {
-  setFilter(null)
+defineI18nRoute({
+  paths: {
+    de: '/veranstaltungen',
+    da: '/begivenheder',
+    en: '/events'
+  }
 })
 
 definePageMeta({
   filters: true
+})
+
+onUnmounted(() => {
+  setFilter(null)
 })
 </script>

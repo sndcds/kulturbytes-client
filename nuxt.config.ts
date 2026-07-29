@@ -54,6 +54,7 @@ export default defineNuxtConfig({
 
   i18n: {
     strategy: 'prefix',
+    customRoutes: 'page',
     defaultLocale: 'de',
     locales: [
       {

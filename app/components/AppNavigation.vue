@@ -16,7 +16,7 @@
 
       <!-- Main navigation -->
       <nav :class="{ open }">
-        <NuxtLink :to="localePath('/events')">
+        <NuxtLink :to="localePath('events')">
           {{ t('nav.events') }}
         </NuxtLink>
 
@@ -24,11 +24,11 @@
           {{ t('nav.venues') }}
         </NuxtLink-->
 
-        <NuxtLink :to="localePath('/venues/venue-map')">
+        <NuxtLink :to="localePath('venue-map')">
           {{ t('nav.map') }}
         </NuxtLink>
 
-        <NuxtLink :to="localePath('/about')">
+        <NuxtLink :to="localePath('about')">
           {{ t('nav.about') }}
         </NuxtLink>
 

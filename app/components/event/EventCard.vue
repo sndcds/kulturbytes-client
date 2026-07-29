@@ -16,7 +16,13 @@ const props = defineProps<{
 
 <template>
   <NuxtLink
-      :to="localePath(`/event/${event.uuid}/${event.date_slug}`)"
+      :to="localePath({
+        name: 'event-event_uuid-date_identifier',
+        params: {
+            event_uuid: event.uuid,
+            date_identifier: event.date_slug
+        }
+      })"
       class="kbts-events-view-card"
   >
     <div class="kbts-events-view-grid-image">

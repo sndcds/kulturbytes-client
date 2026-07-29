@@ -57,9 +57,8 @@
 
           <p class="event-card__venue">
             {{ event.venue_name }}
-            <span v-if="event.venue_city">
-        · {{ event.venue_city }}
-      </span>
+            <span v-if="event.venue_city"> · {{ event.venue_city }}
+          </span>
           </p>
 
           <p
@@ -74,7 +73,13 @@
         <div class="event-card__actions">
 
           <NuxtLink
-              :to="localePath(`/event/${event.uuid}/${event.date_slug}`)"
+              :to="localePath({
+                name: 'event-event_uuid-date_identifier',
+                params: {
+                  event_uuid: event.uuid,
+                  date_identifier: event.date_slug
+                }
+              })"
               class="event-card__button"
           >
             Details
@@ -125,6 +130,14 @@
 import { imageUrl } from '~/utils/image'
 import type { CalendarEventsResponse } from '~/types/calendarEvent'
 import type { GeoListRegionResponse } from '~/types/geolist'
+
+defineI18nRoute({
+  paths: {
+    de: '/veranstaltungen/[country]/[state]/[region]',
+    da: '/begivenheder/[country]/[state]/[region]',
+    en: '/events/[country]/[state]/[region]'
+  }
+})
 
 const route = useRoute()
 const { $api } = useNuxtApp()
@@ -296,7 +309,12 @@ const hasNextPage = computed(() =>
 
 const firstPageLink = computed(() =>
     localePath({
-      path: `/eventlist/${countrySlug.value}/${stateSlug.value}/${regionSlug.value}`
+      name: 'events-country-state-region',
+      params: {
+        country: countrySlug.value,
+        state: stateSlug.value,
+        region: regionSlug.value
+      }
     })
 )
 
@@ -306,7 +324,12 @@ const nextPageLink = computed(() => {
   }
 
   return localePath({
-    path: `/eventlist/${countrySlug.value}/${stateSlug.value}/${regionSlug.value}`,
+    name: 'events-country-state-region',
+    params: {
+      country: countrySlug.value,
+      state: stateSlug.value,
+      region: regionSlug.value
+    },
     query: {
       page: page.value + 1,
       last_event_date_uuid: nextCursor.value.date_uuid,

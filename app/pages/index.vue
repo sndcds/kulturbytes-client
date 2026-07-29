@@ -3,14 +3,14 @@
 
   <div class="container">
     <NuxtLink
-        :to="localePath('/events/')"
+        :to="localePath('events')"
         class="button"
     >
       Events
     </NuxtLink>
 
     <NuxtLink
-        :to="localePath('/eventlist')"
+        :to="localePath('events-countries')"
         class="button"
     >
       Event list
