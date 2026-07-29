@@ -3,6 +3,8 @@
       class="venues-map"
       :center="center"
       :zoom="zoom"
+      :bearing="bearing"
+      :pitch="pitch"
       :height="height"
       :fade-duration="0"
       @map-loaded="onMapLoaded"
@@ -20,6 +22,7 @@ import {
   type MapLayerConfig
 } from '~/composables/useMapLibreLayers'
 import VenuePopup from '~/components/venue/VenuePopup.vue'
+import { useMapsStore } from '~/stores/mapsStore'
 
 const props =
     withDefaults(
@@ -112,14 +115,39 @@ const {
     } as any, maplibregl
 )
 
-const center = props.center
-const zoom = props.zoom
+const mapsStore = useMapsStore()
+const center = computed(() => mapsStore.venueMap.center ?? props.center)
+const zoom = computed(() => mapsStore.venueMap.zoom ?? props.zoom)
+const bearing = computed(() => mapsStore.venueMap.bearing ?? 0)
+const pitch = computed(() => mapsStore.venueMap.pitch ?? 0)
 const height = props.height
 
 async function onMapLoaded(map:MapLibreMapType) {
   await initializeLayers(map)
   await loadVenues(map)
-  map.on('moveend', () => loadVenues(map))
+  map.on(
+      'moveend',
+      () => {
+        saveMapView(map)
+        loadVenues(map)
+      }
+  )
+  map.on('rotateend', () => saveMapView(map))
+  map.on('pitchend', () => saveMapView(map))
+}
+
+function saveMapView(map: MapLibreMapType) {
+  const mapCenter = map.getCenter()
+
+  mapsStore.setVenueMapView({
+    center: [
+      mapCenter.lng,
+      mapCenter.lat,
+    ],
+    zoom: map.getZoom(),
+    bearing: map.getBearing(),
+    pitch: map.getPitch(),
+  })
 }
 
 async function loadVenues(map: MapLibreMapType) {

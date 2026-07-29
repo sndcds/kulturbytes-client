@@ -19,6 +19,8 @@ const props = withDefaults(
     defineProps<{
       center?: [number,number]
       zoom?: number
+      bearing?: number
+      pitch?: number
       height?: string
       fadeDuration?: number
       style?: string
@@ -59,6 +61,8 @@ onMounted(async()=>{
         style: props.style,
         center: props.center,
         zoom: props.zoom,
+        bearing: props.bearing,
+        pitch: props.pitch,
         fadeDuration: props.fadeDuration
       })
 
