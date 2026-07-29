@@ -26,6 +26,7 @@ const route = useRoute()
 const localePath = useLocalePath()
 
 setFilter('events')
+applyFilterFromQuery()
 
 defineI18nRoute({
   paths: {
@@ -65,6 +66,53 @@ function encodeBase62(value: string) {
   }
 
   return encoded
+}
+
+function decodeBase62(value: string) {
+  let number = 0n
+  const base = BigInt(BASE62_ALPHABET.length)
+
+  for (const character of value) {
+    const index = BASE62_ALPHABET.indexOf(character)
+
+    if (index === -1) {
+      throw new Error('Invalid base62 filter value')
+    }
+
+    number = number * base + BigInt(index)
+  }
+
+  if (number === 0n) {
+    return ''
+  }
+
+  const bytes: number[] = []
+
+  while (number > 0n) {
+    bytes.unshift(Number(number & 255n))
+    number = number >> 8n
+  }
+
+  return new TextDecoder().decode(new Uint8Array(bytes))
+}
+
+function applyFilterFromQuery() {
+  const filter =
+      Array.isArray(route.query.filter)
+          ? route.query.filter[0]
+          : route.query.filter
+
+  if (!filter) {
+    return
+  }
+
+  try {
+    const decodedFilter = decodeBase62(filter)
+    const payload = JSON.parse(decodedFilter)
+    filtersStore.applyEventFilterPayload(payload)
+  } catch (error) {
+    console.error('Failed applying event filter from query:', error)
+  }
 }
 
 async function saveFilter() {
