@@ -6,7 +6,11 @@
     "events": "Events",
     "venues": "Venues",
     "map": "Map",
-    "about": "About"
+    "info": "Info",
+    "about": "About",
+    "support": "Support",
+    "contact": "Contact",
+    "imprint": "Imprint"
   },
   "goto": {
     "events_page": "Dicover events",

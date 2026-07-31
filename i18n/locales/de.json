@@ -6,7 +6,11 @@
     "events": "Veranstaltungen",
     "venues": "Orte",
     "map": "Karte",
-    "about": "Info"
+    "info": "Info",
+    "about": "About",
+    "support": "Support",
+    "contact": "Kontakt",
+    "imprint": "Impressum"
   },
   "goto": {
     "events_page": "Finde Veranstaltungen",

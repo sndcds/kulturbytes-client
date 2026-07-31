@@ -6,7 +6,11 @@
     "events": "Begivenheder",
     "venues": "Steder",
     "map": "Kort",
-    "about": "Om"
+    "info": "Info",
+    "about": "About",
+    "support": "Support",
+    "contact": "Kontakt",
+    "imprint": "Impressum"
   },
   "goto": {
     "events_page": "Se begivenheder",
