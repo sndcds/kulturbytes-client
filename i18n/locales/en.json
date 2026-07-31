@@ -8,6 +8,10 @@
     "map": "Map",
     "about": "About"
   },
+  "goto": {
+    "events_page": "Dicover events",
+    "country_list": "Countries"
+  },
   "home": {
     "title": "Home",
     "seo": {

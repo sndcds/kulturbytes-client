@@ -8,6 +8,10 @@
     "map": "Kort",
     "about": "Om"
   },
+  "goto": {
+    "events_page": "Se begivenheder",
+    "country_list": "Lande"
+  },
   "home": {
     "title": "Startside",
     "seo": {

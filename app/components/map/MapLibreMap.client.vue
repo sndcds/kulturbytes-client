@@ -42,9 +42,9 @@ const emit = defineEmits<{
   ]
 }>()
 
-const container = ref<HTMLDivElement|null>(null)
+const container = ref<HTMLDivElement | null>(null)
 
-let map: MapLibreMapType|null = null
+let map: MapLibreMapType | null = null
 
 const safeCenter = computed<[number, number]>(() => {
   const [lng, lat] = props.center
@@ -62,7 +62,7 @@ onMounted(async() => {
       await import('maplibre-gl')
           .then(m=>m.default)
 
-  if (!container.value){
+  if (!container.value) {
     return
   }
 
@@ -102,8 +102,8 @@ onBeforeUnmount(() => {
 <style scoped>
 
 .map-container{
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
 }
 
 </style>

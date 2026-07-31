@@ -8,6 +8,10 @@
     "map": "Karte",
     "about": "Info"
   },
+  "goto": {
+    "events_page": "Finde Veranstaltungen",
+    "country_list": "Länderübersicht"
+  },
   "home": {
     "title": "Startseite",
     "seo": {

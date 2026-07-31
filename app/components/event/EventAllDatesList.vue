@@ -7,9 +7,15 @@
     <NuxtLink
         v-for="date in sortedDates"
         :key="date.uuid"
+        :to="localePath({
+          name: 'event-event_uuid-date_identifier',
+          params: {
+            event_uuid: date.event_uuid,
+            date_identifier: date.slug
+          }
+        })"
         class="kbts-event-view-date-row"
         :class="{ 'is-current': date.uuid === currentDate?.uuid }"
-        :to="localePath(`/event/${date.event_uuid}/${date.slug}`)"
     >
       <span>{{ formatDate(locale, date.start_date ?? '', 'numeric') }}</span>
       <span>{{ formatTime(locale, date.start_time) }}</span>

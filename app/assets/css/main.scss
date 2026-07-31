@@ -21,6 +21,7 @@
     --kbts-chip-fg: #6e6e6b;
     --kbts-chip-bg-active: #888;
     --kbts-chip-fg-active: #fff;
+    --kbts-chip-emphasis-bg: #efebfe;
     --kbts-blockquote-deco: #ecece9;
 
     // Event release status colors
@@ -124,6 +125,10 @@ a {
         border-color: var(--kbts-chip-bg-active);
         color: white;
     }
+}
+
+.kbts-chip.has-count:not(.selected):not(.active) {
+    background: var(--kbts-chip-emphasis-bg);
 }
 
 .kbts-tag-list {

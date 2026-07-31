@@ -1,3 +1,54 @@
+<template>
+  <div class="event-type-filter">
+
+    <div class="kbts-chip-container">
+      <button
+          v-for="type in visibleTypes"
+          :key="type.id"
+          class="kbts-chip"
+          :class="{
+            active: selectedTypeId === type.id,
+            'has-count': getTypeCount(type.id) > 0
+          }"
+          @click="selectType(type.id)"
+      >
+        {{ type.name }}
+        <span
+            v-if="getTypeCount(type.id) > 0"
+            class="chip-count"
+        >
+          {{ getTypeCount(type.id) }}
+        </span>
+      </button>
+    </div>
+
+    <div
+        v-if="selectedType"
+        class="kbts-chip-container genres"
+    >
+      <button
+          v-for="genre in selectedType.genres"
+          :key="genre.id"
+          class="kbts-chip"
+          :class="{
+            active: isSelected(genre.id),
+            'has-count': getGenreCount(genre.id) > 0
+          }"
+          @click="toggleGenre(genre.id)"
+      >
+        {{ genre.name }}
+        <span
+            v-if="getGenreCount(genre.id) > 0"
+            class="chip-count"
+        >
+          {{ getGenreCount(genre.id) }}
+        </span>
+      </button>
+    </div>
+  </div>
+</template>
+
+
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useEventTypeStore } from '~/stores/eventTypesStore'
@@ -137,54 +188,6 @@ watch(locale, () => {
   selectedGenreIds.value = []
 })
 </script>
-
-
-<template>
-  <div class="event-type-filter">
-    <div class="kbts-chip-container">
-      <button
-          v-for="type in visibleTypes"
-          :key="type.id"
-          class="kbts-chip"
-          :class="{
-            active: selectedTypeId === type.id
-          }"
-          @click="selectType(type.id)"
-      >
-        {{ type.name }}
-        <span
-            v-if="getTypeCount(type.id) > 0"
-            class="chip-count"
-        >
-          {{ getTypeCount(type.id) }}
-        </span>
-      </button>
-    </div>
-
-    <div
-        v-if="selectedType"
-        class="kbts-chip-container genres"
-    >
-      <button
-          v-for="genre in selectedType.genres"
-          :key="genre.id"
-          class="kbts-chip"
-          :class="{
-            active: isSelected(genre.id)
-          }"
-          @click="toggleGenre(genre.id)"
-      >
-        {{ genre.name }}
-        <span
-            v-if="getGenreCount(genre.id) > 0"
-            class="chip-count"
-        >
-          {{ getGenreCount(genre.id) }}
-        </span>
-      </button>
-    </div>
-  </div>
-</template>
 
 
 <style scoped lang="scss">
