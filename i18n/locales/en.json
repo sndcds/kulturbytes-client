@@ -1,14 +1,31 @@
 {
-  "home": {
-    "title": "Kulturbytes – Discover events and culture",
-    "description": "Discover events, concerts and cultural activities in your region.",
-    "logo_label": "Kulturbytes homepage"
-  },
+  "siteName": "kulturbytes",
+  "logo_label": "kulturbytes homepage",
   "nav": {
+    "home": "Home",
     "events": "Events",
     "venues": "Venues",
     "map": "Map",
     "about": "About"
+  },
+  "home": {
+    "title": "Home",
+    "seo": {
+      "description": "Discover cultural events, venues and places in your region."
+    }
+  },
+  "events": {
+    "title": "Events",
+    "seo": {
+      "description": "Discover concerts, exhibitions, theatre, festivals and many more upcoming events."
+    },
+    "upcoming_count": "{count} upcoming events"
+  },
+  "venues": {
+    "title": "Venues",
+    "seo": {
+      "description": "Discover cultural venues, places and spaces near you. Explore museums, theatres, concert halls, galleries and many more cultural locations."
+    }
   },
   "download_ics": "Save date",
   "copy_link": "Copy link",
@@ -158,13 +175,19 @@
         "choose_state": "Choose a region"
       }
     },
+    "region": {
+      "seo": {
+        "description": "Discover upcoming concerts, workshops, festivals and cultural events in {region}."
+      }
+    },
+    "events_in": "Events in",
     "list_by_countries": "Events and venues by country",
     "countries_description": "Browse kulturbytes for events and venues in different countries. From there, you can explore regions, municipalities and local cultural events.",
     "countries": "Countries",
     "choose_country": "Choose a country",
     "choose_region": "Choose a city, town or municipality",
-    "countries_title": "kulturbytes ⏐ Countries",
-    "states_title": "kulturbytes ⏐ States and Regions",
-    "regions_title": "kulturbytes ⏐ Cities and Municipalities"
+    "countries_title": "Countries",
+    "states_title": "States and Regions",
+    "regions_title": "Cities and Municipalities"
   }
 }

@@ -109,8 +109,13 @@ const stateName = computed(() => {
   return regionsResponse.value?.metadata?.state_name
 })
 
+const pageTitle = computed(
+    () => `${stateName.value ?? ''}`,
+)
+
+
 const headData = computed(() => ({
-  title: `${stateName.value ?? ''} – Events nach Regionen | kulturbytes`,
+  title: pageTitle,
   link: [
     {
       rel: 'canonical',
@@ -129,7 +134,7 @@ const headData = computed(() => ({
 useHead(() => headData.value)
 
 const seoData = computed(() => ({
-  title: `${stateName.value ?? ''} – Events nach Regionen | kulturbytes`,
+  title: pageTitle,
 
   description: `Entdecke Veranstaltungen, Konzerte und kulturelle Events in ${stateName.value ?? ''}. Wähle eine Region aus, um passende Veranstaltungen zu finden.`,
 

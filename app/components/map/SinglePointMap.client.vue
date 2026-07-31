@@ -2,12 +2,11 @@
 
   <MapLibreMap
       class="map-container"
-      :center="[lon,lat]"
+      :center="center"
       :zoom="zoom"
       :height="height"
       @map-loaded="onMapLoaded"
   />
-
 </template>
 
 
@@ -18,70 +17,86 @@ import type { FeatureCollection, Point } from 'geojson'
 import MapLibreMap from '~/components/map/MapLibreMap.client.vue'
 import { useMapLibreLayers } from '~/composables/useMapLibreLayers'
 
-const props =
-    withDefaults(
-        defineProps<{
-          lat:number
-          lon:number
-          name?:string
-          zoom?:number
-          height?:string
-        }>(),
-        {
-          zoom:14,
-          height:'300px'
-        }
-    )
+const DEFAULT_CENTER: [number, number] = [
+  9.43,
+  54.78
+]
+
+const props = withDefaults(
+    defineProps<{
+      lat?: number
+      lon?: number
+      name?: string
+      zoom?: number
+      height?: string
+    }>(),
+    {
+      zoom: 14,
+      height: '300px'
+    }
+)
 
 const zoom = computed(() => props.zoom)
 
+const hasCoordinates = computed(() =>
+    Number.isFinite(props.lat) &&
+    Number.isFinite(props.lon)
+)
+
+const center = computed<[number, number]>(() =>
+    hasCoordinates.value
+        ? [props.lon!, props.lat!]
+        : DEFAULT_CENTER
+)
+
 const layers = computed(() => ({
-      venue: {
-        data: {
-          type: 'FeatureCollection',
-          features: [
+  venue: {
+    data: {
+      type: 'FeatureCollection',
+      features: hasCoordinates.value
+          ? [
             {
               type: 'Feature',
               geometry: {
                 type: 'Point',
                 coordinates: [
-                  props.lon,
-                  props.lat
+                  props.lon!,
+                  props.lat!
                 ]
               },
-
               properties: {
                 name: props.name ?? ''
               }
             }
           ]
-        } as FeatureCollection<Point>,
+          : []
+    } as FeatureCollection<Point>,
 
-        cluster: false,
-        icons:{
-          default: '/map/markers/cultural-place.png'
-        },
+    cluster: false,
 
-        iconProperty: 'marker_style',
+    icons: {
+      default: '/map/markers/cultural-place.png'
+    },
 
-        properties:{
-          name: props.name ?? '',
-          marker_style:'default'
-        },
+    iconProperty: 'marker_style',
 
-        unclusteredStyle: {
-          iconSize: 2,
-          iconAnchor: 'bottom',
-          iconAllowOverlap: true,
-          iconIgnorePlacement: true
-        },
+    properties: {
+      name: props.name ?? '',
+      marker_style: 'default'
+    },
 
-        popupTitle(feature:any){
-          return String(feature.properties?.name ?? '')
-        }
-      }
-    })
-)
+    unclusteredStyle: {
+      iconSize: 2,
+      iconAnchor: 'bottom',
+      iconAllowOverlap: true,
+      iconIgnorePlacement: true
+    },
+
+    popupTitle(feature:any) {
+      return String(feature.properties?.name ?? '')
+    }
+  }
+}))
 
 const { initializeLayers } = useMapLibreLayers({
   get layers() {
@@ -90,7 +105,7 @@ const { initializeLayers } = useMapLibreLayers({
 } as any)
 
 
-async function onMapLoaded(map:MapLibreMapType) {
+async function onMapLoaded(map: MapLibreMapType) {
   await initializeLayers(map)
 }
 </script>

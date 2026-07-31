@@ -28,6 +28,8 @@ const props = withDefaults(
     {
       center: () => [9.43,54.78],
       zoom: 8,
+      bearing: 0,
+      pitch: 0,
       height: '400px',
       fadeDuration: 300,
       style: '/versatiles/versatiles-style.json'
@@ -40,18 +42,27 @@ const emit = defineEmits<{
   ]
 }>()
 
-const container =
-    ref<HTMLDivElement|null>(null)
+const container = ref<HTMLDivElement|null>(null)
 
-let map:
-    MapLibreMapType|null = null
+let map: MapLibreMapType|null = null
 
-onMounted(async()=>{
+const safeCenter = computed<[number, number]>(() => {
+  const [lng, lat] = props.center
+  if (
+      Number.isFinite(lng) &&
+      Number.isFinite(lat)
+  ) {
+    return [lng, lat]
+  }
+  return [9.43, 54.78]
+})
+
+onMounted(async() => {
   const maplibregl =
       await import('maplibre-gl')
           .then(m=>m.default)
 
-  if(!container.value){
+  if (!container.value){
     return
   }
 
@@ -59,7 +70,7 @@ onMounted(async()=>{
       new maplibregl.Map({
         container: container.value,
         style: props.style,
-        center: props.center,
+        center: safeCenter.value,
         zoom: props.zoom,
         bearing: props.bearing,
         pitch: props.pitch,
@@ -72,7 +83,7 @@ onMounted(async()=>{
 
   map.on(
       'load',
-      ()=>{
+      () => {
         emit(
             'mapLoaded',
             map!
@@ -81,7 +92,7 @@ onMounted(async()=>{
   )
 })
 
-onBeforeUnmount(()=>{
+onBeforeUnmount(() => {
   map?.remove()
 })
 

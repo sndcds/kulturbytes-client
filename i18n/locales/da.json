@@ -1,14 +1,31 @@
 {
-  "home": {
-    "title": "Kulturbytes – Oplev events og kultur",
-    "description": "Oplev arrangementer, koncerter og kulturelle tilbud i din region.",
-    "logo_label": "Kulturbytes startside"
-  },
+  "siteName": "kulturbytes",
+  "logo_label": "kulturbytes startside",
   "nav": {
+    "home": "Startside",
     "events": "Begivenheder",
     "venues": "Steder",
     "map": "Kort",
     "about": "Om"
+  },
+  "home": {
+    "title": "Startside",
+    "seo": {
+      "description": "Oplev arrangementer, koncerter og kulturelle tilbud i din region."
+    }
+  },
+  "events": {
+    "title": "Begivenheder",
+    "seo": {
+      "description": "Find koncerter, udstillinger, teater, festivaler og mange andre kommende begivenheder."
+    },
+    "upcoming_count": "{count} kommende begivenheder"
+  },
+  "venues": {
+    "title": "Steder",
+    "seo": {
+      "description": "Find kultursteder og arrangementssteder i nærheden af dig. Udforsk museer, teatre, koncertsale, gallerier og mange andre kulturelle steder."
+    }
   },
   "download_ics": "Gem dato",
   "copy_link": "Kopiér link",
@@ -158,13 +175,19 @@
         "choose_state": "Vælg en region"
       }
     },
+    "region": {
+      "seo": {
+        "description": "Oplev kommende koncerter, workshops, festivaler og kulturelle begivenheder i {region}."
+      }
+    },
+    "events_in": "Begivenheder i",
     "list_by_countries": "Begivenheder og steder efter land",
     "countries_description": "Gennemse kulturbytes for begivenheder og steder i forskellige lande. Herfra kan du udforske regioner, kommuner og lokale kulturarrangementer.",
     "countries": "Lande",
     "choose_country": "Vælg et land",
     "choose_region": "Vælg en by, kommune eller lokalområde",
-    "countries_title": "kulturbytes ⏐ Lande",
-    "states_title": "kulturbytes ⏐ Regioner og områder",
-    "regions_title": "kulturbytes ⏐ Byer og kommuner"
+    "countries_title": "Lande",
+    "states_title": "Regioner og områder",
+    "regions_title": "Byer og kommuner"
   }
 }

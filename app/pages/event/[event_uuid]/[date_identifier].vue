@@ -3,6 +3,8 @@
   <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
   <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre-->
 
+  <!--pre>{{ JSON.stringify(event, null, 2)}}</pre-->
+
   <div
       v-if="event"
       class="kbts-event-view-layout"
@@ -322,16 +324,16 @@
         />
       </div>
 
-
       <SinglePointMap
-          v-if="event.date.venue_lat && event.date.venue_lon"
+          v-if="Number.isFinite(event.date.venue_lat) && Number.isFinite(event.date.venue_lon)"
           class="kbts-event-view-map"
-          :lat="event.date.venue_lat"
-          :lon="event.date.venue_lon"
+          :lat="Number(event.date.venue_lat)"
+          :lon="Number(event.date.venue_lon)"
           :name="event.date.venue_name"
           :zoom="15"
           height="400px"
       />
+
 
     </div>
 
@@ -612,7 +614,7 @@ const headData = computed(() => ({
 useHead(() => headData.value)
 
 const seoData = computed(() => ({
-  title: `${event.value.title} | kulturbytes`,
+  title: `${event.value.title}`,
 
   description: event.value.summary || event.description,
 

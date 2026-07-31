@@ -1,14 +1,31 @@
 {
-  "home": {
-    "title": "Kulturbytes – Events und Kultur entdecken",
-    "description": "Entdecke Veranstaltungen, Konzerte und kulturelle Angebote in deiner Region.",
-    "logo_label": "Kulturbytes Startseite"
-  },
+  "siteName": "kulturbytes",
+  "logo_label": "kulturbytes Startseite",
   "nav": {
+    "home": "Startseite",
     "events": "Veranstaltungen",
     "venues": "Orte",
     "map": "Karte",
     "about": "Info"
+  },
+  "home": {
+    "title": "Startseite",
+    "seo": {
+      "description": "Entdecke Kulturorte, Veranstaltungen und kulturelle Angebote."
+    }
+  },
+  "events": {
+    "title": "Veranstaltungen",
+    "seo": {
+      "description": "Finde Konzerte, Ausstellungen, Theater, Festivals und viele weitere bevorstehende Veranstaltungen."
+    },
+    "upcoming_count": "{count} bevorstehende Veranstaltungen"
+  },
+  "venues": {
+    "title": "Orte",
+    "seo": {
+      "description": "Entdecke Kulturorte und Veranstaltungsorte in deiner Nähe. Finde Museen, Theater, Konzertsäle, Galerien und viele weitere kulturelle Orte."
+    }
   },
   "download_ics": "Datum speichern",
   "copy_link": "Link kopieren",
@@ -158,14 +175,20 @@
         "choose_state": "Wähle eine Region"
       }
     },
+    "region": {
+      "seo": {
+        "description": "Entdecke bevorstehende Konzerte, Workshops, Festivals und Kulturveranstaltungen in {region}."
+      }
+    },
+    "events_in": "Veranstaltungen in",
     "list_by_countries": "Veranstaltungen und Orte nach Ländern",
     "countries_description": "Durchsuche kulturbytes nach Veranstaltungen und Orten in verschiedenen Ländern. Von dort aus gelangst du zu Regionen, Kommunen und lokalen Kulturveranstaltungen.",
     "countries": "Länder",
     "choose_country": "Wähle ein Land",
     "choose_region": "Wähle eine Stadt, Gemeinde oder Kommune",
-    "countries_title": "kulturbytes ⏐ Länder",
+    "countries_title": "Länder",
     "countries_content:": "Entdecke Veranstaltungen und kulturelle Orte. Finde lokale Kulturveranstaltungen, Regionen und Veranstaltungsorte auf kulturbytes.",
-    "states_title": "kulturbytes ⏐ Bundesländer und Regionen",
-    "regions_title": "kulturbytes ⏐ Städte und Kommunen"
+    "states_title": "Bundesländer und Regionen",
+    "regions_title": "Städte und Kommunen"
   }
 }

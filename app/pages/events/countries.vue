@@ -90,19 +90,22 @@ const {
 )
 
 const countries = computed<GeoListCountry[]>(
-    () =>
-        countriesResponse.value?.data ?? []
+    () => countriesResponse.value?.data ?? []
 )
 
 /**
  * SEO
  */
 const pageUrl = computed(
-    () =>
-        `${config.public.siteUrl}${route.fullPath}`
+    () => `${config.public.siteUrl}${route.fullPath}`
+)
+
+const pageTitle = computed(
+    () => `${t('geolist.countries_title')}`
 )
 
 const headData = computed(() => ({
+  title: pageTitle.value,
   link: [
     {
       rel: 'canonical',

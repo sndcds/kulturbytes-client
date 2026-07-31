@@ -4,6 +4,10 @@
     <!--pre v-if="apiResponse">{{ apiResponse.data.last_event_date_uuid }}</pre>
     <pre v-if="apiResponse">{{ apiResponse.data.last_event_start_at }}</pre-->
 
+    <p class="kbts-events-count">
+      {{ totalEventCount }} events
+    </p>
+
     <div class="kbts-events-view-grid">
       <EventCard
           v-for="event in events"
@@ -76,6 +80,10 @@ const {
   build,
   watchedFilters
 } = useEventQueryParams()
+
+const {
+  totalEventCount
+} = storeToRefs(summaryStore)
 
 const loading = ref(false)
 const hasMore = ref(true)

@@ -8,18 +8,17 @@
     <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
     <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre-->
 
-
     <header>
       <h1>
-        Events in {{ regionName }}
+        {{ pageTitle }}
       </h1>
 
       <p>
-        Discover upcoming events, concerts and activities in {{ regionName }}.
+        {{ pageDescription }}
       </p>
 
       <p>
-        {{ totalEvents }} upcoming events
+        {{ $t('events.upcoming_count', { count: totalEvents }) }}
       </p>
     </header>
 
@@ -342,8 +341,35 @@ const totalEvents = computed(() =>
     summaryData.value?.data.total_event_count ?? 0
 )
 
+/**
+ * SEO
+ */
+
+const config = useRuntimeConfig()
+const { t } = useI18n()
+
+const pageUrl = computed(
+    () => `${config.public.siteUrl}${route.fullPath}`
+)
+
+const pageTitle = computed(
+    () => `${t('geolist.events_in')} ${regionName.value}`
+)
+
+const pageDescription = computed(
+    () =>
+        t('geolist.region.seo.description', {
+          region: regionName.value
+        })
+)
+
 const headData = computed(() => ({
+  title: pageTitle.value,
   link: [
+    {
+      rel: 'canonical',
+      href: pageUrl.value
+    },
     ...(hasNextPage.value
         ? [
           {
@@ -352,28 +378,71 @@ const headData = computed(() => ({
           }
         ]
         : [])
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": `${t('geolist.events_in')} ${regionName.value}`,
+        "description": pageDescription.value,
+        "url": pageUrl.value
+      })
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": t('navigation.home'),
+            "item": `${config.public.siteUrl}${localePath('/')}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": t('events.title'),
+            "item": `${config.public.siteUrl}${localePath('events')}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": regionName.value,
+            "item": pageUrl.value
+          }
+        ]
+      })
+    }
   ]
 }))
 
-useHead(() => headData.value)
-
 
 const seoData = computed(() => ({
-  title: `Events in ${regionName.value}`,
-  description: `Upcoming concerts, workshops and events in ${regionName.value}.`,
+  title: pageTitle.value,
 
-  ogTitle: `Events in ${regionName.value}`,
-  ogDescription: `Discover upcoming events in ${regionName.value}.`,
+  description: pageDescription.value,
+
+  ogTitle: pageTitle.value,
+  ogDescription: pageDescription.value,
+  ogImage: `${config.public.siteUrl}/images/social/events.webp`,
   ogType: 'website',
+  ogUrl: pageUrl.value,
 
   twitterCard: 'summary_large_image',
-  twitterTitle: `Events in ${regionName.value}`,
-  twitterDescription: `Discover upcoming events in ${regionName.value}.`,
+  twitterTitle: pageTitle.value,
+  twitterDescription: pageDescription.value,
+  twitterImage: `${config.public.siteUrl}/images/social/events.webp`,
 
   robots: 'index,follow'
 }))
 
-useSeoMeta(seoData.value)
+
+useHead(() => headData.value)
+useSeoMeta(() => seoData.value)
 
 </script>
 
@@ -492,7 +561,6 @@ useSeoMeta(seoData.value)
 }
 
 @media (max-width: 800px) {
-
   .event-card {
     grid-template-columns: 1fr;
   }

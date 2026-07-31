@@ -8,7 +8,7 @@
       <NuxtLink
           :to="localePath('/')"
           class="logo"
-          :aria-label="t('home.logo_label')"
+          :aria-label="t('logo_label')"
       >
         <AppLogo />
       </NuxtLink>

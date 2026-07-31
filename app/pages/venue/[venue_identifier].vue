@@ -89,7 +89,7 @@
       </div>
 
       <SinglePointMap
-          v-if="venue.lat && venue.lon"
+          v-if="Number.isFinite(venue.lat) && Number.isFinite(venue.lon)"
           class="kbts-event-view-map"
           :lat="venue.lat"
           :lon="venue.lon"

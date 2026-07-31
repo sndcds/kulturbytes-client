@@ -32,7 +32,7 @@ const props =
           height?:string
         }>(),
         {
-          center:()=>[9.5, 54.3],
+          center:() => [9.5, 54.3],
           zoom:8,
           height:'500px'
         })
@@ -43,7 +43,7 @@ const venues =
       features:[]
     })
 
-const layers = computed<Record<string, MapLayerConfig>>(()=>({
+const layers = computed<Record<string, MapLayerConfig>>(() => ({
   venues: {
     data: venues.value,
 

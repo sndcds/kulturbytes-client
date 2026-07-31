@@ -1,4 +1,7 @@
 <template>
+  <pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre><br>
+  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre><br>
+
   <h1>Index</h1>
 
   <div class="container">
@@ -22,34 +25,77 @@
 <script setup lang="ts">
 const localePath = useLocalePath()
 const { locale, t } = useI18n()
+const route = useRoute()
+const config = useRuntimeConfig()
 
-const title = computed(() =>
-    t('home.title', 'Kulturbytes – Events und Kultur entdecken')
+const pageUrl = computed(
+    () => `${config.public.siteUrl}${route.fullPath}`
 )
 
-const description = computed(() =>
-    t(
-        'home.description',
-        'Entdecke Veranstaltungen, Konzerte und kulturelle Angebote in deiner Region.'
-    )
+const pageTitle = computed(
+    () => `${t('home.title')}`
 )
 
-useHead({
+const description = computed(
+    () => t('home.seo.description')
+)
+
+const headData = computed(() => ({
   htmlAttrs: {
-    lang: locale
+    lang: locale.value
   },
-  title
-})
+  title: pageTitle.value,
+  link: [
+    {
+      rel: 'canonical',
+      href: pageUrl.value
+    }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": t('siteName'),
+        "url": config.public.siteUrl,
+        "description": description.value,
+        "inLanguage": locale.value
+      })
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": t('siteName'),
+        "url": config.public.siteUrl
+      })
+    }
+  ]
+}))
 
-useSeoMeta({
-  description,
-  ogTitle: title,
-  ogDescription: description,
+const seoData = computed(() => ({
+  title: pageTitle.value,
+  description: description.value,
+
+  ogTitle: pageTitle.value,
+  ogDescription: description.value,
+  ogImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
   ogType: 'website',
-  twitterCard: 'summary',
-  twitterTitle: title,
-  twitterDescription: description
-})
+  ogUrl: pageUrl.value,
+
+  twitterCard: 'summary_large_image',
+  twitterTitle: pageTitle.value,
+  twitterDescription: description.value,
+  twitterImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
+
+  robots: 'index,follow'
+}))
+
+useHead(() => headData.value)
+useSeoMeta(() => seoData.value)
+
 </script>
 
 

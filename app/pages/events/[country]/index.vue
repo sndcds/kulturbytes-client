@@ -14,7 +14,7 @@
 
     <div class="kbts-geolist-content">
       <h1>
-        {{ t(`geolist.country.${countrySlug}.name`) }}
+        {{ countryName }}
       </h1>
       <p>
         {{ t(`geolist.country.${countrySlug}.choose_state`) }}
@@ -93,23 +93,20 @@ const {
     }
 )
 
-const states = computed<GeoListState[]>(() => statesResponse.value?.data ?? [])
+const states = computed<GeoListState[]>(
+    () => statesResponse.value?.data ?? []
+)
 
 const countryName = computed(
-    () => {
-      // fallback from slug
-      return countrySlug.value
-          .replaceAll('-', ' ')
-          .replace(
-              /\b\w/g,
-              c => c.toUpperCase()
-          )
-    }
+    () => t(`geolist.country.${countrySlug.value}.name`)
+)
+
+const pageTitle = computed(
+    () => countryName.value
 )
 
 const headData = computed(() => ({
-  title:
-      `${countryName.value} – Events nach Bundesländern | kulturbytes`,
+  title: pageTitle,
   link: [
     {
       rel: 'canonical',
@@ -123,7 +120,7 @@ const headData = computed(() => ({
 useHead(() => headData.value)
 
 const seoData = computed(() => ({
-  title: `${countryName.value} – Events nach Bundesländern | kulturbytes`,
+  title: pageTitle,
   description: `Entdecke Veranstaltungen, Konzerte und Kulturangebote in ${countryName.value}. Wähle ein Bundesland aus und finde passende Events in deiner Region.`,
 
   ogTitle: `${countryName.value} – Veranstaltungen entdecken`,
