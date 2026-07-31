@@ -80,7 +80,8 @@
       "age_to": "To (years)",
       "price": "Price",
       "price_type": "Price type",
-      "max_price": "Maximum price"
+      "max_price": "Maximum price",
+      "save_filter": "Save filter"
     },
     "more_dates": "More dates",
     "all_dates": "All dates",

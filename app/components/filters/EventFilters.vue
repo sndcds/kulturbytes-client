@@ -7,6 +7,10 @@ import Checkbox from '~/components/ui/Checkbox.vue'
 import TypeGenreSelect from '~/components/event/ui/TypeGenreSelect.vue'
 
 const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
+const localePath = useLocalePath()
+const { encodeEventFilter } = useEventFilterEncoding()
 const open = ref(false)
 const eventFilters = useFiltersStore()
 
@@ -71,6 +75,19 @@ const eventVenueInput = computed({
     eventVenue.value = value.replace(/^\s+/, '')
   }
 })
+
+async function saveFilter() {
+  const payload = eventFilters.buildEventFilterPayload()
+  const encodedFilter = encodeEventFilter(JSON.stringify(payload))
+
+  await router.push({
+    path: localePath('events'),
+    query: {
+      ...route.query,
+      filter: encodedFilter,
+    },
+  })
+}
 </script>
 
 
@@ -265,6 +282,14 @@ const eventVenueInput = computed({
       </div>
     </Collapsible>
 
+    <button
+        type="button"
+        class="save-filter-button"
+        @click="saveFilter"
+    >
+      {{ t('event.filter.save_filter') }}
+    </button>
+
   </div>
 
 </template>
@@ -345,5 +370,25 @@ label {
   color: var(--kbts-bg);
   border-color: var(--kbts-fg);
 }
-</style>
 
+.save-filter-button {
+  align-self: flex-start;
+  margin-top: 0.75rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--kbts-fg);
+  border-radius: 999px;
+  background: var(--kbts-fg);
+  color: var(--kbts-bg);
+  font: inherit;
+  cursor: pointer;
+  transition:
+      background .15s ease,
+      color .15s ease;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--kbts-bg);
+    color: var(--kbts-fg);
+  }
+}
+</style>

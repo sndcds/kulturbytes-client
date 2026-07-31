@@ -80,7 +80,8 @@
       "age_to": "Til (år)",
       "price": "Pris",
       "price_type": "Pristype",
-      "max_price": "Maksimal pris"
+      "max_price": "Maksimal pris",
+      "save_filter": "Gem filter"
     },
     "more_dates": "Flere datoer",
     "all_dates": "Alle datoer",

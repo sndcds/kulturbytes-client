@@ -80,7 +80,8 @@
       "age_to": "Bis (Jahre)",
       "price": "Preis",
       "price_type": "Preisart",
-      "max_price": "Höchstpreis"
+      "max_price": "Höchstpreis",
+      "save_filter": "Filter speichern"
     },
     "more_dates": "Weitere Termine",
     "all_dates": "Alle Termine",
