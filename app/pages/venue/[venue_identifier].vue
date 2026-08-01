@@ -106,8 +106,10 @@
       class="kbts-venue-view-events"
   >
     <h2 class="kbts-venue-view-events-title">
-      {{ t('events') }}
+      {{ t('events.upcoming_events_title') }}
     </h2>
+
+    <hr>
 
     <EventsView
         :venue-uuid="venue.uuid"

@@ -5,16 +5,18 @@
     "home": "Startseite",
     "events": "Veranstaltungen",
     "venues": "Orte",
-    "map": "Karte",
+    "map": "Orte",
     "info": "Info",
-    "about": "About",
+    "about": "Über uns",
     "support": "Support",
     "contact": "Kontakt",
     "imprint": "Impressum"
   },
   "goto": {
     "events_page": "Finde Veranstaltungen",
-    "country_list": "Länderübersicht"
+    "country_list": "Länderübersicht",
+    "register": "Konto erstellen",
+    "login": "Login"
   },
   "home": {
     "title": "Startseite",
@@ -27,6 +29,7 @@
     "seo": {
       "description": "Finde Konzerte, Ausstellungen, Theater, Festivals und viele weitere bevorstehende Veranstaltungen."
     },
+    "upcoming_events_title": "Kommende Veranstaltungen",
     "upcoming_count": "{count} bevorstehende Veranstaltungen"
   },
   "venues": {

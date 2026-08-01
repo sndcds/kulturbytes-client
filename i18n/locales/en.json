@@ -5,7 +5,7 @@
     "home": "Home",
     "events": "Events",
     "venues": "Venues",
-    "map": "Map",
+    "map": "Venues",
     "info": "Info",
     "about": "About",
     "support": "Support",
@@ -14,7 +14,9 @@
   },
   "goto": {
     "events_page": "Dicover events",
-    "country_list": "Countries"
+    "country_list": "Countries",
+    "register": "Register",
+    "login": "Login"
   },
   "home": {
     "title": "Home",
@@ -27,6 +29,7 @@
     "seo": {
       "description": "Discover concerts, exhibitions, theatre, festivals and many more upcoming events."
     },
+    "upcoming_events_title": "Upcoming Events",
     "upcoming_count": "{count} upcoming events"
   },
   "venues": {

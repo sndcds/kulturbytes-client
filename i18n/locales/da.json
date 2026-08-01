@@ -5,16 +5,18 @@
     "home": "Startside",
     "events": "Begivenheder",
     "venues": "Steder",
-    "map": "Kort",
+    "map": "Steder",
     "info": "Info",
-    "about": "About",
+    "about": "Om os",
     "support": "Support",
     "contact": "Kontakt",
     "imprint": "Impressum"
   },
   "goto": {
     "events_page": "Se begivenheder",
-    "country_list": "Lande"
+    "country_list": "Lande",
+    "register": "Opret en konto",
+    "login": "Login"
   },
   "home": {
     "title": "Startside",
@@ -27,6 +29,7 @@
     "seo": {
       "description": "Find koncerter, udstillinger, teater, festivaler og mange andre kommende begivenheder."
     },
+    "upcoming_events_title": "Kommende begivenheder",
     "upcoming_count": "{count} kommende begivenheder"
   },
   "venues": {

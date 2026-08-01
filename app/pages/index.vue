@@ -1,71 +1,153 @@
 <script setup lang="ts">
 </script>
+
 <template>
   <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre><br-->
   <!--pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre><br-->
 
   <div class="kbts-articles-grid">
 
-    <div
-        class="kbts-article" style="color: mediumblue; background-color: transparent;">
+    <div class="kbts-article kbts-article-hero" style="color: mediumblue; background-color: transparent;">
       <div class="kbts-article-content">
+
         <h1>
-          Kultur entdecken
+          Entdecken
         </h1>
+
+        <p style="font-size: 1.4rem; margin-top: 1rem;">
+          Es gibt unzählige Möglichkeiten, Kultur zu erleben.
+          kulturbytes hilft dir dabei, Neues zu entdecken, zu stöbern oder gezielt das zu finden,
+          was dich interessiert.
+        </p>
 
         <NuxtLink
             :to="localePath('events')"
             class="button"
+            style="color: mediumblue; border-color: mediumblue;"
         >
           {{ t('goto.events_page') }}
         </NuxtLink>
 
+      </div>
+    </div>
+
+
+    <div class="kbts-article" style="color: mediumblue; background-color: transparent;">
+      <div class="kbts-article-content">
+
+        <h2>
+          Für Kulturakteure
+        </h2>
+
+        <div class="button-row">
+          <a
+              href="https://app.kulturbytes.de/app/signup"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="button small"
+              style="color: mediumblue; border-color: mediumblue;"
+          >
+            {{ t('goto.register') }}
+          </a>
+
+          <a
+              href="https://app.kulturbytes.de/app/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="button small"
+              style="color: mediumblue; border-color: mediumblue;"
+          >
+            {{ t('goto.login') }}
+          </a>
+        </div>
+
         <p>
-          Kultur findet überall statt – in kleinen Initiativen, auf Bühnen, in Museen,
-          Vereinen und an vielen besonderen Orten in deiner Region. kulturbytes macht
-          diese Vielfalt sichtbar und lädt dazu ein, Veranstaltungen und kulturelle Angebote neu zu entdecken.
+          Du organisierst Veranstaltungen oder betreibst einen Kulturort?
+          Mit einem kostenlosen Account kannst du deine Angebote auf kulturbytes veröffentlichen
+          und für Besucherinnen und Besucher sichtbar machen.
         </p>
+
       </div>
     </div>
 
     <div class="kbts-article" style="color: mediumseagreen; background-color: transparent;">
       <div class="kbts-article-content">
-        <h1>
-          Geo
-        </h1>
 
-        <NuxtLink
-            :to="localePath('events-countries')"
-            class="button"
-            style="color: mediumseagreen; border-color: mediumseagreen;"
-        >
-          {{ t('goto.country_list') }}
-        </NuxtLink>
+        <h2>
+          Grenzenlos
+        </h2>
+
+        <div class="button-row">
+          <NuxtLink
+              :to="localePath('events-countries')"
+              class="button small"
+              style="color: mediumseagreen; border-color: mediumseagreen;"
+          >
+            {{ t('goto.country_list') }}
+          </NuxtLink>
+        </div>
 
         <p>
-          Kostenlos, offen und gemeinschaftlich entwickelt: kulturbytes entsteht als
-          Open-Source-Projekt von der Community für die Community.
+          kulturbytes verbindet Veranstaltungen und Orte aus verschiedenen Regionen und Ländern.
+          Entdecke, wo bereits Angebote zu finden sind und wohin die Plattform wächst.
         </p>
+
       </div>
     </div>
 
     <div class="kbts-article" style="color: lightcoral; background-color: transparent;">
       <div class="kbts-article-content">
-        <h1>
-          Community
-        </h1>
 
-        <NuxtLink
-            :to="localePath('events-countries')"
-            class="button"
-            style="color: lightcoral; border-color: lightcoral;"
-        >
-          {{ t('goto.country_list') }}
-        </NuxtLink>
+        <h2>
+          Offen + Gemeinsam
+        </h2>
+
+        <div class="button-row">
+          <NuxtLink
+              :to="localePath('events-countries')"
+              class="button small"
+              style="color: lightcoral; border-color: lightcoral;"
+          >
+            Code
+          </NuxtLink>
+
+          <NuxtLink
+              :to="localePath('events-countries')"
+              class="button small"
+              style="color: lightcoral; border-color: lightcoral;"
+          >
+            Dokumentation
+          </NuxtLink>
+        </div>
 
         <p>
-          Kostenlos, offen und gemeinschaftlich entwickelt: kulturbytes entsteht als
-          Open-Source-Projekt von der Community für die Community.
+          kulturbytes ist eine offene Plattform, die von der Community entwickelt wird.
+          Hier findest du Informationen zu unserem Open-Source-Projekt, dem Code und der Dokumentation.
+        </p>
+
+      </div>
+    </div>
+
+    <div class="kbts-article" style="color: lightcoral; background-color: transparent;">
+      <div class="kbts-article-content">
+        <h2>
+          Unterstütze kulturbytes
+        </h2>
+
+        <div class="button-row">
+          <NuxtLink
+              :to="localePath('events-countries')"
+              class="button small"
+              style="color: lightcoral; border-color: lightcoral;"
+          >
+            Unterstützen
+          </NuxtLink>
+        </div>
+
+        <p>
+          kulturbytes lebt von Menschen, die sich einbringen.
+          Hilf uns dabei, die Plattform weiter zu pflegen, zu verbessern
+          und neue Funktionen zu entwickeln.
         </p>
 
       </div>
@@ -152,7 +234,7 @@ useSeoMeta(() => seoData.value)
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
 .button {
   font-size: 1.2rem;
   padding: .8rem 1.6rem;
@@ -160,6 +242,16 @@ useSeoMeta(() => seoData.value)
   color: mediumblue;
   border: 2px solid mediumblue;
   margin-top: 2rem;
+}
+
+.button.small {
+  font-size: .9rem;
+  padding: .4rem .8rem;
+}
+
+.button-row {
+  display: flex;
+  gap: .5rem;
 }
 
 .kbts-articles-grid {
@@ -175,10 +267,14 @@ useSeoMeta(() => seoData.value)
   border-radius: .5rem;
   padding: 1rem;
 
-  h1 {
+  h1, h2 {
     font-size: 3rem;
     font-weight: 400;
     margin: 0;
+  }
+
+  h2 {
+    font-size: 2rem;
   }
 
   p {
@@ -191,10 +287,24 @@ useSeoMeta(() => seoData.value)
   }
 }
 
+.kbts-article-hero {
+  grid-column: span 2;
+}
+
 .kbts-article-content {
   display: flex;
   flex-direction: column;
-  gap: 0rem;
+  gap: 0;
   align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+  .kbts-articles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kbts-article-hero {
+    grid-column: span 1;
+  }
 }
 </style>

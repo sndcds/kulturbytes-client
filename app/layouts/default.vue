@@ -17,6 +17,7 @@
 <style scoped lang="scss">
 .layout {
   min-height: 100vh;
+  width: 100vw;
 }
 
 main {
