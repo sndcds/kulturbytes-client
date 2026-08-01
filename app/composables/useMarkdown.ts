@@ -1,5 +1,4 @@
 import MarkdownIt from 'markdown-it'
-import DOMPurify from 'isomorphic-dompurify'
 
 const md = new MarkdownIt({
     html: false,
@@ -8,10 +7,16 @@ const md = new MarkdownIt({
 })
 
 export function useMarkdown() {
+
     function renderMarkdown(markdown: string) {
         const html = md.render(markdown)
 
-        return DOMPurify.sanitize(html)
+        if (import.meta.client) {
+            const { $sanitizeHtml } = useNuxtApp()
+            return $sanitizeHtml(html)
+        }
+
+        return html
     }
 
     return {

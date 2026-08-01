@@ -101,11 +101,11 @@
     margin-top: 1rem;
   }
 
-  :deep(p) {
+  :deep(.content p) {
     margin-bottom: 1rem;
   }
 
-  :deep(a) {
+  :deep(.content a) {
     text-decoration: underline;
   }
 
