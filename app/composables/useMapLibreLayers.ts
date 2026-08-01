@@ -1,5 +1,6 @@
 import type { Component } from 'vue'
-import { h, render, nextTick } from 'vue'
+import { getCurrentInstance, h, render, nextTick } from 'vue'
+import { useNuxtApp } from '#app'
 
 import type {
     Feature,
@@ -89,6 +90,11 @@ interface Props {
 
 export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
 
+    const appContext =
+        getCurrentInstance()?.appContext
+        ??
+        useNuxtApp().vueApp._context
+
     let currentPopup: Popup | null = null
     let currentPopupContainer: HTMLElement | null = null
 
@@ -170,6 +176,10 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
                             feature
                         }
                     )
+
+                if (appContext) {
+                    vnode.appContext = appContext
+                }
 
                 render(
                     vnode,

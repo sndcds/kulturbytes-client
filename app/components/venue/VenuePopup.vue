@@ -39,11 +39,6 @@ import { computed } from 'vue'
 
 const localePath = useLocalePath()
 
-const router = useRouter()
-console.log(
-    JSON.stringify(router.getRoutes().filter(r => r.name?.includes('venue')), null, 2)
-)
-
 const props = defineProps<{
   feature?: any
 }>()
