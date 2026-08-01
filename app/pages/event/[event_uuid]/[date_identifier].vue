@@ -1,7 +1,7 @@
 <template>
 
-  <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre>
-  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre-->
+  <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre-->
+  <!--pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre-->
 
   <!--pre>{{ JSON.stringify(event, null, 2)}}</pre-->
 
@@ -494,8 +494,15 @@ async function fetchEvent() {
   )
 }
 
+/*
 const { data: eventResponse, error } = await useAsyncData(
     `event-${eventUuid}-${dateIdentifier}-${locale.value}`,
+    fetchEvent
+)
+*/
+
+const { data: eventResponse, error } = await useAsyncData(
+    `event-${eventUuid}-${dateIdentifier}`,
     fetchEvent
 )
 
@@ -613,31 +620,37 @@ const headData = computed(() => ({
 
 useHead(() => headData.value)
 
-const seoData = computed(() => ({
-  title: `${event.value.title}`,
+useSeoMeta({
+    title: event.value.title,
+    description: event.value.summary || event.value.description,
 
-  description: event.value.summary || event.description,
+    ogTitle: event.value.title,
+    ogDescription: event.value.summary || event.value.description,
+    ogType:'article',
+    ogImage:
+        event.value.images?.main?.url
+            ? imageUrl(
+                event.value.images.main.url,
+                1200,
+                '16:9'
+            )
+            : undefined,
 
-  ogTitle: event.value.title,
-  ogDescription: event.value.summary || event.description,
-  ogType: 'article',
-  ogImage:
-      event.value?.images?.main?.url
-          ? imageUrl(event.value.images.main.url, 1200, '16:9')
-          : undefined,
+    twitterCard:'summary_large_image',
+    twitterTitle: event.value.title,
+    twitterDescription: event.value.summary || event.value.description,
+    twitterImage:
+        event.value.images?.main?.url
+            ? imageUrl(
+                event.value.images.main.url,
+                1200,
+                '16:9'
+            )
+            : undefined,
 
-  twitterCard: 'summary_large_image',
-  twitterTitle: event.value.title,
-  twitterDescription: event.value.summary || event.description,
-  twitterImage:
-      event.value?.images?.main?.url
-          ? imageUrl(event.value.images.main.url, 1200, '16:9')
-          : undefined,
+    robots:'index,follow'
+})
 
-  robots: 'index,follow'
-}))
-
-useSeoMeta(() => seoData.value)
 
 
 const onDownloadIcs = () => {
