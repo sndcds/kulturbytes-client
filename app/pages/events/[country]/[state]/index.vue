@@ -130,10 +130,9 @@ const headData = computed(() => ({
   ]
 }))
 
-
 useHead(() => headData.value)
 
-const seoData = computed(() => ({
+useSeoMeta({
   title: pageTitle,
 
   description: `Entdecke Veranstaltungen, Konzerte und kulturelle Events in ${stateName.value ?? ''}. Wähle eine Region aus, um passende Veranstaltungen zu finden.`,
@@ -147,8 +146,6 @@ const seoData = computed(() => ({
   twitterDescription: `Kulturelle Veranstaltungen in ${stateName.value ?? ''}.`,
 
   robots: 'index,follow'
-}))
-
-useSeoMeta(() => seoData.value)
+})
 
 </script>

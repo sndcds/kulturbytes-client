@@ -652,7 +652,6 @@ useSeoMeta({
 })
 
 
-
 const onDownloadIcs = () => {
   if (!event.value?.uuid || !event.value?.date?.uuid) {
     return

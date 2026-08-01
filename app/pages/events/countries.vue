@@ -150,7 +150,7 @@ const headData = computed(() => ({
 
 useHead(() => headData.value)
 
-const seoData = computed(() => ({
+useSeoMeta({
   title: t('geolist.countries_title'),
   description: t('geolist.countries_description'),
 
@@ -164,8 +164,6 @@ const seoData = computed(() => ({
   twitterDescription: t('geolist.countries_description'),
 
   robots: 'index,follow'
-}))
-
-useSeoMeta(() => seoData.value)
+})
 
 </script>

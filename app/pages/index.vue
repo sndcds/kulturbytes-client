@@ -210,7 +210,9 @@ const headData = computed(() => ({
   ]
 }))
 
-const seoData = computed(() => ({
+useHead(() => headData.value)
+
+useSeoMeta({
   title: pageTitle.value,
   description: description.value,
 
@@ -226,10 +228,7 @@ const seoData = computed(() => ({
   twitterImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
 
   robots: 'index,follow'
-}))
-
-useHead(() => headData.value)
-useSeoMeta(() => seoData.value)
+})
 
 </script>
 
