@@ -1,5 +1,5 @@
-import { createApp } from 'vue'
 import type { Component } from 'vue'
+import { h, render, nextTick } from 'vue'
 
 import type {
     Feature,
@@ -90,10 +90,21 @@ interface Props {
 export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
 
     let currentPopup: Popup | null = null
+    let currentPopupContainer: HTMLElement | null = null
 
     const removePopup = () => {
-        currentPopup?.remove()
-        currentPopup = null
+        if (currentPopupContainer) {
+            render(
+                null,
+                currentPopupContainer
+            )
+            currentPopupContainer = null
+        }
+
+        if (currentPopup) {
+            currentPopup.remove()
+            currentPopup = null
+        }
     }
 
     const addIcon = async (
@@ -132,7 +143,8 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
             'click',
             `${layerName}-unclustered`,
 
-            event => {
+            async event => {
+
                 const feature =
                     event.features?.[0]
 
@@ -148,23 +160,58 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
 
                 removePopup()
 
-                const container = document.createElement('div')
-                createApp(popupComponent, {
-                    feature
-                }).mount(container)
+                const container =
+                    document.createElement('div')
+
+                const vnode =
+                    h(
+                        popupComponent,
+                        {
+                            feature
+                        }
+                    )
+
+                render(
+                    vnode,
+                    container
+                )
+
+                currentPopupContainer =
+                    container
+
+                await nextTick()
 
                 currentPopup =
                     new maplibregl.Popup({
-                        closeButton: config.popupStyle?.closeButton ?? false,
-                        closeOnClick: true,
-                        maxWidth: config.popupStyle?.maxWidth ?? '320px',
-                        className: config.popupStyle?.className ?? '',
-                        offset: config.popupStyle?.offset ?? [0, -15]
-                    })
-                        .setLngLat(feature.geometry.coordinates as [number, number])
-                        .setDOMContent(container)
-                        .addTo(map)
+                        closeButton:
+                            config.popupStyle?.closeButton ?? false,
 
+                        closeOnClick:
+                            true,
+
+                        maxWidth:
+                            config.popupStyle?.maxWidth ?? '320px',
+
+                        className:
+                            config.popupStyle?.className ?? '',
+
+                        offset:
+                            config.popupStyle?.offset ?? [0, -15]
+                    })
+                        .setLngLat(
+                            feature.geometry.coordinates as [number, number]
+                        )
+                        .setDOMContent(
+                            container
+                        )
+                        .addTo(
+                            map
+                        )
+
+                currentPopup.on(
+                    'close',
+                    removePopup
+                )
 
                 currentPopup.getElement()
                     ?.querySelector(

@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { h, render } from 'vue'
 import type { Component } from 'vue'
 import type { VenueFeature } from '~/types/mapMarkers'
 import type { Map as MapLibreMap, Marker } from 'maplibre-gl'
@@ -15,7 +15,6 @@ interface MarkerConfig {
 
 interface ManagedMarker {
     marker:Marker
-    app:ReturnType<typeof createApp>
     element:HTMLElement
     feature:VenueFeature
 }
@@ -50,9 +49,19 @@ export function useMapLibreMarkers(
         const id = getId(feature)
         const element = document.createElement('div')
         const Component = getComponent(feature)
-        const app = createApp(Component, { feature })
 
-        app.mount(element)
+        const vnode =
+            h(
+                Component,
+                {
+                    feature
+                }
+            )
+
+        render(
+            vnode,
+            element
+        )
 
         const marker =
             new maplibregl.Marker({
@@ -68,8 +77,8 @@ export function useMapLibreMarkers(
             id,
             {
                 marker,
-                app,
-                element
+                element,
+                feature: feature as VenueFeature
             }
         )
     }
@@ -89,12 +98,18 @@ export function useMapLibreMarkers(
     }
 
     function removeMarker(id:string){
-        const existing = markers.get(id)
+        const existing =
+            markers.get(id)
+
         if (!existing)
             return
 
         existing.marker.remove()
-        existing.app.unmount()
+
+        render(
+            null,
+            existing.element
+        )
 
         markers.delete(id)
     }
