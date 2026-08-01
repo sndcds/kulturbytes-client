@@ -98,18 +98,12 @@ export function useMapLibreMarkers(
     }
 
     function removeMarker(id:string){
-        const existing =
-            markers.get(id)
-
+        const existing = markers.get(id)
         if (!existing)
             return
 
         existing.marker.remove()
-
-        render(
-            null,
-            existing.element
-        )
+        render(null, existing.element)
 
         markers.delete(id)
     }

@@ -46,9 +46,7 @@ const venues =
 const layers = computed<Record<string, MapLayerConfig>>(() => ({
   venues: {
     data: venues.value,
-
     cluster: true,
-
     iconProperty:'marker_style',
 
     icons: {

@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+
 const localePath = useLocalePath()
 
 const router = useRouter()
