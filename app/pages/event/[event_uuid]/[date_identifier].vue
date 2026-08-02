@@ -494,17 +494,18 @@ async function fetchEvent() {
   )
 }
 
-/*
-const { data: eventResponse, error } = await useAsyncData(
-    `event-${eventUuid}-${dateIdentifier}-${locale.value}`,
-    fetchEvent
-)
-*/
-
 const { data: eventResponse, error } = await useAsyncData(
     `event-${eventUuid}-${dateIdentifier}`,
     fetchEvent
 )
+
+if (error.value?.statusCode === 404) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Event not found',
+    fatal: true,
+  })
+}
 
 const event = computed(() => eventResponse.value?.data)
 const eventImage = computed(() => event.value?.images?.main)
@@ -620,36 +621,26 @@ const headData = computed(() => ({
 
 useHead(() => headData.value)
 
-useSeoMeta({
-    title: event.value.title,
-    description: event.value.summary || event.value.description,
+useSeoMeta(() => ({
+  title: event.value?.title,
+  description: event.value?.summary || event.value?.description,
 
-    ogTitle: event.value.title,
-    ogDescription: event.value.summary || event.value.description,
-    ogType:'article',
-    ogImage:
-        event.value.images?.main?.url
-            ? imageUrl(
-                event.value.images.main.url,
-                1200,
-                '16:9'
-            )
-            : undefined,
+  ogTitle: event.value?.title,
+  ogDescription: event.value?.summary || event.value?.description,
+  ogType: 'article',
+  ogImage: event.value?.images?.main?.url
+      ? imageUrl(event.value.images.main.url, 1200, '16:9')
+      : undefined,
 
-    twitterCard:'summary_large_image',
-    twitterTitle: event.value.title,
-    twitterDescription: event.value.summary || event.value.description,
-    twitterImage:
-        event.value.images?.main?.url
-            ? imageUrl(
-                event.value.images.main.url,
-                1200,
-                '16:9'
-            )
-            : undefined,
+  twitterCard: 'summary_large_image',
+  twitterTitle: event.value?.title,
+  twitterDescription: event.value?.summary || event.value?.description,
+  twitterImage: event.value?.images?.main?.url
+      ? imageUrl(event.value.images.main.url, 1200, '16:9')
+      : undefined,
 
-    robots:'index,follow'
-})
+  robots: event.value ? 'index,follow' : 'noindex'
+}))
 
 
 const onDownloadIcs = () => {

@@ -65,6 +65,25 @@ a {
     }
 }
 
+.kbts-button {
+    align-self: flex-start;
+    padding: 0.3rem 1rem;
+    border: 1px solid var(--kbts-fg);
+    border-radius: 999px;
+    background: var(--kbts-gb);
+    color: var(--kbts-fg);
+    font: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover,
+    &:focus-visible {
+        background: var(--kbts-fg);
+        color: var(--kbts-bg);
+    }
+}
+
+
 .kbts-flex-col {
     display: flex;
     flex-direction: column;

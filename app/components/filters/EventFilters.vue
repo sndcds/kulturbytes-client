@@ -76,9 +76,16 @@ const eventVenueInput = computed({
   }
 })
 
+
 async function saveFilter() {
   const payload = eventFilters.buildEventFilterPayload()
   const encodedFilter = encodeEventFilter(JSON.stringify(payload))
+
+  const url = new URL(window.location.href)
+  url.pathname = localePath('events')
+  url.searchParams.set('filter', encodedFilter)
+
+  await navigator.clipboard.writeText(url.toString())
 
   await router.push({
     path: localePath('events'),
@@ -284,7 +291,7 @@ async function saveFilter() {
 
     <button
         type="button"
-        class="save-filter-button"
+        class="kbts-button"
         @click="saveFilter"
     >
       {{ t('event.filter.save_filter') }}
@@ -371,24 +378,4 @@ label {
   border-color: var(--kbts-fg);
 }
 
-.save-filter-button {
-  align-self: flex-start;
-  margin-top: 0.75rem;
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--kbts-fg);
-  border-radius: 999px;
-  background: var(--kbts-fg);
-  color: var(--kbts-bg);
-  font: inherit;
-  cursor: pointer;
-  transition:
-      background .15s ease,
-      color .15s ease;
-
-  &:hover,
-  &:focus-visible {
-    background: var(--kbts-bg);
-    color: var(--kbts-fg);
-  }
-}
 </style>
