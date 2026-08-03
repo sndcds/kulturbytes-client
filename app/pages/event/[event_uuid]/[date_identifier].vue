@@ -705,7 +705,7 @@ const onCopyLink = async () => {
     margin-bottom: .5rem;
     padding-left: .75rem;
     color: var(--kbts-fg);
-    line-height: 1.5;
+    line-height: 1.6;
 
     &::before {
       content: "";

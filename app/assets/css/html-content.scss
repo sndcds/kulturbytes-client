@@ -1,18 +1,33 @@
 .kbts-html {
+  * {
+    font-size: 1rem;
+  }
   h1 {
-    font-size: 2.4rem;
+    font-size: 2.6rem;
     font-weight: 300;
     margin-top: 3rem;
   }
+
   h2 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 300;
     margin-top: 2rem;
   }
+
+  h3 {
+    font-size: 1.6rem;
+    font-weight: 300;
+  }
+
   p {
     font-size: 1.1rem;
     font-weight: 400;
     line-height: 1.4;
+  }
+
+  li {
+    line-height: 1.6;
+    font-size: 1.1rem;
   }
 }
 
