@@ -641,7 +641,7 @@ useSeoMeta({
 
   ogTitle: event.value?.title,
   ogDescription: () => truncateText(event.value?.summary || event.value?.description, 160),
-  ogUrl: () => requestUrl.href
+  ogUrl: () => requestUrl.href,
   ogType: 'article',
   ogImage: event.value?.images?.main?.url
       ? imageUrl(event.value.images.main.url, 1200, '16:9')
