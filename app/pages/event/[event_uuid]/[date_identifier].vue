@@ -623,7 +623,7 @@ const headData = computed(() => ({
 
 useHead(() => headData.value)
 
-useSeoMeta(() => ({
+useSeoMeta({
   title: event.value?.title,
   description: event.value?.summary || event.value?.description,
 
@@ -642,7 +642,7 @@ useSeoMeta(() => ({
       : undefined,
 
   robots: event.value ? 'index,follow' : 'noindex'
-}))
+})
 
 
 const onDownloadIcs = () => {

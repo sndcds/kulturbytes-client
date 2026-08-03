@@ -1,43 +1,22 @@
-<script setup lang="ts">
-</script>
-
 <template>
-  <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre><br-->
-  <!--pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre><br-->
-
   <div class="kbts-articles-grid">
-
-    <div class="kbts-article kbts-article-hero" style="color: mediumblue; background-color: transparent;">
+    <div class="kbts-article kbts-article-hero">
       <div class="kbts-article-content">
-
-        <h1>
-          Entdecken
-        </h1>
+        <h1>{{ t('home.discover.title') }}</h1>
 
         <p style="font-size: 1.4rem; margin-top: 1rem;">
-          Es gibt unzählige Möglichkeiten, Kultur zu erleben.
-          kulturbytes hilft dir dabei, Neues zu entdecken, zu stöbern oder gezielt das zu finden,
-          was dich interessiert.
+          {{ t('home.discover.text') }}
         </p>
 
-        <NuxtLink
-            :to="localePath('events')"
-            class="button"
-            style="color: mediumblue; border-color: mediumblue;"
-        >
+        <NuxtLink :to="localePath('events')" class="button">
           {{ t('goto.events_page') }}
         </NuxtLink>
-
       </div>
     </div>
 
-
-    <div class="kbts-article" style="color: mediumblue; background-color: transparent;">
+    <div class="kbts-article">
       <div class="kbts-article-content">
-
-        <h2>
-          Für Kulturakteure
-        </h2>
+        <h2>{{ t('home.create.title') }}</h2>
 
         <div class="button-row">
           <a
@@ -45,7 +24,6 @@
               target="_blank"
               rel="noopener noreferrer"
               class="button small"
-              style="color: mediumblue; border-color: mediumblue;"
           >
             {{ t('goto.register') }}
           </a>
@@ -55,104 +33,28 @@
               target="_blank"
               rel="noopener noreferrer"
               class="button small"
-              style="color: mediumblue; border-color: mediumblue;"
           >
             {{ t('goto.login') }}
           </a>
         </div>
 
-        <p>
-          Du organisierst Veranstaltungen oder betreibst einen Kulturort?
-          Mit einem kostenlosen Account kannst du deine Angebote auf kulturbytes veröffentlichen
-          und für Besucherinnen und Besucher sichtbar machen.
-        </p>
-
+        <p>{{ t('home.create.text') }}</p>
       </div>
     </div>
 
-    <div class="kbts-article" style="color: mediumseagreen; background-color: transparent;">
+    <div class="kbts-article">
       <div class="kbts-article-content">
-
-        <h2>
-          Grenzenlos
-        </h2>
+        <h2>{{ t('home.find.title') }}</h2>
 
         <div class="button-row">
-          <NuxtLink
-              :to="localePath('events-countries')"
-              class="button small"
-              style="color: mediumseagreen; border-color: mediumseagreen;"
-          >
+          <NuxtLink :to="localePath('events-countries')" class="button small">
             {{ t('goto.country_list') }}
           </NuxtLink>
         </div>
 
-        <p>
-          kulturbytes verbindet Veranstaltungen und Orte aus verschiedenen Regionen und Ländern.
-          Entdecke, wo bereits Angebote zu finden sind und wohin die Plattform wächst.
-        </p>
-
+        <p>{{ t('home.find.text') }}</p>
       </div>
     </div>
-
-    <div class="kbts-article" style="color: lightcoral; background-color: transparent;">
-      <div class="kbts-article-content">
-
-        <h2>
-          Offen + Gemeinsam
-        </h2>
-
-        <div class="button-row">
-          <NuxtLink
-              :to="localePath('events-countries')"
-              class="button small"
-              style="color: lightcoral; border-color: lightcoral;"
-          >
-            Code
-          </NuxtLink>
-
-          <NuxtLink
-              :to="localePath('events-countries')"
-              class="button small"
-              style="color: lightcoral; border-color: lightcoral;"
-          >
-            Dokumentation
-          </NuxtLink>
-        </div>
-
-        <p>
-          kulturbytes ist eine offene Plattform, die von der Community entwickelt wird.
-          Hier findest du Informationen zu unserem Open-Source-Projekt, dem Code und der Dokumentation.
-        </p>
-
-      </div>
-    </div>
-
-    <div class="kbts-article" style="color: lightcoral; background-color: transparent;">
-      <div class="kbts-article-content">
-        <h2>
-          Unterstütze kulturbytes
-        </h2>
-
-        <div class="button-row">
-          <NuxtLink
-              :to="localePath('events-countries')"
-              class="button small"
-              style="color: lightcoral; border-color: lightcoral;"
-          >
-            Unterstützen
-          </NuxtLink>
-        </div>
-
-        <p>
-          kulturbytes lebt von Menschen, die sich einbringen.
-          Hilf uns dabei, die Plattform weiter zu pflegen, zu verbessern
-          und neue Funktionen zu entwickeln.
-        </p>
-
-      </div>
-    </div>
-
   </div>
 </template>
 
@@ -238,14 +140,20 @@ useSeoMeta({
   font-size: 1.2rem;
   padding: .8rem 1.6rem;
   border-radius: 99px;
-  color: mediumblue;
-  border: 2px solid mediumblue;
+  color: var(--kbts-fg);
+  border: 2px solid var(--kbts-fg);
   margin-top: 2rem;
+
+  &:hover {
+    color: var(--kbts-bg);
+    background: var(--kbts-fg);
+  }
 }
 
 .button.small {
-  font-size: .9rem;
+  font-size: 1rem;
   padding: .4rem .8rem;
+  border-width: 1px;
 }
 
 .button-row {
@@ -255,6 +163,7 @@ useSeoMeta({
 
 .kbts-articles-grid {
   display: grid;
+  gap: 1rem;
   grid-template-columns: 1fr 1fr;
 }
 

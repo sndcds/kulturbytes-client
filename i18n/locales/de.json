@@ -24,6 +24,18 @@
     "title": "Startseite",
     "seo": {
       "description": "Entdecke Kulturorte, Veranstaltungen und kulturelle Angebote."
+    },
+    "discover": {
+      "title": "Entdecke",
+      "text": "Es gibt unzählige Möglichkeiten, Kultur zu erleben. kulturbytes hilft dir dabei, Neues zu entdecken, zu stöbern oder gezielt das zu finden, was dich interessiert."
+    },
+    "create": {
+      "title": "Mache",
+      "text": "Du organisierst Veranstaltungen oder betreibst einen Kulturort? Mit einem kostenlosen Account kannst du deine Angebote auf kulturbytes veröffentlichen und für Besucherinnen und Besucher sichtbar machen."
+    },
+    "find": {
+      "title": "Finde",
+      "text": "kulturbytes verbindet Veranstaltungen und Orte aus verschiedenen Regionen und Ländern. Entdecke, wo bereits Angebote zu finden sind und wohin die Plattform wächst."
     }
   },
   "events": {

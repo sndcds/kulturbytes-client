@@ -39,12 +39,18 @@
 
 .kbts-html-button {
   display: flex;
-  vertical-align: center;
-  gap: 0.5rem;
+  align-items: center;
+  gap: .5rem;
   padding: 1rem;
   margin-top: 3rem;
   background: var(--kbts-card-bg);
-  border-radius: .5rem;
+  border-radius: .25rem;
+  transition: all .2s ease-in-out;
+
+  &:hover {
+    background: var(--kbts-fg);
+    color: var(--kbts-bg);
+  }
 }
 
 .kbts-html-horizontal-flex {

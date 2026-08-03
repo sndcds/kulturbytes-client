@@ -24,6 +24,18 @@
     "title": "Startside",
     "seo": {
       "description": "Oplev arrangementer, koncerter og kulturelle tilbud i din region."
+    },
+    "discover": {
+      "title": "Opdag",
+      "text": "Der er utallige måder at opleve kultur på. kulturbytes hjælper dig med at opdage noget nyt, gå på opdagelse eller finde præcis det, der interesserer dig."
+    },
+    "create": {
+      "title": "Opret",
+      "text": "Arrangerer du begivenheder eller driver du et kultursted? Med en gratis konto kan du offentliggøre dine tilbud på kulturbytes og gøre dem synlige for besøgende."
+    },
+    "find": {
+      "title": "Find",
+      "text": "kulturbytes forbinder arrangementer og steder på tværs af forskellige regioner og lande. Opdag, hvor der allerede findes tilbud, og hvor platformen vokser."
     }
   },
   "events": {

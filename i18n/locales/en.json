@@ -15,7 +15,7 @@
     "legal": "Imprint"
   },
   "goto": {
-    "events_page": "Dicover events",
+    "events_page": "Discover events",
     "country_list": "Countries",
     "register": "Register",
     "login": "Login"
@@ -24,6 +24,18 @@
     "title": "Home",
     "seo": {
       "description": "Discover cultural events, venues and places in your region."
+    },
+    "discover": {
+      "title": "Discover",
+      "text": "There are countless ways to experience culture. kulturbytes helps you discover something new, explore, or find exactly what interests you."
+    },
+    "create": {
+      "title": "Create",
+      "text": "Do you organise events or run a cultural venue? With a free account, you can publish your offerings on kulturbytes and make them visible to visitors."
+    },
+    "find": {
+      "title": "Find",
+      "text": "kulturbytes connects events and places across different regions and countries. Discover where offerings are already available and where the platform is growing."
     }
   },
   "events": {
