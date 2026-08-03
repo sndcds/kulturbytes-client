@@ -371,7 +371,7 @@ import {
   Coins
 } from '@lucide/vue'
 import { useThemeStore } from '~/stores/themeStore'
-import { truncateText } from '~/utils/truncateText'
+import { truncateText } from '~/utils/text'
 
 defineI18nRoute({
   paths: {
