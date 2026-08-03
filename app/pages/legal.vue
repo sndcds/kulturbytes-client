@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import deHtml from '../assets/about/de.html?raw'
-import enHtml from '../assets/about/en.html?raw'
-import daHtml from '../assets/about/da.html?raw'
+import deHtml from '../assets/legal/de.html?raw'
+import enHtml from '../assets/legal/en.html?raw'
+import daHtml from '../assets/legal/da.html?raw'
 
 definePageMeta({
   layout: 'default'
@@ -19,5 +19,5 @@ const pageHtml = computed(() => htmlByLocale[locale.value] ?? enHtml)
 </script>
 
 <template>
-  <article class="kbts-html about-page" v-html="pageHtml" />
+  <article class="kbts-html legal-page" v-html="pageHtml" />
 </template>

@@ -10,7 +10,9 @@
     "about": "Om os",
     "support": "Support",
     "contact": "Kontakt",
-    "imprint": "Impressum"
+    "privacy": "Privatlivspolitik",
+    "terms": "Brugsbetingelser",
+    "legal": "Impressum"
   },
   "goto": {
     "events_page": "Se begivenheder",

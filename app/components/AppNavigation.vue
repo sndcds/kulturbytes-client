@@ -55,41 +55,45 @@
             <NuxtLink
                 :to="localePath('about')"
                 role="menuitem"
+                @click="closeNavigationMenus"
             >
               {{ t('nav.about') }}
             </NuxtLink>
             <NuxtLink
-                :to="localePath('/support')"
+                :to="localePath('/privacy')"
                 role="menuitem"
+                @click="closeNavigationMenus"
             >
-              {{ t('nav.support') }}
+              {{ t('nav.privacy') }}
             </NuxtLink>
             <NuxtLink
-                :to="localePath('/kontakt')"
+                :to="localePath('/terms')"
                 role="menuitem"
+                @click="closeNavigationMenus"
             >
-              {{ t('nav.contact') }}
+              {{ t('nav.terms') }}
             </NuxtLink>
             <NuxtLink
-                :to="localePath('/impressum')"
+                :to="localePath('/legal')"
                 role="menuitem"
+                @click="closeNavigationMenus"
             >
-              {{ t('nav.imprint') }}
+              {{ t('nav.legal') }}
             </NuxtLink>
           </div>
 
           <div class="info-menu-mobile">
-            <NuxtLink :to="localePath('about')">
+            <NuxtLink :to="localePath('about')" @click="closeNavigationMenus">
               {{ t('nav.about') }}
             </NuxtLink>
-            <NuxtLink :to="localePath('/support')">
-              {{ t('nav.support') }}
+            <NuxtLink :to="localePath('/privacy')" @click="closeNavigationMenus">
+              {{ t('nav.privacy') }}
             </NuxtLink>
-            <NuxtLink :to="localePath('/kontakt')">
-              {{ t('nav.contact') }}
+            <NuxtLink :to="localePath('/terms')" @click="closeNavigationMenus">
+              {{ t('nav.terms') }}
             </NuxtLink>
-            <NuxtLink :to="localePath('/impressum')">
-              {{ t('nav.imprint') }}
+            <NuxtLink :to="localePath('/legal')" @click="closeNavigationMenus">
+              {{ t('nav.legal') }}
             </NuxtLink>
           </div>
         </div>
@@ -267,6 +271,11 @@ function updateNavigationMode() {
   isMobileNavigation.value = window.matchMedia('(max-width: 768px)').matches
 }
 
+function closeNavigationMenus() {
+  infoOpen.value = false
+  open.value = false
+}
+
 onMounted(() => {
   updateNavigationMode()
   window.addEventListener('resize', updateNavigationMode)
@@ -341,7 +350,7 @@ watch(
 .filter-button, .filter-x {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: .5rem;
   border: 1px solid var(--kbts-border);
   background: white;
   border-radius: 0;
@@ -358,13 +367,13 @@ watch(
 }
 
 .filter-button {
-  border-top-left-radius: 0.25rem !important;
-  border-bottom-left-radius: 0.25rem !important;
+  border-top-left-radius: .25rem !important;
+  border-bottom-left-radius: .25rem !important;
 }
 
 .filter-x {
-  border-top-right-radius: 0.25rem !important;
-  border-bottom-right-radius: 0.25rem !important;
+  border-top-right-radius: .25rem !important;
+  border-bottom-right-radius: .25rem !important;
   border-left-width: 0;
 }
 
@@ -377,7 +386,7 @@ nav {
   > a,
   .info-button {
     position: relative;
-    padding: 0.25rem;
+    padding: .25rem;
     color: var(--kbts-fg);
     background: transparent;
     border: 0;
@@ -385,13 +394,13 @@ nav {
     font-weight: 400;
     font: inherit;
     cursor: pointer;
-    transition: color 0.25s ease;
+    transition: color .25s ease;
 
     &::after {
       content: "";
       position: absolute;
       left: 10%;
-      bottom: -0.3rem;
+      bottom: -.3rem;
       width: 80%;
       height: 2px;
 
@@ -400,7 +409,7 @@ nav {
 
       transform: scaleX(0);
       transform-origin: center;
-      transition: transform 0.25s ease;
+      transition: transform .25s ease;
     }
 
     &:hover {
@@ -434,44 +443,43 @@ nav {
 .info-menu {
   position: absolute;
   top: 100%;
-  left: 50%;
   min-width: 180px;
-  padding: 0.5rem;
+  padding: .5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: .1rem;
   background: var(--kbts-bg);
   border: 1px solid var(--kbts-border);
   border-radius: 8px;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .12);
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, -0.25rem);
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transform: translate(0, -.25rem);
+  transition: opacity .18s ease, transform .18s ease;
 
   a {
-    padding: 0.65rem 0.75rem;
+    padding: .65rem .75rem;
     color: var(--kbts-fg);
     text-decoration: none;
     font-weight: 400;
     border-radius: 6px;
     white-space: nowrap;
-    transition: background 0.18s ease;
+    transition: background .18s ease;
 
     &:hover,
-    &:focus-visible,
+    &:focus-visible {
+      background: rgba(0, 0, 0, .06);
+    }
+
     &.router-link-active {
-      background: rgba(0, 0, 0, 0.06);
+      font-weight: 700;
     }
   }
 }
 
-.info-nav:hover .info-menu,
-.info-nav:focus-within .info-menu,
 .info-nav.open .info-menu {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, 0);
 }
 
 .menu-toggle {
@@ -604,7 +612,7 @@ nav {
 
     > a,
     .info-button {
-      padding-inline: 0.75rem;
+      padding-inline: .75rem;
       border-radius: 6px;
 
       &::after {
@@ -612,9 +620,11 @@ nav {
       }
 
       &:hover,
-      &:focus-visible,
+      &:focus-visible {
+        background: rgba(0, 0, 0, .05);
+      }
+
       &.router-link-active {
-        background: rgba(0, 0, 0, 0.05);
       }
     }
 
@@ -640,15 +650,18 @@ nav {
     gap: 0;
 
     a {
-      padding: 0.45rem 0.75rem;
+      padding: .45rem .75rem;
       font-size: 1.05rem;
-      color: var(--kbts-muted-fg);
-      border-radius: 6px;
+      color: var(--kbts-fg);
+      border-radius: .25rem;
 
       &:hover,
-      &:focus-visible,
+      &:focus-visible {
+        background: rgba(0, 0, 0, .04);
+      }
+
       &.router-link-active {
-        background: rgba(0, 0, 0, 0.04);
+        font-weight: 700;
         color: var(--kbts-fg);
       }
     }

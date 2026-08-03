@@ -10,7 +10,9 @@
     "about": "About",
     "support": "Support",
     "contact": "Contact",
-    "imprint": "Imprint"
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "legal": "Imprint"
   },
   "goto": {
     "events_page": "Dicover events",
