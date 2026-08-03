@@ -370,7 +370,8 @@ import {
   Link,
   Coins
 } from '@lucide/vue'
-import { useThemeStore } from "~/stores/themeStore";
+import { useThemeStore } from '~/stores/themeStore'
+import { truncateText } from '~/utils/truncateText'
 
 defineI18nRoute({
   paths: {
@@ -383,6 +384,7 @@ defineI18nRoute({
 const route = useRoute()
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
+const requestUrl = useRequestURL()
 const themeStore = useThemeStore()
 
 const { renderMarkdown } = useMarkdown()
@@ -611,6 +613,15 @@ const eventSchema = computed(() => {
 })
 
 const headData = computed(() => ({
+  htmlAttrs: {
+    lang: () => locale.value
+  },
+  link: [
+    {
+      rel: 'canonical',
+      href: requestUrl.href
+    }
+  ],
   script: eventSchema.value
       ? [
         {
@@ -623,20 +634,24 @@ const headData = computed(() => ({
 
 useHead(() => headData.value)
 
+
 useSeoMeta({
   title: event.value?.title,
   description: event.value?.summary || event.value?.description,
 
   ogTitle: event.value?.title,
-  ogDescription: event.value?.summary || event.value?.description,
+  ogDescription: () => truncateText(event.value?.summary || event.value?.description, 160),
+  ogUrl: () => requestUrl.href
   ogType: 'article',
   ogImage: event.value?.images?.main?.url
       ? imageUrl(event.value.images.main.url, 1200, '16:9')
       : undefined,
+  ogImageWidth: '1200',
+  ogImageHeight: '630',
 
   twitterCard: 'summary_large_image',
   twitterTitle: event.value?.title,
-  twitterDescription: event.value?.summary || event.value?.description,
+  twitterDescription: () => truncateText(event.value?.summary || event.value?.description, 160),
   twitterImage: event.value?.images?.main?.url
       ? imageUrl(event.value.images.main.url, 1200, '16:9')
       : undefined,
