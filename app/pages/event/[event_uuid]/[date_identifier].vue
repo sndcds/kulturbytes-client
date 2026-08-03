@@ -516,7 +516,9 @@ const descriptionHtml = computed(() =>
 )
 
 const eventOrganizer = computed(() => {
-  if (!event.value) return null
+  if (!event.value)
+    return null
+
   return {
     name: event.value.org_name,
     webLink: event.value.org_web_link,

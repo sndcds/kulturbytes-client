@@ -93,11 +93,10 @@ const model = computed<DisplayModel>(() => {
   const sameDay = !date.end_date || date.end_date === date.start_date
 
   if (sameDay) {
-    const time = formatTimeRangeStr(date.start_time, date.end_time)
     return {
       type: 'single',
       date: formatDateStr(date.start_date),
-      time: time,
+      time: formatTimeRangeStr(date.start_time, date.end_time),
       entry_time: date.entry_time ? formatTimeStr(date.entry_time) : null
     }
   }
@@ -107,7 +106,7 @@ const model = computed<DisplayModel>(() => {
     start_date: formatDateStr(date.start_date),
     start_time: formatTimeStr(date.start_time),
     end_date: formatDateStr(date.end_date),
-    end_time: formatTimeStr(date.end_time),
+    end_time: date.end_time ? formatTimeStr(date.end_time) : null,
     entry_time: date.entry_time ? formatTimeStr(date.entry_time) : null
   }
 })
