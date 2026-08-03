@@ -372,6 +372,7 @@ import {
 } from '@lucide/vue'
 import { useThemeStore } from '~/stores/themeStore'
 import { truncateText } from '~/utils/text'
+import { ogLocale } from '~/utils/locale'
 
 defineI18nRoute({
   paths: {
@@ -384,6 +385,7 @@ defineI18nRoute({
 const route = useRoute()
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
+const config = useRuntimeConfig()
 const requestUrl = useRequestURL()
 const themeStore = useThemeStore()
 
@@ -401,6 +403,9 @@ const displayedTicketFlags = [
   'registration_required',
 ]
 
+const canonicalUrl = computed(() =>
+    new URL(route.path, config.public.siteUrl).href
+)
 
 const imageCredit = computed(() => {
   const image = event.value?.images?.main
@@ -619,7 +624,7 @@ const headData = computed(() => ({
   link: [
     {
       rel: 'canonical',
-      href: requestUrl.href
+      href: canonicalUrl.value
     }
   ],
   script: eventSchema.value
@@ -639,16 +644,20 @@ useSeoMeta({
   title: event.value?.title,
   description: event.value?.summary || event.value?.description,
 
+  ogSiteName: t('siteName'),
+  ogLocale: ogLocale(locale.value),
   ogTitle: event.value?.title,
-  ogDescription: () => truncateText(event.value?.summary || event.value?.description, 160),
-  ogUrl: () => requestUrl.href,
+  ogDescription: truncateText(event.value?.summary || event.value?.description, 160),
+  ogUrl: requestUrl.href,
   ogType: 'article',
   ogImage: event.value?.images?.main?.url
       ? imageUrl(event.value.images.main.url, 1200, '16:9')
       : undefined,
   ogImageWidth: '1200',
   ogImageHeight: '630',
+  ogImageAlt: event.value?.images?.main?.alt || event.value?.title,
 
+  // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
   twitterTitle: event.value?.title,
   twitterDescription: () => truncateText(event.value?.summary || event.value?.description, 160),
