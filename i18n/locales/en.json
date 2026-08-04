@@ -43,6 +43,7 @@
   "events": {
     "title": "Events",
     "seo": {
+      "title": "Discover events on kulturbytes",
       "description": "Discover concerts, exhibitions, theatre, festivals and many more upcoming events.",
       "image_alt": "Graphic illustration of kulturbytes events"
     },
@@ -52,6 +53,7 @@
   "venues": {
     "title": "Venues",
     "seo": {
+      "title": "Discover venues on kulturbytes",
       "description": "Discover cultural venues, places and spaces near you. Explore museums, theatres, concert halls, galleries and many more cultural locations.",
       "image_alt": "Graphic illustration of kulturbytes venues"
     }

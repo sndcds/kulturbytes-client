@@ -63,6 +63,7 @@ function applyFilterFromQuery() {
 
 const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
 const pageTitle = computed(() => `${t('events.title')}`)
+const seoTitle = computed(() => `${t('venues.seo.title')}`)
 const description = computed(() => t('events.seo.description'))
 
 const headData = computed(() => ({
@@ -121,7 +122,7 @@ useSeoMeta({
   ogType: 'website',
   ogSiteName: t('siteName'),
   ogLocale: ogLocale(locale.value),
-  ogTitle: pageTitle.value,
+  ogTitle: seoTitle.value,
   ogDescription: description.value,
   ogUrl: pageUrl.value,
   ogImage: `${config.public.siteUrl}/images/social/events.webp`,
@@ -131,7 +132,7 @@ useSeoMeta({
 
   // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
-  twitterTitle: pageTitle.value,
+  twitterTitle: seoTitle.value,
   twitterDescription: description.value,
   twitterImage: `${config.public.siteUrl}/images/social/events.webp`,
 

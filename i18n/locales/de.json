@@ -43,6 +43,7 @@
   "events": {
     "title": "Veranstaltungen",
     "seo": {
+      "title": "Finde Veranstaltungen auf kulturbytes",
       "description": "Finde Konzerte, Ausstellungen, Theater, Festivals und viele weitere bevorstehende Veranstaltungen.",
       "image_alt": "Grafische Darstellung von kulturbytes Veranstaltungen"
     },
@@ -52,6 +53,7 @@
   "venues": {
     "title": "Orte",
     "seo": {
+      "title": "Finde Kulturorte auf kulturbytes",
       "description": "Entdecke Kulturorte und Veranstaltungsorte in deiner Nähe. Finde Museen, Theater, Konzertsäle, Galerien und viele weitere kulturelle Orte.",
       "image_alt": "Grafische Darstellung von kulturbytes Orte"
     }

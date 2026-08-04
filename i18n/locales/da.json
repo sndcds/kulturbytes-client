@@ -43,6 +43,7 @@
   "events": {
     "title": "Begivenheder",
     "seo": {
+      "title": "Find begivenheder på kulturbytes",
       "description": "Find koncerter, udstillinger, teater, festivaler og mange andre kommende begivenheder.",
       "image_alt": "Grafisk illustration af kulturbytes begivenheder"
     },
@@ -52,6 +53,7 @@
   "venues": {
     "title": "Steder",
     "seo": {
+      "title": "Find kultursteder på kulturbytes",
       "description": "Find kultursteder og arrangementssteder i nærheden af dig. Udforsk museer, teatre, koncertsale, gallerier og mange andre kulturelle steder.",
       "image_alt": "Grafisk illustration af kulturbytes steder"
     }
