@@ -123,19 +123,19 @@ useSeoMeta({
   ogSiteName: t('siteName'),
   ogLocale: ogLocale(locale.value),
 
-  ogTitle: pageTitle.value,
-  ogDescription: truncateText(description.value, 160),
+  ogTitle: t('home.seo.title'),
+  ogDescription: t('home.seo.description'),
 
   ogUrl: pageUrl.value,
   ogType: 'website',
   ogImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
   ogImageWidth: '1200',
   ogImageHeight: '675',
-  ogImageAlt: 'kulturbytes',
+  ogImageAlt: t('home.seo.image_alt'),
 
   // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
-  twitterTitle: pageTitle.value,
+  twitterTitle: t('home.seo.title'),
   twitterDescription: truncateText(description.value),
   twitterImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
 

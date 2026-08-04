@@ -23,7 +23,9 @@
   "home": {
     "title": "Home",
     "seo": {
-      "description": "Discover cultural events, venues and places in your region."
+      "title": "kulturbytes – The Open Platform for Culture",
+      "description": "Discover events, cultural venues and creative activities. A free, open platform connecting cultural organisations, artists and communities.",
+      "image_alt": "Graphic illustration of kulturbytes with logo and cultural elements"
     },
     "discover": {
       "title": "Discover",

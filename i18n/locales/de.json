@@ -23,7 +23,9 @@
   "home": {
     "title": "Startseite",
     "seo": {
-      "description": "Entdecke Kulturorte, Veranstaltungen und kulturelle Angebote."
+      "title": "kulturbytes – Die offene Plattform für Kultur",
+      "description": "Entdecke Veranstaltungen, Kulturorte und kulturelle Angebote. Die offene, kostenlose Plattform für Kulturinstitutionen, Initiativen und Kulturschaffende.",
+      "image_alt": "Grafische Darstellung von kulturbytes mit Logo und kulturellen Motiven"
     },
     "discover": {
       "title": "Entdecke",

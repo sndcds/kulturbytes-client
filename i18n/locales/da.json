@@ -23,7 +23,9 @@
   "home": {
     "title": "Startside",
     "seo": {
-      "description": "Oplev arrangementer, koncerter og kulturelle tilbud i din region."
+      "title": "kulturbytes – Den åbne platform for kultur",
+      "description": "Find arrangementer, kultursteder og kulturelle tilbud. En gratis og åben platform for kulturinstitutioner, foreninger og kulturaktører.",
+      "image_alt": "Grafisk illustration af kulturbytes med logo og kulturelle elementer"
     },
     "discover": {
       "title": "Opdag",
