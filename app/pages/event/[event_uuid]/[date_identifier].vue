@@ -373,6 +373,7 @@ import {
 import { useThemeStore } from '~/stores/themeStore'
 import { truncateText } from '~/utils/text'
 import { ogLocale } from '~/utils/locale'
+import {eventSchemaStatus} from "../../../utils/eventSchema";
 
 defineI18nRoute({
   paths: {
@@ -578,15 +579,15 @@ const eventSchema = computed(() => {
 
     startDate: `${d.start_date}T${d.start_time || '00:00'}`,
 
-    endDate: d.end_date
-        ? `${d.end_date}T${d.end_time || '23:59'}`
+    endDate: (d.end_date || d.end_time)
+        ? `${d.end_date || d.start_date}T${d.end_time || '23:59'}`
         : undefined,
 
     doorTime: d.entry_time
         ? `${d.start_date}T${d.entry_time}`
         : undefined,
 
-    eventStatus: 'https://schema.org/EventScheduled',
+    eventStatus: eventSchemaStatus(d.release_status),
 
     location: {
       '@type': 'Place',
@@ -614,10 +615,8 @@ const eventSchema = computed(() => {
         }
         : undefined,
 
-    url: `https://kulturbytes.de/event/${e.uuid}/${d.slug}`
+    url: `https://kulturbytes.de/event/${e.uuid}/${d.slug}`,
   }
-
-  // TODO: add price_type: and offers:
 })
 
 useHead(() => ({
