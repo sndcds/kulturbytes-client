@@ -32,7 +32,7 @@ useHead({
             "url": config.public.siteUrl,
             "logo": {
               "@type": "ImageObject",
-              "url": `${config.public.siteUrl}/images/kulturbytes-logo-typo-2-lines.svg`
+              "url": `${config.public.siteUrl}/images/dsd-logo-typo-black.svg`
             }
           },
           {

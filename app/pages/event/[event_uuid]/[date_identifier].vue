@@ -555,6 +555,8 @@ const showTicketFlags = computed(() => {
   )
 })
 
+// Schema.org
+
 const eventSchema = computed(() => {
   if (!event.value) return null
 
@@ -617,27 +619,29 @@ const eventSchema = computed(() => {
   // TODO: add price_type: and offers:
 })
 
-const headData = computed(() => ({
+useHead(() => ({
   htmlAttrs: {
-    lang: () => locale.value
+    lang: locale.value
   },
+
   link: [
     {
+      key: 'canonical',
       rel: 'canonical',
       href: canonicalUrl.value
     }
   ],
+
   script: eventSchema.value
       ? [
         {
+          key: 'event-schema',
           type: 'application/ld+json',
-          children: JSON.stringify(eventSchema.value)
+          innerHTML: JSON.stringify(eventSchema.value)
         }
       ]
       : []
 }))
-
-useHead(() => headData.value)
 
 
 useSeoMeta({
