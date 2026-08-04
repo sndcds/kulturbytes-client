@@ -43,7 +43,8 @@
   "events": {
     "title": "Veranstaltungen",
     "seo": {
-      "description": "Finde Konzerte, Ausstellungen, Theater, Festivals und viele weitere bevorstehende Veranstaltungen."
+      "description": "Finde Konzerte, Ausstellungen, Theater, Festivals und viele weitere bevorstehende Veranstaltungen.",
+      "image_alt": "Grafische Darstellung von kulturbytes Veranstaltungen"
     },
     "upcoming_events_title": "Kommende Veranstaltungen",
     "upcoming_count": "{count} bevorstehende Veranstaltungen"
@@ -51,7 +52,8 @@
   "venues": {
     "title": "Orte",
     "seo": {
-      "description": "Entdecke Kulturorte und Veranstaltungsorte in deiner Nähe. Finde Museen, Theater, Konzertsäle, Galerien und viele weitere kulturelle Orte."
+      "description": "Entdecke Kulturorte und Veranstaltungsorte in deiner Nähe. Finde Museen, Theater, Konzertsäle, Galerien und viele weitere kulturelle Orte.",
+      "image_alt": "Grafische Darstellung von kulturbytes Orte"
     }
   },
   "download_ics": "Datum speichern",

@@ -8,6 +8,13 @@
 
 <script setup lang="ts">
 import VenueMap from '~/components/venue/VenueMap.client.vue'
+import { ogLocale } from '~/utils/locale'
+
+const route = useRoute()
+const config = useRuntimeConfig()
+const localePath = useLocalePath()
+const { t } = useI18n()
+
 
 defineI18nRoute({
   paths: {
@@ -21,27 +28,13 @@ definePageMeta({
   layout: 'map'
 })
 
-
 /**
  * SEO
  */
 
-const route = useRoute()
-const config = useRuntimeConfig()
-const localePath = useLocalePath()
-const { t } = useI18n()
-
-const pageUrl = computed(
-    () => `${config.public.siteUrl}${route.fullPath}`
-)
-
-const pageTitle = computed(
-    () => `${t('venues.title')}`
-)
-
-const description = computed(
-    () => t('venues.seo.description')
-)
+const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
+const pageTitle = computed(() => `${t('venues.title')}`)
+const description = computed(() => t('venues.seo.description'))
 
 const headData = computed(() => ({
   title: pageTitle.value,
@@ -92,16 +85,22 @@ useSeoMeta({
   title: pageTitle.value,
   description: description.value,
 
+  ogType: 'website',
+  ogSiteName: t('siteName'),
+  ogLocale: ogLocale(locale.value),
   ogTitle: pageTitle.value,
   ogDescription: description.value,
-  ogImage: `${config.public.siteUrl}/images/social/venues.webp`,
-  ogType: 'website',
   ogUrl: pageUrl.value,
+  ogImage: `${config.public.siteUrl}/images/social/events.webp`,
+  ogImageWidth: '1200',
+  ogImageHeight: '675',
+  ogImageAlt: t('events.seo.image_alt'),
 
+  // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
   twitterTitle: pageTitle.value,
   twitterDescription: description.value,
-  twitterImage: `${config.public.siteUrl}/images/social/venues.webp`,
+  twitterImage: `${config.public.siteUrl}/images/social/events.webp`,
 
   robots: 'index,follow'
 })

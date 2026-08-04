@@ -156,11 +156,10 @@ useSeoMeta({
   ogSiteName: t('siteName'),
   ogLocale: ogLocale(locale.value),
 
+  ogType: 'website',
   ogTitle: t('home.seo.title'),
   ogDescription: t('home.seo.description'),
-
   ogUrl: pageUrl.value,
-  ogType: 'website',
   ogImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
   ogImageWidth: '1200',
   ogImageHeight: '675',

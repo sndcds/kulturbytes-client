@@ -43,7 +43,8 @@
   "events": {
     "title": "Begivenheder",
     "seo": {
-      "description": "Find koncerter, udstillinger, teater, festivaler og mange andre kommende begivenheder."
+      "description": "Find koncerter, udstillinger, teater, festivaler og mange andre kommende begivenheder.",
+      "image_alt": "Grafisk illustration af kulturbytes begivenheder"
     },
     "upcoming_events_title": "Kommende begivenheder",
     "upcoming_count": "{count} kommende begivenheder"
@@ -51,7 +52,8 @@
   "venues": {
     "title": "Steder",
     "seo": {
-      "description": "Find kultursteder og arrangementssteder i nærheden af dig. Udforsk museer, teatre, koncertsale, gallerier og mange andre kulturelle steder."
+      "description": "Find kultursteder og arrangementssteder i nærheden af dig. Udforsk museer, teatre, koncertsale, gallerier og mange andre kulturelle steder.",
+      "image_alt": "Grafisk illustration af kulturbytes steder"
     }
   },
   "download_ics": "Gem dato",

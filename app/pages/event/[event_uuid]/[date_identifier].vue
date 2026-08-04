@@ -645,16 +645,19 @@ useHead(() => ({
 }))
 
 
+const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
+const description = computed(() => truncateText(event.value?.summary || event.value?.description, 160))
+
 useSeoMeta({
   title: event.value?.title,
-  description: event.value?.summary || event.value?.description,
+  description: description,
 
+  ogType: 'article',
   ogSiteName: t('siteName'),
   ogLocale: ogLocale(locale.value),
   ogTitle: event.value?.title,
-  ogDescription: truncateText(event.value?.summary || event.value?.description, 160),
-  ogUrl: requestUrl.href,
-  ogType: 'article',
+  ogDescription: description,
+  ogUrl: pageUrl,
   ogImage: event.value?.images?.main?.url
       ? imageUrl(event.value.images.main.url, 1200, '16:9')
       : undefined,
@@ -665,7 +668,7 @@ useSeoMeta({
   // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
   twitterTitle: event.value?.title,
-  twitterDescription: () => truncateText(event.value?.summary || event.value?.description, 160),
+  twitterDescription: description,
   twitterImage: event.value?.images?.main?.url
       ? imageUrl(event.value.images.main.url, 1200, '16:9')
       : undefined,
