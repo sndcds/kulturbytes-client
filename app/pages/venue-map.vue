@@ -13,7 +13,7 @@ import { ogLocale } from '~/utils/locale'
 const route = useRoute()
 const config = useRuntimeConfig()
 const localePath = useLocalePath()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 
 defineI18nRoute({

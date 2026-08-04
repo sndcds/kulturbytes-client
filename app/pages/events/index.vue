@@ -14,7 +14,7 @@ const { setFilter } = filtersStore
 const route = useRoute()
 const localePath = useLocalePath()
 const config = useRuntimeConfig()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { decodeEventFilter } = useEventFilterEncoding()
 import { ogLocale } from '~/utils/locale'
 
