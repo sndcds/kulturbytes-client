@@ -64,6 +64,8 @@ const localePath = useLocalePath()
 const { locale, t } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
+import { truncateText } from '~/utils/text'
+import { ogLocale } from '~/utils/locale'
 
 const pageUrl = computed(
     () => `${config.public.siteUrl}${route.fullPath}`
@@ -118,18 +120,26 @@ useSeoMeta({
   title: pageTitle.value,
   description: description.value,
 
-  ogTitle: pageTitle.value,
-  ogDescription: description.value,
-  ogImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
-  ogType: 'website',
-  ogUrl: pageUrl.value,
+  ogSiteName: t('siteName'),
+  ogLocale: ogLocale(locale.value),
 
+  ogTitle: pageTitle.value,
+  ogDescription: truncateText(description.value, 160),
+
+  ogUrl: pageUrl.value,
+  ogType: 'website',
+  ogImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
+  ogImageWidth: '1200',
+  ogImageHeight: '675',
+  ogImageAlt: event.value?.images?.main?.alt || event.value?.title,
+
+  // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
   twitterTitle: pageTitle.value,
-  twitterDescription: description.value,
+  twitterDescription: truncateText(description.value),
   twitterImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
 
-  robots: 'index,follow'
+  robots: event.value ? 'index,follow' : 'noindex'
 })
 
 </script>

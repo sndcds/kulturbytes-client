@@ -654,7 +654,7 @@ useSeoMeta({
       ? imageUrl(event.value.images.main.url, 1200, '16:9')
       : undefined,
   ogImageWidth: '1200',
-  ogImageHeight: '630',
+  ogImageHeight: '675',
   ogImageAlt: event.value?.images?.main?.alt || event.value?.title,
 
   // twitterSite: '@kulturbytes', TODO:
