@@ -388,6 +388,7 @@ const localePath = useLocalePath()
 const config = useRuntimeConfig()
 const requestUrl = useRequestURL()
 const themeStore = useThemeStore()
+const { countryName } = useCountryName()
 
 const { renderMarkdown } = useMarkdown()
 const { isDownloadingIcs, downloadIcs } = useIcsDownload()
@@ -601,7 +602,7 @@ const eventSchema = computed(() => {
 
         postalCode: d.venue_postal_code,
         addressLocality: d.venue_city,
-        addressCountry: d.venue_country
+        addressCountry: countryName(d.venue_country)
       }
     },
 
