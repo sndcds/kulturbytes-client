@@ -83,32 +83,65 @@ const headData = computed(() => ({
   htmlAttrs: {
     lang: locale.value
   },
+
   title: pageTitle.value,
+
   link: [
     {
       rel: 'canonical',
       href: pageUrl.value
     }
   ],
+
+  /* TODO: "@type": "WebSite" could be extended with this if search is available:
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${config.public.siteUrl}/events?search={search_term_string}`
+      },
+      "query-input": "required name=search_term_string"
+    }
+   */
   script: [
     {
       type: 'application/ld+json',
       children: JSON.stringify({
         "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": t('siteName'),
-        "url": config.public.siteUrl,
-        "description": description.value,
-        "inLanguage": locale.value
-      })
-    },
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": t('siteName'),
-        "url": config.public.siteUrl
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": `${config.public.siteUrl}/#organization`,
+            "name": t('siteName'),
+            "url": config.public.siteUrl,
+            "logo": {
+              "@type": "ImageObject",
+              "url": `${config.public.siteUrl}/images/kulturbytes-logo-typo-2-lines.svg`
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": `${config.public.siteUrl}/#website`,
+            "name": t('siteName'),
+            "url": config.public.siteUrl,
+            "description": description.value,
+            "inLanguage": locale.value,
+            "publisher": {
+              "@id": `${config.public.siteUrl}/#organization`
+            },
+          },
+          {
+            "@type": "WebPage",
+            "@id": `${pageUrl.value}#webpage`,
+            "url": pageUrl.value,
+            "name": pageTitle.value,
+            "description": description.value,
+            "isPartOf": {
+              "@id": `${config.public.siteUrl}/#website`
+            },
+            "inLanguage": locale.value
+          }
+        ]
       })
     }
   ]
@@ -133,7 +166,7 @@ useSeoMeta({
   ogImageHeight: '675',
   ogImageAlt: t('home.seo.image_alt'),
 
-  // twitterSite: '@kulturbytes', TODO:
+  // twitterSite: '@kulturbytes', TODO: Outcomment this if twitterSite is available
   twitterCard: 'summary_large_image',
   twitterTitle: t('home.seo.title'),
   twitterDescription: truncateText(description.value),
