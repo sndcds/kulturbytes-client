@@ -16,17 +16,34 @@
 
 
 <script setup lang="ts">
-const { organization, website } = useStructuredData()
+const config = useRuntimeConfig()
 
 useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
-          organization,
-          website
+          {
+            "@type": "Organization",
+            "@id": `${config.public.siteUrl}/#organization`,
+            "name": "DatenSindDaten e. V.",
+            "url": config.public.siteUrl,
+            "logo": {
+              "@type": "ImageObject",
+              "url": `${config.public.siteUrl}/images/kulturbytes-logo-typo-2-lines.svg`
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": `${config.public.siteUrl}/#website`,
+            "name": "kulturbytes",
+            "url": config.public.siteUrl,
+            "publisher": {
+              "@id": `${config.public.siteUrl}/#organization`
+            }
+          }
         ]
       })
     }
