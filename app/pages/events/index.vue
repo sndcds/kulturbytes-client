@@ -63,7 +63,7 @@ function applyFilterFromQuery() {
 
 const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
 const pageTitle = computed(() => `${t('events.title')}`)
-const seoTitle = computed(() => `${t('venues.seo.title')}`)
+const seoTitle = computed(() => `${t('events.seo.title')}`)
 const description = computed(() => t('events.seo.description'))
 
 const headData = computed(() => ({
