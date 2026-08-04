@@ -95,16 +95,16 @@ useSeoMeta({
   ogTitle: pageTitle.value,
   ogDescription: description.value,
   ogUrl: pageUrl.value,
-  ogImage: `${config.public.siteUrl}/images/social/events.webp`,
+  ogImage: `${config.public.siteUrl}/images/social/venues.webp`,
   ogImageWidth: '1200',
   ogImageHeight: '675',
-  ogImageAlt: t('events.seo.image_alt'),
+  ogImageAlt: t('venues.seo.image_alt'),
 
   // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
   twitterTitle: pageTitle.value,
   twitterDescription: description.value,
-  twitterImage: `${config.public.siteUrl}/images/social/events.webp`,
+  twitterImage: `${config.public.siteUrl}/images/social/venues.webp`,
 
   robots: 'index,follow'
 })
