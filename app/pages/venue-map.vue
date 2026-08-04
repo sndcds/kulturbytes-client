@@ -38,8 +38,12 @@ const description = computed(() => t('venues.seo.description'))
 
 const headData = computed(() => ({
   title: pageTitle.value,
+  htmlAttrs: {
+    lang: locale.value
+  },
   link: [
     {
+      key: 'canonical',
       rel: 'canonical',
       href: pageUrl.value
     }

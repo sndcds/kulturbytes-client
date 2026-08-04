@@ -624,7 +624,6 @@ useHead(() => ({
   htmlAttrs: {
     lang: locale.value
   },
-
   link: [
     {
       key: 'canonical',
@@ -632,7 +631,6 @@ useHead(() => ({
       href: canonicalUrl.value
     }
   ],
-
   script: eventSchema.value
       ? [
         {

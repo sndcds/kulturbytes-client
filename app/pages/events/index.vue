@@ -67,8 +67,12 @@ const description = computed(() => t('events.seo.description'))
 
 const headData = computed(() => ({
   title: pageTitle.value,
+  htmlAttrs: {
+    lang: locale.value
+  },
   link: [
     {
+      key: 'canonical',
       rel: 'canonical',
       href: pageUrl.value
     }
