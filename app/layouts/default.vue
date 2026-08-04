@@ -14,6 +14,27 @@
   </div>
 </template>
 
+
+<script setup lang="ts">
+const { organization, website } = useStructuredData()
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          organization,
+          website
+        ]
+      })
+    }
+  ]
+})
+</script>
+
+
 <style scoped lang="scss">
 .layout {
   min-height: 100vh;
