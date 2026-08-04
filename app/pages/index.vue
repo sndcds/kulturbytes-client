@@ -131,7 +131,7 @@ useSeoMeta({
   ogImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
   ogImageWidth: '1200',
   ogImageHeight: '675',
-  ogImageAlt: event.value?.images?.main?.alt || event.value?.title,
+  ogImageAlt: 'kulturbytes',
 
   // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
@@ -139,7 +139,7 @@ useSeoMeta({
   twitterDescription: truncateText(description.value),
   twitterImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
 
-  robots: event.value ? 'index,follow' : 'noindex'
+  robots: 'index,follow'
 })
 
 </script>
