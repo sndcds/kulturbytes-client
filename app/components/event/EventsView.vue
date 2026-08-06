@@ -12,6 +12,24 @@
       />
     </div>
 
+    <div
+        v-if="showEmptyState"
+        class="kbts-events-empty-state"
+    >
+      <p>
+        {{ emptyStateText }}
+      </p>
+
+      <button
+          v-if="hasActiveFilters"
+          type="button"
+          class="kbts-button"
+          @click="resetEventFilters"
+      >
+        {{ t('event.filter.reset_filters') }}
+      </button>
+    </div>
+
     <div ref="loadTrigger" class="kbts-events-view-load-trigger">
     </div>
 
@@ -45,7 +63,7 @@ const props = withDefaults(
     }
 )
 
-const { locale } = useI18n()
+const { t } = useI18n()
 const { $api } = useNuxtApp()
 
 const eventFilters = useFiltersStore()
@@ -53,6 +71,7 @@ const eventFilters = useFiltersStore()
 const {
   eventCategories,
   eventDateSpan,
+  eventDateRange,
   eventSearch,
   eventDateStart,
   eventDateEnd,
@@ -82,6 +101,7 @@ const {
 } = storeToRefs(summaryStore)
 
 const loading = ref(false)
+const resettingFilters = ref(false)
 const hasMore = ref(true)
 const cursor = ref<{
   date_uuid: string
@@ -114,6 +134,38 @@ function setupObserver() {
 
 const error = ref<string | null>(null)
 
+const hasActiveFilters = computed(() => {
+  if (!props.useFilters) {
+    return false
+  }
+
+  return Boolean(
+      eventCategories.value?.length ||
+      eventSearch.value.trim() ||
+      eventDateRange.value.startDate ||
+      eventDateRange.value.endDate ||
+      eventCity.value.trim() ||
+      eventPostalCode.value.trim() ||
+      eventVenue.value.trim() ||
+      eventLocationFlag.value ||
+      eventTypeIds.value.length ||
+      eventGenreIds.value.length ||
+      eventAgeFrom.value ||
+      eventAgeTo.value ||
+      eventPriceType.value
+  )
+})
+
+const showEmptyState = computed(
+    () => !loading.value && !hasMore.value && events.value.length === 0
+)
+
+const emptyStateText = computed(() => {
+  return hasActiveFilters.value
+      ? t('event.no_filter_results')
+      : t('event.no_events_in_system')
+})
+
 onMounted(async () => {
   await loadEvents()
   setupObserver()
@@ -127,6 +179,18 @@ function resetEvents() {
   events.value = []
   cursor.value = null
   hasMore.value = true
+}
+
+async function resetEventFilters() {
+  reloadEvents.cancel()
+  resettingFilters.value = true
+  eventFilters.resetFilters()
+
+  await nextTick()
+
+  resettingFilters.value = false
+  resetEvents()
+  await loadEvents()
 }
 
 async function loadEvents() {
@@ -184,9 +248,11 @@ watch(
       eventDateEnd,
     ],
     () => {
-      if (props.useFilters) {
-        reloadEvents()
+      if (!props.useFilters || resettingFilters.value) {
+        return
       }
+
+      reloadEvents()
     },
     { deep: true }
 )
@@ -203,7 +269,7 @@ watch(
       eventMaxPrice
     ],
     async () => {
-      if (!props.useFilters) {
+      if (!props.useFilters || resettingFilters.value) {
         return
       }
 
@@ -240,6 +306,20 @@ watch(
   &.loading {
     opacity: .35;
     pointer-events: none;
+  }
+}
+
+.kbts-events-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 2rem 0;
+
+  p {
+    margin: 0;
+    color: var(--kbts-muted-fg);
+    font-size: 1rem;
   }
 }
 </style>

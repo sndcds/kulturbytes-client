@@ -71,6 +71,8 @@
   },
   "event": {
     "no_events_found": "Ingen begivenheder fundet",
+    "no_filter_results": "Desværre ingen resultater",
+    "no_events_in_system": "Ingen begivenheder i systemet",
     "category": {
       "culture": "Kultur",
       "education": "Uddannelse",
@@ -104,6 +106,7 @@
       "price": "Pris",
       "price_type": "Pristype",
       "max_price": "Maksimal pris",
+      "reset_filters": "Nulstil filtre",
       "save_filter": "Gem filter"
     },
     "more_dates": "Flere datoer",

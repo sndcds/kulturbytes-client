@@ -71,6 +71,8 @@
   },
   "event": {
     "no_events_found": "Es wurden keine Events gefunden",
+    "no_filter_results": "Leider keine Ergebnisse",
+    "no_events_in_system": "Keine Events im System vorhanden",
     "category": {
       "culture": "Kultur",
       "education": "Bildung",
@@ -104,6 +106,7 @@
       "price": "Preis",
       "price_type": "Preisart",
       "max_price": "Höchstpreis",
+      "reset_filters": "Filter zurücksetzen",
       "save_filter": "Filter speichern"
     },
     "more_dates": "Weitere Termine",

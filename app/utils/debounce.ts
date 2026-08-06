@@ -4,11 +4,17 @@ export function debounce<T extends (...args: any[]) => any>(
 ) {
     let timer: ReturnType<typeof setTimeout>
 
-    return (...args: Parameters<T>) => {
+    const debounced = (...args: Parameters<T>) => {
         clearTimeout(timer)
 
         timer = setTimeout(() => {
             fn(...args)
         }, delay)
     }
+
+    debounced.cancel = () => {
+        clearTimeout(timer)
+    }
+
+    return debounced
 }

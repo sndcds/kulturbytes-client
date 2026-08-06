@@ -71,6 +71,8 @@
   },
   "event": {
     "no_events_found": "No events found",
+    "no_filter_results": "No results found",
+    "no_events_in_system": "No events available in the system",
     "category": {
       "culture": "Culture",
       "education": "Education",
@@ -104,6 +106,7 @@
       "price": "Price",
       "price_type": "Price type",
       "max_price": "Maximum price",
+      "reset_filters": "Reset filters",
       "save_filter": "Save filter"
     },
     "more_dates": "More dates",
