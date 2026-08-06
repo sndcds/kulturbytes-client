@@ -70,8 +70,8 @@
     "button_label": "Filter"
   },
   "event": {
-    "no_events_found": "Es wurden keine Events gefunden",
-    "no_filter_results": "Leider keine Ergebnisse",
+    "no_events_found": "Es wurden keine Veranstaltungen gefunden",
+    "no_filter_results": "Keine Ergebnisse gefunden",
     "no_events_in_system": "Keine Events im System vorhanden",
     "category": {
       "culture": "Kultur",
@@ -125,7 +125,7 @@
     "venue": "Ort",
     "space": "Raum",
     "meeting_point": "Treffpunkt",
-    "organized_by": "Veranstalted von",
+    "organized_by": "Veranstaltet von",
     "to_online_event": "Online Veranstaltung öffnen",
     "registration": {
       "label": "Anmeldung",

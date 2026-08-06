@@ -16,9 +16,9 @@
         v-if="showEmptyState"
         class="kbts-events-empty-state"
     >
-      <p>
+      <h2>
         {{ emptyStateText }}
-      </p>
+      </h2>
 
       <button
           v-if="hasActiveFilters"
@@ -312,14 +312,25 @@ watch(
 .kbts-events-empty-state {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 2rem 0;
+  align-items: center;
+  gap: 1rem;
+
+  h2 {
+    font-weight: 400;
+    font-size: 2rem;
+  }
 
   p {
     margin: 0;
     color: var(--kbts-muted-fg);
     font-size: 1rem;
+  }
+
+  .kbts-button {
+    font-size: 1.2rem;
+    padding: .8rem 1.6rem;
+    width: fit-content;
+    margin-inline: auto;
   }
 }
 </style>
