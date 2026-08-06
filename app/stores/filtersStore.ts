@@ -35,11 +35,14 @@ type EventFilterPayload = {
     }
 }
 
+type EventFilterTab = 'location' | 'types' | 'age' | 'price'
+
 export const useFiltersStore = defineStore(
     'filters',
     () => {
         // UI state
         const filterType = ref<string | null>(null)
+        const eventFilterTab = ref<EventFilterTab>('location')
 
         // Event filters
         const eventCategories = ref<number[] | null>(null)
@@ -218,6 +221,7 @@ export const useFiltersStore = defineStore(
         return {
             // UI state
             filterType,
+            eventFilterTab,
             setFilter,
 
             // Event filters
