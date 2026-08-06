@@ -125,7 +125,7 @@
     "venue": "Venue",
     "space": "Space",
     "meeting_point": "Meeting point",
-    "organizer": "Organizer",
+    "organized_by": "Organized by",
     "to_online_event": "Open online event",
     "registration": {
       "label": "Registration",

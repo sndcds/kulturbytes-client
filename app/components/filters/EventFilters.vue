@@ -327,20 +327,20 @@ async function saveFilter() {
       </div>
     </div>
 
-    <button
+    <!--button
         type="button"
         class="kbts-button"
         @click="saveFilter"
     >
       {{ t('event.filter.save_filter') }}
-    </button>
+    </button-->
 
   </div>
 
 </template>
 
 
-<style scoped>
+<style scoped lang="scss">
 .filters {
   display: flex;
   flex-direction: column;
@@ -390,7 +390,7 @@ input {
   gap: 0.35rem;
   padding: 0.25rem;
   border-radius: 999px;
-  background: var(--kbts-card-bg);
+  // background: var(--kbts-card-bg);
 }
 
 .filter-tab {

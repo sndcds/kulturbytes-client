@@ -125,7 +125,7 @@
     "venue": "Sted",
     "space": "Lokale",
     "meeting_point": "Mødested",
-    "organizer": "Arrangør",
+    "organized_by": "Arranget af",
     "to_online_event": "Åbn online begivenhed",
     "registration": {
       "label": "Tilmelding",

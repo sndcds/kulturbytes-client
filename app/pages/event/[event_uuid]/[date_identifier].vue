@@ -171,7 +171,7 @@
           class="kbts-event-view-organizer"
        >
         <span class="kbts-event-view-label">
-          {{ t('event.organizer') }}
+          {{ t('event.organized_by') }}
         </span><br>
         <a
             v-if="eventOrganizer?.webLink"

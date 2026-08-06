@@ -125,7 +125,7 @@
     "venue": "Ort",
     "space": "Raum",
     "meeting_point": "Treffpunkt",
-    "organizer": "Veranstalter",
+    "organized_by": "Veranstalted von",
     "to_online_event": "Online Veranstaltung öffnen",
     "registration": {
       "label": "Anmeldung",
