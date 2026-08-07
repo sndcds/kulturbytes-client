@@ -24,6 +24,7 @@ export interface EventDate {
     all_day: boolean
 
     venue_uuid: string
+    venue_slug?: string
     venue_name: string
     venue_street: string
     venue_house_number: string

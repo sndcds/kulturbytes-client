@@ -130,7 +130,13 @@
 
       <div class="kbts-event-view-venue kbts-flex-col">
         <span class="kbts-event-view-label">{{ t('event.venue') }}</span>
-        <span>{{ event.date.venue_name }}</span>
+        <NuxtLink
+            v-if="venueLink"
+            :to="venueLink"
+        >
+          {{ event.date.venue_name }}
+        </NuxtLink>
+        <span v-else>{{ event.date.venue_name }}</span>
         <span v-if="event.date.venue_street || event.date.venue_house_number">
           {{ [event.date.venue_street, event.date.venue_house_number].filter(Boolean).join(' ') }}
         </span>
@@ -518,6 +524,20 @@ if (error.value?.statusCode === 404) {
 
 const event = computed(() => eventResponse.value?.data)
 const eventImage = computed(() => event.value?.images?.main)
+const venueLink = computed(() => {
+  const venueIdentifier = event.value?.date.venue_slug || event.value?.date.venue_uuid
+
+  if (!venueIdentifier) {
+    return null
+  }
+
+  return localePath({
+    name: 'venue-venue_identifier',
+    params: {
+      venue_identifier: venueIdentifier,
+    },
+  })
+})
 const descriptionHtml = computed(() =>
     event.value?.description
         ? renderMarkdown(event.value.description)
