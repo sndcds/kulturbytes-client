@@ -20,6 +20,10 @@
     "register": "Opret en konto",
     "login": "Login"
   },
+  "map": {
+    "website_link": "Hjemmeside",
+    "details_link": "Detaljer"
+  },
   "home": {
     "title": "Startside",
     "seo": {

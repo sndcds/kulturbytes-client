@@ -18,7 +18,7 @@
           target="_blank"
           rel="noopener noreferrer"
       >
-        Website
+        {{ t('map.website_link') }}
       </a>
 
       <NuxtLink
@@ -26,7 +26,7 @@
           href="#"
           @click.prevent.stop="openVenue"
       >
-        Details
+        {{ t('map.details_link') }}
       </NuxtLink>
     </div>
 
@@ -38,6 +38,7 @@
 import { computed } from 'vue'
 
 const localePath = useLocalePath()
+const { t } = useI18n()
 
 const props = defineProps<{
   feature?: any
@@ -73,8 +74,7 @@ function openVenue() {
 
   .action {
     display: flex;
-    gap: 2px;
-    padding: 2px;
+    gap: .25rem;
   }
 
   h3 {
@@ -87,9 +87,10 @@ function openVenue() {
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 0.5rem;
+    padding: .5rem;
     background: var(--kbts-card-bg);
     transition: all 0.2s ease;
+    border-radius: 999px;
 
     &:hover {
       background: var(--kbts-fg);

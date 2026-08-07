@@ -20,6 +20,10 @@
     "register": "Konto erstellen",
     "login": "Login"
   },
+  "map": {
+    "website_link": "Webseite",
+    "details_link": "Details"
+  },
   "home": {
     "title": "Startseite",
     "seo": {

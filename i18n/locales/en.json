@@ -20,6 +20,10 @@
     "register": "Register",
     "login": "Login"
   },
+  "map": {
+    "website_link": "Website",
+    "details_link": "Details"
+  },
   "home": {
     "title": "Home",
     "seo": {

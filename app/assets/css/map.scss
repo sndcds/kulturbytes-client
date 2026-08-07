@@ -22,9 +22,10 @@
   overflow: hidden;
 
   .maplibregl-popup-content {
-    padding: 0;
+    padding: .5rem;
     overflow: hidden;
     background: var(--kbts-bg);
+    border-radius: .25rem;
   }
 
   .map-popup {
