@@ -120,7 +120,7 @@
               class="filter-button"
               :aria-expanded="filtersOpen"
               aria-label="Toggle filters"
-              @click="filtersOpen = !filtersOpen"
+              @click="toggleFilters"
           >
             <SlidersHorizontal :size="18"/>{{ t('filter.button_label') }}
           </button>
@@ -140,7 +140,7 @@
         <button
             class="menu-toggle"
             aria-label="Toggle navigation"
-            @click="open = !open"
+            @click="toggleNavigation"
         >
           <span></span>
           <span></span>
@@ -219,12 +219,32 @@ const resetFilters = () => {
   // filtersOpen.value = false // optional
 }
 
+function toggleFilters() {
+  const nextFiltersOpen = !filtersOpen.value
+  filtersOpen.value = nextFiltersOpen
+
+  if (nextFiltersOpen) {
+    open.value = false
+    infoOpen.value = false
+  }
+}
+
+function toggleNavigation() {
+  const nextNavigationOpen = !open.value
+  open.value = nextNavigationOpen
+
+  if (nextNavigationOpen) {
+    filtersOpen.value = false
+  }
+}
+
 const infoMenuVisible = computed(() => {
   return isMobileNavigation.value || infoOpen.value
 })
 
 function openInfoMenu() {
   if (!isMobileNavigation.value) {
+    filtersOpen.value = false
     infoOpen.value = true
   }
 }
@@ -237,7 +257,12 @@ function closeInfoMenu() {
 
 function toggleInfoMenu() {
   if (!isMobileNavigation.value) {
-    infoOpen.value = !infoOpen.value
+    const nextInfoOpen = !infoOpen.value
+    infoOpen.value = nextInfoOpen
+
+    if (nextInfoOpen) {
+      filtersOpen.value = false
+    }
   }
 }
 
