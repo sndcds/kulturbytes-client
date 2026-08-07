@@ -134,7 +134,7 @@
             v-if="venueLink"
             :to="venueLink"
         >
-          {{ event.date.venue_name }} ↗
+          {{ event.date.venue_name }} →
         </NuxtLink>
         <span v-else>{{ event.date.venue_name }}</span>
         <span v-if="event.date.venue_street || event.date.venue_house_number">

@@ -81,7 +81,7 @@
             :href="venue.organization.web_link"
             target="_blank"
         >
-          {{ venue.organization?.name }}
+          {{ venue.organization?.name }} ↗
         </a>
         <span v-else>
           {{ venue.organization?.name }}
