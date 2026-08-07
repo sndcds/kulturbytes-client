@@ -88,6 +88,13 @@
         </span>
       </div>
 
+      <div class="kbts-venue-view-share">
+        <FacebookShareButton
+            :quote="venue.name"
+            hashtag="#kulturbytes"
+        />
+      </div>
+
       <SinglePointMap
           v-if="Number.isFinite(venue.lat) && Number.isFinite(venue.lon)"
           class="kbts-event-view-map"
@@ -125,7 +132,10 @@ import { useThemeStore } from "~/stores/themeStore";
 import LogoImage  from '~/components/ui/LogoImage.vue'
 import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
 import EventsView from '~/components/event/EventsView.vue'
+import FacebookShareButton from '~/components/ui/FacebookShareButton.vue'
 import type { Venue, VenueResponse } from '~/types/venue'
+import { truncateText } from '~/utils/text'
+import { ogLocale } from '~/utils/locale'
 
 defineI18nRoute({
   paths: {
@@ -136,12 +146,13 @@ defineI18nRoute({
 })
 
 const route = useRoute()
-const localePath = useLocalePath()
 const { locale, t } = useI18n()
 const { $api } = useNuxtApp()
+const config = useRuntimeConfig()
 const themeStore = useThemeStore()
 
 const { renderMarkdown } = useMarkdown()
+const { countryName } = useCountryName()
 
 const venueUuid = route.params.venue_identifier as string
 
@@ -166,6 +177,10 @@ const { data: venueResponse } = await useAsyncData(
 
 const venue = computed<Venue | undefined>(
     () => venueResponse.value?.data
+)
+
+const canonicalUrl = computed(() =>
+    new URL(route.path, config.public.siteUrl).href
 )
 
 const venueImage = computed(() => venue.value?.images?.main_photo)
@@ -201,6 +216,101 @@ const imageCredit = computed(() => {
   }
   return `${t('venue.image_by')}: ${parts.join(', ')}`
 })
+
+const venueSchema = computed(() => {
+  if (!venue.value) return null
+
+  const v = venue.value
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+
+    name: v.name,
+
+    description: v.description,
+
+    image: v.images?.main_photo?.url
+        ? [imageUrl(v.images.main_photo.url, 1200, '16:9')]
+        : undefined,
+
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: [
+        v.street,
+        v.house_number
+      ]
+          .filter(Boolean)
+          .join(' '),
+
+      postalCode: v.postal_code,
+      addressLocality: v.city,
+      addressCountry: countryName(v.country)
+    },
+
+    geo: Number.isFinite(v.lat) && Number.isFinite(v.lon)
+        ? {
+          '@type': 'GeoCoordinates',
+          latitude: v.lat,
+          longitude: v.lon
+        }
+        : undefined,
+
+    url: canonicalUrl.value,
+  }
+})
+
+useHead(() => ({
+  htmlAttrs: {
+    lang: locale.value
+  },
+  link: [
+    {
+      key: 'canonical',
+      rel: 'canonical',
+      href: canonicalUrl.value
+    }
+  ],
+  script: venueSchema.value
+      ? [
+        {
+          key: 'venue-schema',
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify(venueSchema.value)
+        }
+      ]
+      : []
+}))
+
+const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
+const description = computed(() => truncateText(venue.value?.description, 160))
+
+useSeoMeta({
+  title: venue.value?.name,
+  description: description,
+
+  ogType: 'website',
+  ogSiteName: t('siteName'),
+  ogLocale: ogLocale(locale.value),
+  ogTitle: venue.value?.name,
+  ogDescription: description,
+  ogUrl: pageUrl,
+  ogImage: venue.value?.images?.main_photo?.url
+      ? imageUrl(venue.value.images.main_photo.url, 1200, '16:9')
+      : undefined,
+  ogImageWidth: '1200',
+  ogImageHeight: '675',
+  ogImageAlt: venue.value?.images?.main_photo?.alt || venue.value?.name,
+
+  twitterCard: 'summary_large_image',
+  twitterTitle: venue.value?.name,
+  twitterDescription: description,
+  twitterImage: venue.value?.images?.main_photo?.url
+      ? imageUrl(venue.value.images.main_photo.url, 1200, '16:9')
+      : undefined,
+
+  robots: venue.value ? 'index,follow' : 'noindex'
+})
 </script>
 
 <style lang="scss">
@@ -216,6 +326,10 @@ const imageCredit = computed(() => {
   font-size: 2rem;
   font-weight: 300;
   margin: 0 0 1rem;
+}
+
+.kbts-venue-view-share {
+  margin-top: 1rem;
 }
 
 .kbts-venue-view-image {
