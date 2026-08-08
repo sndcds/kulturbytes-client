@@ -1,104 +1,189 @@
+/*
+  Desktop:
+    The layout consists of two independent vertical columns.
+    There is deliberately NO CSS grid here, because grid rows would
+    align the vertical positions of elements between the columns.
+
+  Mobile:
+    The column wrappers become display: contents, making all individual
+    elements participate directly in the main flex container.
+*/
+
 .kbts-venue-view-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  column-gap: 2rem;
-  row-gap:2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
   a {
     font-weight: 400;
   }
-  min-width: 0;
-  max-width: 100%;
 }
 
-.kbts-venue-view-layout-left {
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
+
+/*
+  Desktop columns
+*/
+
+.kbts-venue-view-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+
   min-width: 0;
-  max-width: 100%;
 }
 
-.kbts-venue-view-layout-right {
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  min-width: 0;
-  max-width: 100%;
+.kbts-venue-view-column-left {
+  flex: 2 1 0;
 }
 
-.kbts-venue-view-image { order: 1; }
-.kbts-venue-view-content { order: 2; }
+.kbts-venue-view-column-right {
+  flex: 1 1 0;
+}
 
-.kbts-venue-view-logo-image {
-  margin-top: 1rem;
+
+/*
+  Individual elements
+    These orders only apply when the columns are flattened on mobile.
+    Change these numbers to completely control the mobile order.
+*/
+
+.kbts-venue-view-image {
+  order: 10;
 }
 
 .kbts-venue-view-content {
-  margin-top: 2rem;
-  min-width: 0;
-  overflow: hidden;
+  order: 20;
 }
 
-.kbts-venue-view-label {
-  font-weight: 300;
-  color: #999;
+.kbts-venue-view-logo {
+  order: 30;
 }
+
+.kbts-venue-view-address {
+  order: 40;
+}
+
+.kbts-venue-view-organization {
+  order: 50;
+}
+
+.kbts-venue-view-share {
+  order: 60;
+}
+
+.kbts-venue-view-map {
+  order: 70;
+}
+
+
+/*
+  Image
+*/
 
 .kbts-venue-view-image {
   position: relative;
+
+  width: 100%;
+  max-width: 800px;
+  min-width: 0;
+
+  aspect-ratio: 16 / 9;
+
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-  min-width: 0;
-  max-width: 800px;
-  aspect-ratio: 16 / 9;
+  gap: .5rem;
+
   overflow: visible;
 }
 
+.kbts-venue-view-image-outer {
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border-radius: 8px;
+}
+
+.kbts-venue-view-image-inner {
+  width: 100%;
+  height: 100%;
+
+  background-size: cover;
+  background-position: center;
+
+  transition: transform .2s ease;
+
+  &.has-placeholder {
+    background: #eee;
+  }
+}
+
 .kbts-venue-view-image-caption {
-  font-size: 0.8rem;
-  padding-left: 0.5rem;
+  font-size: .8rem;
+  padding-left: .5rem;
+}
+
+
+/*
+  Content
+*/
+
+.kbts-venue-view-content {
+  width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
 }
 
 .kbts-venue-view-title {
   font-size: 3rem;
   font-weight: 300;
+
   margin: 0;
-  margin-top: 2rem;
 }
 
 .kbts-venue-view-subtitle {
   font-size: 1.8rem;
   font-weight: 400;
-  margin: 0;
-  margin-top: 1rem;
+
+  margin: 1rem 0 0;
 }
+
+
+/*
+  Description
+*/
 
 .kbts-venue-description {
   font-size: 1.1rem;
   line-height: 1.4;
-  margin: 0;
-  margin-top: 2rem;
+
+  margin: 2rem 0 0;
 
   h1 {
     font-size: 1.8rem;
     font-weight: 400;
-    margin: 0;
-    margin-top: 1rem;
+
+    margin: 1rem 0 0;
   }
 
   h2 {
     font-size: 1.4rem;
     font-weight: 400;
-    margin: 0;
-    margin-top: 1rem;
+
+    margin: 1rem 0 0;
   }
 
   p {
     font-weight: 400;
-    margin: 0;
-    margin-top: 1rem;
+
+    margin: 1rem 0 0;
   }
 
   :deep(.content p) {
@@ -111,34 +196,143 @@
 
   blockquote {
     margin: 0;
-    padding-left: 0.8rem;
-    border-left: 0.2rem solid var(--kbts-blockquote-deco);
+
+    padding-left: .8rem;
+
+    border-left: .2rem solid var(--kbts-blockquote-deco);
   }
 }
 
+
+/*
+  Venue information
+*/
+
+.kbts-venue-view-venue {
+  width: 100%;
+  min-width: 0;
+}
+
+.kbts-venue-view-label {
+  font-weight: 300;
+  color: #999;
+}
+
+
+/*
+  Logo
+*/
+
+.kbts-venue-view-logo {
+  max-width: 100%;
+}
+
+
+/*
+  Share
+*/
+
+.kbts-venue-view-share {
+  margin-top: 0;
+}
+
+
+/*
+  Map
+*/
+
+.kbts-venue-view-map {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1 / 1;
+  border-radius: .5rem;
+}
+
+
+/*
+  Upcoming events
+*/
+
+.kbts-venue-view-events {
+  margin-top: 3rem;
+}
+
+.kbts-venue-view-events-title {
+  font-size: 2rem;
+  font-weight: 300;
+
+  margin: 0 0 1rem;
+}
+
+
+/*
+  Mobile
+
+  The two column wrappers are flattened.
+
+  This is the important part:
+    .column {
+        display: contents;
+    }
+
+  The children of both columns now behave as if they were direct
+  children of .kbts-venue-view-layout.
+
+  Their individual `order` values then determine the complete mobile
+  sequence.
+*/
+
 @media (max-width: 960px) {
+
   .kbts-venue-view-layout {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
+
     gap: 2rem;
   }
 
-  .kbts-venue-view-layout-left,
-  .kbts-venue-view-layout-right {
+  /*
+   * Remove the visual/layout effect of the two desktop columns.
+   */
+  .kbts-venue-view-column {
     display: contents;
   }
 
+  /*
+   * Individual elements now participate directly in the parent
+   * flex layout and use their order values.
+   */
+
   .kbts-venue-view-image {
+    order: 10;
     max-width: 100%;
+  }
+
+  .kbts-venue-view-content {
+    order: 20;
+  }
+
+  .kbts-venue-view-logo {
+    order: 30;
+  }
+
+  .kbts-venue-view-address {
+    order: 40;
+  }
+
+  .kbts-venue-view-organization {
+    order: 50;
+  }
+
+  .kbts-venue-view-share {
+    order: 60;
   }
 
   .kbts-venue-view-map {
-    max-width: 100%;
-    max-height: 100%;
-  }
+    order: 70;
 
-  .kbts-venue-view-image { order: 1; }
-  .kbts-venue-view-date { order: 2; }
-  .kbts-venue-view-content { order: 4; }
-  .kbts-venue-view-map { order: 14; }
+    width: 100%;
+    max-width: 100%;
+  }
 }

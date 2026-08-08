@@ -106,14 +106,12 @@
     </div>
 
     <div class="kbts-event-view-layout-right">
-      <!-- Date and time -->
       <EventDateTimeDisplay
           class="kbts-event-view-date"
           :date="event.date"
       />
 
       <!-- Venue -->
-
       <LogoImage
           v-if="event.logo_mode & 0x2 && venueLogos"
           class="kbts-event-view-venue-logo"
@@ -157,7 +155,6 @@
 
 
       <!-- Organizer -->
-
       <LogoImage
           v-if="event.logo_mode & 0x1 && eventOrganizer?.logos"
           class="kbts-event-view-organizer-logo"
@@ -337,7 +334,6 @@
           :lon="Number(event.date.venue_lon)"
           :name="event.date.venue_name"
           :zoom="15"
-          height="400px"
       />
 
 

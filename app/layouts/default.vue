@@ -1,11 +1,7 @@
 <template>
   <div class="layout">
 
-    <AppNavigation>
-      <template #filters>
-        <slot name="filters" />
-      </template>
-    </AppNavigation>
+    <AppNavigation />
 
     <main>
       <slot />

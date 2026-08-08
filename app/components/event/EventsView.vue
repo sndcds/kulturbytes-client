@@ -290,7 +290,7 @@ watch(
 
 <style scoped lang="scss">
 .kbts-events-view-layout {
-  padding: 1rem;
+  margin-top: 2rem;
   h1 {
     font-size: 2rem;
     font-weight: 300;

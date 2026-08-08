@@ -399,7 +399,7 @@ const headData = computed(() => ({
           {
             "@type": "ListItem",
             "position": 1,
-            "name": t('navigation.home'),
+            "name": t('nav.home'),
             "item": `${config.public.siteUrl}${localePath('/')}`
           },
           {

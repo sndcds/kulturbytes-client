@@ -3,11 +3,7 @@ import deHtml from '../assets/about/de.html?raw'
 import enHtml from '../assets/about/en.html?raw'
 import daHtml from '../assets/about/da.html?raw'
 
-definePageMeta({
-  layout: 'default'
-})
-
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const htmlByLocale = {
   de: deHtml,
@@ -16,6 +12,14 @@ const htmlByLocale = {
 }
 
 const pageHtml = computed(() => htmlByLocale[locale.value] ?? enHtml)
+
+definePageMeta({
+  layout: 'default'
+})
+
+useHead({
+  title: computed(() => t('nav.about'))
+})
 </script>
 
 <template>

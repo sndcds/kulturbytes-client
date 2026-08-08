@@ -4,6 +4,9 @@
     <!-- Single day -->
     <template v-if="model.type === 'single'">
       <h2 class="kbts-event-view-date-time__date">
+        <span class="kbts-event-view-date-time__weekday">
+          {{ formatWeekday(date.start_date) }}
+        </span>
         {{ model.date }}
       </h2>
 
@@ -110,4 +113,19 @@ const model = computed<DisplayModel>(() => {
     entry_time: date.entry_time ? formatTimeStr(date.entry_time) : null
   }
 })
+
+const formatWeekday = (date: string | null) => {
+  if (!date) {
+    return ''
+  }
+
+  const [year, month, day] = date.split('-').map(Number)
+
+  const weekday = new Intl.DateTimeFormat(locale.value, {
+    weekday: 'short'
+  }).format(
+      new Date(year, month - 1, day)
+  )
+  return weekday
+}
 </script>

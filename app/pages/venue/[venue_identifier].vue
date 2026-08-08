@@ -1,24 +1,23 @@
 <template>
-
-<br>
   <div
       v-if="venue"
       class="kbts-venue-view-layout"
   >
-    <div class="kbts-venue-view-layout-left">
+
+    <!-- Left Column -->
+    <div class="kbts-venue-view-column kbts-venue-view-column-left">
 
       <!-- Image -->
-      <div class="kbts-venue-view-image">
-        <div
-            v-if="venueImage"
-            class="kbts-venue-view-image-outer"
-        >
+      <div
+          v-if="venueImage"
+          class="kbts-venue-view-image"
+      >
+        <div class="kbts-venue-view-image-outer">
           <div
               class="kbts-venue-view-image-inner"
-              :class="{ 'has-placeholder': !venueImage }"
               :style="{
-              backgroundImage: `url(${imageUrl(venueImage.url, 960, '16:9')})`
-            }"
+          backgroundImage: `url(${imageUrl(venueImage.url, 960, '16:9')})`
+        }"
           />
         </div>
 
@@ -30,6 +29,7 @@
         </span>
       </div>
 
+      <!-- Content -->
       <div class="kbts-venue-view-content">
         <h1 class="kbts-venue-view-title">
           {{ venue.name }}
@@ -39,12 +39,15 @@
             class="kbts-venue-description"
             v-html="descriptionHtml"
         />
-
       </div>
+
     </div>
 
-    <div class="kbts-venue-view-layout-right">
 
+    <!-- Right Column -->
+    <div class="kbts-venue-view-column kbts-venue-view-column-right">
+
+      <!-- Logo -->
       <LogoImage
           v-if="venueLogos"
           class="kbts-venue-view-logo"
@@ -57,37 +60,50 @@
           :max-width="240"
           :max-height="200"
           link-target="_blank"
-          style="margin-bottom: 1rem;"
       />
 
-      <div class="kbts-venue-view-venue kbts-flex-col">
-        <span class="kbts-venue-view-label">{{ t('address') }}</span>
+      <!-- Address -->
+      <div
+          class="kbts-venue-view-venue kbts-venue-view-address kbts-flex-col"
+      >
+        <span class="kbts-venue-view-label">
+          {{ t('address') }}
+        </span>
+
         <span>{{ venue.name }}</span>
+
         <span v-if="venue.street || venue.house_number">
           {{ [venue.street, venue.house_number].filter(Boolean).join(' ') }}
         </span>
+
         <span v-if="venue.postal_code || venue.city">
           {{ [venue.postal_code, venue.city].filter(Boolean).join(' ') }}
         </span>
       </div>
 
+      <!-- Organization -->
       <div
           v-if="venue.organization"
-          class="kbts-venue-view-venue kbts-flex-col"
+          class="kbts-venue-view-venue kbts-venue-view-organization kbts-flex-col"
       >
-        <span class="kbts-venue-view-label">{{ t('organization') }}</span>
+        <span class="kbts-venue-view-label">
+          {{ t('organization') }}
+        </span>
+
         <a
-            v-if="venue.organization?.web_link"
+            v-if="venue.organization.web_link"
             :href="venue.organization.web_link"
             target="_blank"
         >
-          {{ venue.organization?.name }} ↗
+          {{ venue.organization.name }} ↗
         </a>
+
         <span v-else>
-          {{ venue.organization?.name }}
+          {{ venue.organization.name }}
         </span>
       </div>
 
+      <!-- Share -->
       <div class="kbts-venue-view-share">
         <FacebookShareButton
             :quote="venue.name"
@@ -95,19 +111,22 @@
         />
       </div>
 
+      <!-- Map -->
       <SinglePointMap
           v-if="Number.isFinite(venue.lat) && Number.isFinite(venue.lon)"
-          class="kbts-event-view-map"
+          class="kbts-venue-view-map"
           :lat="venue.lat"
           :lon="venue.lon"
           :name="venue.name"
           :zoom="15"
-          height="400px"
       />
 
     </div>
+
   </div>
 
+
+  <!-- Events -->
   <section
       v-if="venue"
       class="kbts-venue-view-events"
@@ -314,10 +333,6 @@ useSeoMeta({
 </script>
 
 <style lang="scss">
-.kbts-venue-view-content {
-  grid-area: content;
-}
-
 .kbts-venue-view-events {
   margin-top: 3rem;
 }
@@ -333,8 +348,6 @@ useSeoMeta({
 }
 
 .kbts-venue-view-image {
-  grid-area: image;
-
   .kbts-venue-view-image-outer {
     width: 100%;
     height: 100%;
