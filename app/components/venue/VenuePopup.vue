@@ -5,8 +5,8 @@
         {{ venue.name }}
       </h3>
 
-      <div v-if="venue.street || venue.city">
-        {{ venue.street }} {{ venue.house_number }}, {{ venue.postal_code }} {{ venue.city }}
+      <div v-if="venueAddress">
+        {{ venueAddress }}
       </div>
     </div>
 
@@ -47,6 +47,17 @@ const props = defineProps<{
 const venue = computed(() =>
     props.feature?.properties ?? {}
 )
+
+const venueAddress = computed(() => {
+  const streetLine = [venue.value.street, venue.value.house_number]
+      .filter(Boolean)
+      .join(' ')
+  const cityLine = [venue.value.postal_code, venue.value.city]
+      .filter(Boolean)
+      .join(' ')
+
+  return [streetLine, cityLine].filter(Boolean).join(', ')
+})
 
 function openVenue() {
   navigateTo(
