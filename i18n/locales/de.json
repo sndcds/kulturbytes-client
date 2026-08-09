@@ -14,6 +14,12 @@
     "terms": "Nutzungsbedingungen",
     "legal": "Impressum"
   },
+  "error": {
+    "not_found_title": "Seite nicht gefunden",
+    "not_found_description": "Die angeforderte Seite existiert leider nicht.",
+    "generic_description": "Ein unerwarteter Fehler ist aufgetreten.",
+    "back_home": "Zur Startseite"
+  },
   "goto": {
     "events_page": "Finde Veranstaltungen",
     "country_list": "Länderübersicht",

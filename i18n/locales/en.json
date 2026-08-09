@@ -14,6 +14,12 @@
     "terms": "Terms of Use",
     "legal": "Imprint"
   },
+  "error": {
+    "not_found_title": "Page not found",
+    "not_found_fescription": "Unfortunately, the requested page does not exist.",
+    "generic_description": "An unexpected error occurred.",
+    "back_home": "Back to home"
+  },
   "goto": {
     "events_page": "Discover events",
     "country_list": "Countries",

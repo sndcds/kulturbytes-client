@@ -14,6 +14,12 @@
     "terms": "Brugsbetingelser",
     "legal": "Impressum"
   },
+  "error": {
+    "not_found_title": "Siden blev ikke fundet",
+    "not_found_description": "Den ønskede side findes desværre ikke.",
+    "generic_description": "Der opstod en uventet fejl.",
+    "back_home": "Til forsiden"
+  },
   "goto": {
     "events_page": "Se begivenheder",
     "country_list": "Lande",
