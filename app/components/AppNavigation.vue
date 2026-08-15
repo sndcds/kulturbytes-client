@@ -6,19 +6,33 @@
 
       <!-- Logo -->
       <NuxtLink
-          :to="localePath('/')"
+          :to="logoLink"
           class="logo"
           :aria-label="t('logo_label')"
       >
-        <AppLogo />
+        <AppLogo v-if="!isPortalRoute" />
+        <Building2
+            v-else
+            class="portal-logo"
+            :size="32"
+        />
       </NuxtLink>
 
 
       <!-- Main navigation -->
       <nav :class="{ open }">
-        <NuxtLink :to="localePath('events')">
+        <NuxtLink :to="portalEventsLink">
           {{ t('nav.events') }}
         </NuxtLink>
+
+        <button
+            v-if="eventFilters.eventPortalUuid"
+            type="button"
+            class="portal-exit-button"
+            @click="endPortal"
+        >
+          Portal Ende
+        </button>
 
         <!--NuxtLink :to="localePath('/venues/venues')"> TODO: ?
           {{ t('nav.venues') }}
@@ -188,7 +202,7 @@
 import AppLogo from '~/components/ui/AppLogo.vue'
 import EventFilters from '~/components/filters/EventFilters.vue'
 import VenueFilters from '~/components/filters/VenueFilters.vue'
-import { SlidersHorizontal, FunnelX } from '@lucide/vue'
+import { SlidersHorizontal, FunnelX, Building2 } from '@lucide/vue'
 import { useFiltersStore } from "~/stores/filtersStore";
 
 const { t } = useI18n()
@@ -201,6 +215,7 @@ const isMobileNavigation = ref(false)
 
 const filtersOpen = ref(false)
 const eventFilters = useFiltersStore()
+const router = useRouter()
 
 const {
   locale: currentLocale,
@@ -210,6 +225,31 @@ const {
 const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
 
+const isPortalRoute = computed(() => /\/portal\//.test(route.path))
+
+const logoLink = computed(() => {
+  if (eventFilters.eventPortalUuid) {
+    return localePath('/portal/home')
+  }
+
+  return localePath('/')
+})
+
+const portalEventsLink = computed(() => {
+  if (!eventFilters.eventPortalUuid) {
+    return localePath('events')
+  }
+
+  return localePath(`/portal/${eventFilters.eventPortalUuid}`)
+})
+
+function endPortal() {
+  eventFilters.eventPortalUuid = null
+  eventFilters.setFilter('events')
+  router.push(localePath('events'))
+}
+
+// TODO: replace this temporary Lucide placeholder with the portal logo loaded from the API.
 const hasFilters = computed(() => {
   return Boolean(route.meta?.filters)
 })
@@ -352,6 +392,29 @@ watch(
   align-items: center;
   color: var(--kbts-fg);
   text-decoration: none;
+}
+
+.portal-logo {
+  display: block;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--kbts-fg);
+}
+
+.portal-exit-button {
+  border: 1px solid var(--kbts-border);
+  background: white;
+  color: var(--kbts-fg);
+  padding: .45rem .75rem;
+  font: inherit;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
+
+  &:hover {
+    background: var(--kbts-fg);
+    color: var(--kbts-bg);
+  }
 }
 
 /*

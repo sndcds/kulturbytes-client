@@ -23,6 +23,7 @@ import {
 } from '~/composables/useMapLibreLayers'
 import VenuePopup from '~/components/venue/VenuePopup.vue'
 import { useMapsStore } from '~/stores/mapsStore'
+import { useFiltersStore } from '~/stores/filtersStore'
 
 const props =
     withDefaults(
@@ -114,6 +115,7 @@ const {
 )
 
 const mapsStore = useMapsStore()
+const filtersStore = useFiltersStore()
 const center = computed(() => mapsStore.venueMap.center ?? props.center)
 const zoom = computed(() => mapsStore.venueMap.zoom ?? props.zoom)
 const bearing = computed(() => mapsStore.venueMap.bearing ?? 0)
@@ -161,7 +163,13 @@ async function loadVenues(map: MapLibreMapType) {
   const { $api } = useNuxtApp()
 
   try {
-    const response = await $api<any>('/api/venues/geojson', { query: { bbox } })
+    const query: Record<string, string> = { bbox }
+
+    if (filtersStore.eventPortalUuid) {
+      query.portal = filtersStore.eventPortalUuid
+    }
+
+    const response = await $api<any>('/api/venues/geojson', { query })
     venues.value = response.data ?? response
     updateSources(map, layers.value)
   } catch (error) {
