@@ -1,38 +1,17 @@
 <template>
-  <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre><br>
-  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre><br-->
-
-  <EventsView />
+  <EventsView :key="portalUuid" />
 </template>
 
 <script setup lang="ts">
 import EventsView from '~/components/event/EventsView.vue'
 import { useFiltersStore } from '~/stores/filtersStore'
-
-const filtersStore = useFiltersStore()
-const { setFilter } = filtersStore
-const route = useRoute()
-const localePath = useLocalePath()
-const config = useRuntimeConfig()
-const { t, locale } = useI18n()
-const { decodeEventFilter } = useEventFilterEncoding()
 import { ogLocale } from '~/utils/locale'
-
-function activateEventsPage() {
-  filtersStore.eventPortalUuid = null
-  setFilter('events')
-}
-
-activateEventsPage()
-onActivated(activateEventsPage)
-
-applyFilterFromQuery()
 
 defineI18nRoute({
   paths: {
-    de: '/veranstaltungen',
-    da: '/begivenheder',
-    en: '/events'
+    de: '/portal/[portal_slug]',
+    da: '/portal/[portal_slug]',
+    en: '/portal/[portal_slug]'
   }
 })
 
@@ -40,15 +19,36 @@ definePageMeta({
   filters: true
 })
 
+const filtersStore = useFiltersStore()
+const route = useRoute()
+const localePath = useLocalePath()
+const config = useRuntimeConfig()
+const { t, locale } = useI18n()
+const { decodeEventFilter } = useEventFilterEncoding()
+
+const portalUuid = computed(() => {
+  const value = route.params.portal_slug
+  return Array.isArray(value) ? value[0] ?? '' : value?.toString() ?? ''
+})
+
+function activatePortal() {
+  filtersStore.eventPortalUuid = portalUuid.value || null
+  filtersStore.setFilter('events')
+}
+
+activatePortal()
+onActivated(activatePortal)
+watch(portalUuid, activatePortal)
+applyFilterFromQuery()
+
 onUnmounted(() => {
-  setFilter(null)
+  filtersStore.setFilter(null)
 })
 
 function applyFilterFromQuery() {
-  const filter =
-      Array.isArray(route.query.filter)
-          ? route.query.filter[0]
-          : route.query.filter
+  const filter = Array.isArray(route.query.filter)
+      ? route.query.filter[0]
+      : route.query.filter
 
   if (!filter) {
     return
@@ -63,14 +63,9 @@ function applyFilterFromQuery() {
   }
 }
 
-
-/**
- * SEO
- */
-
 const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
-const pageTitle = computed(() => `${t('events.title')}`)
-const seoTitle = computed(() => `${t('events.seo.title')}`)
+const pageTitle = computed(() => t('events.title'))
+const seoTitle = computed(() => t('events.seo.title'))
 const description = computed(() => t('events.seo.description'))
 
 const headData = computed(() => ({
@@ -89,30 +84,30 @@ const headData = computed(() => ({
     {
       type: 'application/ld+json',
       children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "name": t('events.title'),
-        "description": description.value,
-        "url": pageUrl.value
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: t('events.title'),
+        description: description.value,
+        url: pageUrl.value
       })
     },
     {
       type: 'application/ld+json',
       children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
           {
-            "@type": "ListItem",
-            "position": 1,
-            "name": t('nav.home'),
-            "item": `${config.public.siteUrl}${localePath('/')}`
+            '@type': 'ListItem',
+            position: 1,
+            name: t('nav.home'),
+            item: `${config.public.siteUrl}${localePath('/')}`
           },
           {
-            "@type": "ListItem",
-            "position": 2,
-            "name": t('events.title'),
-            "item": pageUrl.value
+            '@type': 'ListItem',
+            position: 2,
+            name: t('events.title'),
+            item: pageUrl.value
           }
         ]
       })
@@ -137,7 +132,6 @@ useSeoMeta({
   ogImageHeight: '675',
   ogImageAlt: t('events.seo.image_alt'),
 
-  // twitterSite: '@kulturbytes', TODO:
   twitterCard: 'summary_large_image',
   twitterTitle: seoTitle.value,
   twitterDescription: description.value,
@@ -145,5 +139,4 @@ useSeoMeta({
 
   robots: 'index,follow'
 })
-
 </script>

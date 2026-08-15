@@ -32,6 +32,7 @@ export function useEventQueryParams() {
         eventPriceType,
         eventMaxPrice,
         eventPriceCurrency,
+        eventPortalUuid,
     } = storeToRefs(filters)
 
     const watchedFilters = computed(() => ({
@@ -50,6 +51,7 @@ export function useEventQueryParams() {
         eventPriceType: eventPriceType.value,
         eventMaxPrice: eventMaxPrice.value,
         eventPriceCurrency: eventPriceCurrency.value,
+        eventPortalUuid: eventPortalUuid.value,
     }))
 
     async function build(options: BuildOptions = {}) {
@@ -77,6 +79,10 @@ export function useEventQueryParams() {
 
         if (options.includeFilters === false) {
             return params
+        }
+
+        if (eventPortalUuid.value) {
+            params.append('portal', eventPortalUuid.value)
         }
 
         if (eventCategories.value?.length) {
