@@ -10,7 +10,13 @@
           class="logo"
           :aria-label="t('logo_label')"
       >
-        <AppLogo v-if="!isPortalRoute" />
+        <AppLogo v-if="!isPortalActive" />
+        <img
+            v-else-if="portalLogoUrl"
+            class="portal-logo-image"
+            :src="portalLogoUrl"
+            :alt="activePortal?.name || 'Portal'"
+        />
         <Building2
             v-else
             class="portal-logo"
@@ -204,6 +210,13 @@ import EventFilters from '~/components/filters/EventFilters.vue'
 import VenueFilters from '~/components/filters/VenueFilters.vue'
 import { SlidersHorizontal, FunnelX, Building2 } from '@lucide/vue'
 import { useFiltersStore } from "~/stores/filtersStore";
+import type { ApiResponse } from '~/types/api'
+
+interface Portal {
+  uuid: string
+  name: string
+  web_logo_uuid?: string | null
+}
 
 const { t } = useI18n()
 
@@ -224,8 +237,47 @@ const {
 
 const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
+const config = useRuntimeConfig()
+const { $api } = useNuxtApp()
 
-const isPortalRoute = computed(() => /\/portal\//.test(route.path))
+const activePortal = ref<Portal | null>(null)
+const isPortalActive = computed(() => Boolean(eventFilters.eventPortalUuid))
+const portalLogoUrl = computed(() => {
+  const logoUuid = activePortal.value?.web_logo_uuid
+
+  if (!logoUuid) {
+    return null
+  }
+
+  const apiUrl = config.public.apiUrl.replace(/\/$/, '')
+  return `${apiUrl}/api/image/${encodeURIComponent(logoUuid)}?width=480&type=png&quality=80`
+})
+
+watch(
+    () => eventFilters.eventPortalUuid,
+    async (portalUuid) => {
+      activePortal.value = null
+
+      if (!portalUuid) {
+        return
+      }
+
+      const requestedPortalUuid = portalUuid
+
+      try {
+        const response = await $api<ApiResponse<Portal>>(
+            `/api/portal/${encodeURIComponent(portalUuid)}`
+        )
+
+        if (eventFilters.eventPortalUuid === requestedPortalUuid) {
+          activePortal.value = response.data
+        }
+      } catch (error) {
+        console.error('Failed loading portal:', error)
+      }
+    },
+    { immediate: true }
+)
 
 const logoLink = computed(() => {
   if (eventFilters.eventPortalUuid) {
@@ -249,7 +301,6 @@ function endPortal() {
   router.push(localePath('events'))
 }
 
-// TODO: replace this temporary Lucide placeholder with the portal logo loaded from the API.
 const hasFilters = computed(() => {
   return Boolean(route.meta?.filters)
 })
@@ -400,6 +451,15 @@ watch(
   height: 32px;
   flex-shrink: 0;
   color: var(--kbts-fg);
+}
+
+.portal-logo-image {
+  display: block;
+  width: auto;
+  max-width: 160px;
+  height: auto;
+  max-height: 40px;
+  object-fit: contain;
 }
 
 .portal-exit-button {

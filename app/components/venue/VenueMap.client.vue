@@ -24,6 +24,7 @@ import {
 import VenuePopup from '~/components/venue/VenuePopup.vue'
 import { useMapsStore } from '~/stores/mapsStore'
 import { useFiltersStore } from '~/stores/filtersStore'
+import type { VenueFeature, VenueProperties } from '~/types/mapMarkers'
 
 const props =
     withDefaults(
@@ -44,6 +45,47 @@ const venues =
       features:[]
     })
 
+const markerStyleByVenueType: Record<string, string> = {
+  art_gallery: 'cultural_place',
+  beach: 'public_area',
+  castle: 'historic_site',
+  cultural_center: 'cultural_place',
+  educational_institution: 'education',
+  event_house: 'cultural_place',
+  exhibition_hall: 'cultural_place',
+  library: 'education',
+  museum: 'museum',
+  music_school: 'education',
+  outdoor_area: 'outdoor_area',
+  park: 'public_area',
+  playground: 'small_place',
+  public_place: 'public_place',
+  sacred_space: 'sacred_space',
+  theatre: 'cultural_place',
+  youth_center: 'cultural_place',
+}
+
+function normalizeVenueMarkers(collection: FeatureCollection): FeatureCollection {
+  return {
+    ...collection,
+    features: collection.features.map((feature) => {
+      const properties = feature.properties as VenueProperties | null
+
+      if (!properties || properties.marker_style || !properties.type) {
+        return feature
+      }
+
+      return {
+        ...feature,
+        properties: {
+          ...properties,
+          marker_style: markerStyleByVenueType[properties.type] ?? 'default',
+        },
+      } as VenueFeature
+    }),
+  }
+}
+
 const layers = computed<Record<string, MapLayerConfig>>(() => ({
   venues: {
     data: venues.value,
@@ -54,9 +96,12 @@ const layers = computed<Record<string, MapLayerConfig>>(() => ({
       default: '/map/markers/default.png',
       "cultural_place": '/map/markers/cultural-place.png',
       "outdoor_area": '/map/markers/outdoor-area.png',
+      "public_area": '/map/markers/public-place.png',
       "public_place": '/map/markers/public-place.png',
       "sacred_space": '/map/markers/sacred-space.png',
       "city_district": '/map/markers/city-district.png',
+      "historic_site": '/map/markers/cultural-place.png',
+      "small_place": '/map/markers/outdoor-area.png',
       "museum": '/map/markers/museum.png',
       "education": '/map/markers/education.png',
     },
@@ -170,7 +215,7 @@ async function loadVenues(map: MapLibreMapType) {
     }
 
     const response = await $api<any>('/api/venues/geojson', { query })
-    venues.value = response.data ?? response
+    venues.value = normalizeVenueMarkers(response.data ?? response)
     updateSources(map, layers.value)
   } catch (error) {
     console.error('Failed loading venues:', error)

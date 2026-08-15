@@ -6,6 +6,10 @@ export interface VenueProperties {
     name:string
     city?:string|null
     country?:string|null
+    house_number?:string|null
+    street?:string|null
+    web_link?:string|null
+    logo_url?:string|null
     logo_uuid?:string|null
     marker_style?:string|null
     type?:string|null
