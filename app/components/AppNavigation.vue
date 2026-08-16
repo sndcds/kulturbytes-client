@@ -1,6 +1,10 @@
 <template>
 
-  <header class="navigation">
+  <header
+      class="navigation"
+      :class="{ 'portal-navigation': isPortalActive }"
+      :style="navigationStyle"
+  >
 
     <div class="nav-inner">
 
@@ -27,28 +31,46 @@
 
       <!-- Main navigation -->
       <nav :class="{ open }">
-        <NuxtLink :to="portalEventsLink">
-          {{ t('nav.events') }}
-        </NuxtLink>
+        <div class="nav-primary">
+          <NuxtLink :to="portalEventsLink">
+            {{ t('nav.events') }}
+          </NuxtLink>
 
-        <button
-            v-if="eventFilters.eventPortalUuid"
-            type="button"
-            class="portal-exit-button"
-            @click="endPortal"
-        >
-          Portal Ende
-        </button>
+          <NuxtLink :to="localePath('venue-map')">
+            {{ t('nav.venues') }}
+          </NuxtLink>
 
-        <!--NuxtLink :to="localePath('/venues/venues')"> TODO: ?
-          {{ t('nav.venues') }}
-        </NuxtLink-->
+          <div v-if="hasFilters" class="filter-button-group">
+            <button
+                class="filter-button"
+                :aria-expanded="filtersOpen"
+                aria-label="Toggle filters"
+                @click="toggleFilters"
+            >
+              <SlidersHorizontal :size="18" />{{ t('filter.button_label') }}
+            </button>
 
-        <NuxtLink :to="localePath('venue-map')">
-          {{ t('nav.map') }}
-        </NuxtLink>
+            <button
+                class="filter-x"
+                aria-label="Reset filters"
+                @click="resetFilters"
+            >
+              <FunnelX :size="18" />
+            </button>
+          </div>
+        </div>
 
-        <div
+        <div class="nav-secondary">
+          <button
+              v-if="eventFilters.eventPortalUuid"
+              type="button"
+              class="portal-exit-button"
+              @click="endPortal"
+          >
+            {{ t('nav.end_portal') }}
+          </button>
+
+          <div
             ref="infoNav"
             class="info-nav"
             :class="{ open: infoMenuVisible }"
@@ -116,45 +138,14 @@
               {{ t('nav.legal') }}
             </NuxtLink>
           </div>
-        </div>
+          </div>
 
-        <div class="language-switcher">
-          <NuxtLink
-              v-for="locale in locales"
-              :key="locale.code"
-              :to="switchLocalePath(locale.code)"
-              :class="{ active: locale.code === currentLocale }"
-          >
-            {{ locale.code.toLowerCase() }}
-          </NuxtLink>
+          <LanguageSwitcher />
         </div>
       </nav>
 
       <!-- Right actions -->
       <div class="nav-actions">
-
-        <!-- Filter button -->
-        <div class="filter-button-group">
-          <button
-              v-if="hasFilters"
-              class="filter-button"
-              :aria-expanded="filtersOpen"
-              aria-label="Toggle filters"
-              @click="toggleFilters"
-          >
-            <SlidersHorizontal :size="18"/>{{ t('filter.button_label') }}
-          </button>
-
-          <button
-              v-if="hasFilters"
-              class="filter-x"
-              aria-label="Reset filters"
-              @click="resetFilters"
-          >
-            <FunnelX :size="18"/>
-          </button>
-        </div>
-
 
         <!-- Mobile menu -->
         <button
@@ -206,6 +197,7 @@
 
 <script setup lang="ts">
 import AppLogo from '~/components/ui/AppLogo.vue'
+import LanguageSwitcher from '~/components/ui/LanguageSwitcher.vue'
 import EventFilters from '~/components/filters/EventFilters.vue'
 import VenueFilters from '~/components/filters/VenueFilters.vue'
 import { SlidersHorizontal, FunnelX, Building2 } from '@lucide/vue'
@@ -223,16 +215,30 @@ const filtersOpen = ref(false)
 const eventFilters = useFiltersStore()
 const router = useRouter()
 
-const {
-  locale: currentLocale,
-  locales
-} = useI18n()
-
-const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
 const { activePortal, activatePortal, clearPortal } = usePortal()
 const isPortalActive = computed(() => Boolean(eventFilters.eventPortalIdentifier))
 const portalLogoUrl = computed(() => activePortal.value?.web_logo_url ?? null)
+
+function cssLength(value: string | null | undefined, fallback: string) {
+  return value && /^\d+(?:\.\d+)?(?:px|rem|em)$/.test(value.trim())
+      ? value.trim()
+      : fallback
+}
+
+const navigationStyle = computed(() => {
+  if (!isPortalActive.value) {
+    return undefined
+  }
+
+  const style = activePortal.value?.config?.style
+
+  return {
+    '--kbts-nav-height': cssLength(style?.nav_height, '72px'),
+    '--kbts-logo-top-margin': cssLength(style?.logo?.top_margin, '12px'),
+    '--kbts-logo-bottom-margin': cssLength(style?.logo?.bottom_margin, '12px'),
+  }
+})
 
 onMounted(async () => {
   const portalIdentifier = eventFilters.eventPortalIdentifier
@@ -389,6 +395,9 @@ watch(
 <style scoped lang="scss">
 
 .navigation {
+  --kbts-nav-height: 58px;
+  --kbts-logo-top-margin: 12px;
+  --kbts-logo-bottom-margin: 12px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -406,7 +415,12 @@ watch(
   margin: 0 auto;
   padding: 1rem;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+}
+
+.portal-navigation .nav-inner {
+  height: var(--kbts-nav-height);
+  padding: 0 1rem;
 }
 
 .logo {
@@ -414,6 +428,17 @@ watch(
   align-items: center;
   color: var(--kbts-fg);
   text-decoration: none;
+}
+
+.portal-navigation .logo {
+  align-self: flex-start;
+  height: calc(
+      var(--kbts-nav-height)
+      - var(--kbts-logo-top-margin)
+      - var(--kbts-logo-bottom-margin)
+  );
+  margin-top: var(--kbts-logo-top-margin);
+  margin-bottom: var(--kbts-logo-bottom-margin);
 }
 
 .portal-logo {
@@ -427,10 +452,19 @@ watch(
 .portal-logo-image {
   display: block;
   width: auto;
-  max-width: 160px;
   height: auto;
   max-height: 40px;
   object-fit: contain;
+}
+
+.portal-navigation .portal-logo-image {
+  height: 100%;
+  max-height: none;
+}
+
+.portal-navigation .portal-logo {
+  width: auto;
+  height: 100%;
 }
 
 .portal-exit-button {
@@ -452,7 +486,7 @@ watch(
  Right side controls
 */
 .nav-actions {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 1rem;
   margin-left: auto;
@@ -498,11 +532,11 @@ watch(
 
 nav {
   display: flex;
-  align-items: center;
-  gap: 2rem;
+  align-items: flex-end;
+  flex: 1;
   margin-left: 2rem;
 
-  > a,
+  .nav-primary > a,
   .info-button {
     position: relative;
     padding: .25rem;
@@ -549,6 +583,17 @@ nav {
       }
     }
   }
+}
+
+.nav-primary,
+.nav-secondary {
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.nav-secondary {
+  margin-left: auto;
 }
 
 .info-nav {
@@ -616,31 +661,6 @@ nav {
   }
 }
 
-.language-switcher {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  margin-left: 1rem;
-
-  a {
-    color: var(--kbts-muted-fg);
-    text-decoration: none;
-    font-size: .9rem;
-    font-weight: 400;
-    transition: color .2s ease;
-    padding: .25rem;
-
-    &:hover {
-      color: var(--kbts-fg);
-    }
-
-    &.active {
-      color: var(--kbts-fg);
-      font-weight: 700;
-    }
-  }
-}
-
 .filter-panel {
   background: white;
   border-top: 1px solid var(--kbts-border);
@@ -692,7 +712,12 @@ nav {
     padding: .75rem 1rem;
   }
 
+  .portal-navigation .nav-inner {
+    padding: 0 1rem;
+  }
+
   .nav-actions {
+    display: flex;
     gap: .5rem;
   }
 
@@ -752,6 +777,25 @@ nav {
     }
   }
 
+  .portal-navigation nav {
+    top: var(--kbts-nav-height);
+  }
+
+  .nav-primary,
+  .nav-secondary {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .nav-secondary {
+    margin-left: 0;
+  }
+
+  .filter-button-group {
+    padding: .75rem;
+  }
+
   .info-nav {
     display: flex;
     flex-direction: column;
@@ -786,14 +830,8 @@ nav {
     }
   }
 
-  .language-switcher {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(1,0,0,1);
-  }
-
   .filter-panel {
-    max-height: calc(100vh - 60px);
+    max-height: calc(100vh - var(--kbts-nav-height));
   }
 }
 
