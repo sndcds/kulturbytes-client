@@ -64,6 +64,9 @@ export const useFiltersStore = defineStore(
         const eventMaxPrice = ref<number | null>(10)
         const eventPortalUuid = ref<string | null>(null)
 
+        // Portal mode
+        const eventPortalIdentifier = ref<string | null>(null)
+
         function setFilter(type: string | null) {
             filterType.value = type
         }
@@ -244,6 +247,8 @@ export const useFiltersStore = defineStore(
             eventPriceCurrency,
             eventMaxPrice,
             eventPortalUuid,
+
+            eventPortalIdentifier,
 
             eventDateRange,
             hasValidEvnetDateRange,

@@ -241,7 +241,7 @@ const config = useRuntimeConfig()
 const { $api } = useNuxtApp()
 
 const activePortal = ref<Portal | null>(null)
-const isPortalActive = computed(() => Boolean(eventFilters.eventPortalUuid))
+const isPortalActive = computed(() => Boolean(eventFilters.eventPortalIdentifier))
 const portalLogoUrl = computed(() => {
   const logoUuid = activePortal.value?.web_logo_uuid
 
@@ -254,22 +254,22 @@ const portalLogoUrl = computed(() => {
 })
 
 watch(
-    () => eventFilters.eventPortalUuid,
-    async (portalUuid) => {
+    () => eventFilters.eventPortalIdentifier,
+    async (portalIdentifier) => {
       activePortal.value = null
 
-      if (!portalUuid) {
+      if (!portalIdentifier) {
         return
       }
 
-      const requestedPortalUuid = portalUuid
+      const requestedPortalIdentifier = portalIdentifier
 
       try {
         const response = await $api<ApiResponse<Portal>>(
-            `/api/portal/${encodeURIComponent(portalUuid)}`
+            `/api/portal2/${encodeURIComponent(portalIdentifier)}`
         )
 
-        if (eventFilters.eventPortalUuid === requestedPortalUuid) {
+        if (eventFilters.eventPortalIdentifier === requestedPortalIdentifier) {
           activePortal.value = response.data
         }
       } catch (error) {
@@ -280,7 +280,7 @@ watch(
 )
 
 const logoLink = computed(() => {
-  if (eventFilters.eventPortalUuid) {
+  if (eventFilters.eventPortalIdentifier) {
     return localePath('/portal/home')
   }
 
