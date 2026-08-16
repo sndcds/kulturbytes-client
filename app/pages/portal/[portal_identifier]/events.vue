@@ -1,18 +1,17 @@
 <template>
-  <EventsView :key="portalIdentifier" />
+  <EventsView v-if="portalReady" :key="`${portalIdentifier}:${portalUuid}`" />
 </template>
 
 <script setup lang="ts">
 import EventsView from '~/components/event/EventsView.vue'
 import { useFiltersStore } from '~/stores/filtersStore'
 import { ogLocale } from '~/utils/locale'
-import {isUuidV7} from "../../utils/uuid";
 
 defineI18nRoute({
   paths: {
-    de: '/portal/[portal_identifier]',
-    da: '/portal/[portal_identifier]',
-    en: '/portal/[portal_identifier]'
+    de: '/portal/[portal_identifier]/events',
+    da: '/portal/[portal_identifier]/events',
+    en: '/portal/[portal_identifier]/events'
   }
 })
 
@@ -26,29 +25,25 @@ const localePath = useLocalePath()
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const { decodeEventFilter } = useEventFilterEncoding()
+const { activatePortal } = usePortal()
+const portalReady = ref(false)
 
 const portalIdentifier = computed(() => {
   const value = route.params.portal_identifier
   return Array.isArray(value) ? value[0] ?? '' : value?.toString() ?? ''
 })
+const portalUuid = computed(() => filtersStore.eventPortalUuid)
 
-console.log("portalIdentifier:", portalIdentifier.value)
-
-function activatePortal() {
-  filtersStore.eventPortalIdentifier = portalIdentifier.value || null
-
-  if (isUuidV7(portalIdentifier.value)) {
-    filtersStore.eventPortalUuid = portalIdentifier.value || null
-  } else {
-
-  }
-
+async function activateEventsPortal() {
+  portalReady.value = false
+  await activatePortal(portalIdentifier.value)
   filtersStore.setFilter('events')
+  portalReady.value = Boolean(filtersStore.eventPortalUuid)
 }
 
-activatePortal()
-onActivated(activatePortal)
-watch(filtersStore.eventPortalUuid, activatePortal)
+await activateEventsPortal()
+onActivated(activateEventsPortal)
+watch(portalIdentifier, activateEventsPortal)
 applyFilterFromQuery()
 
 onUnmounted(() => {

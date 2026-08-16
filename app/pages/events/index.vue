@@ -16,10 +16,11 @@ const localePath = useLocalePath()
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const { decodeEventFilter } = useEventFilterEncoding()
+const { clearPortal } = usePortal()
 import { ogLocale } from '~/utils/locale'
 
 function activateEventsPage() {
-  filtersStore.eventPortalUuid = null
+  clearPortal()
   setFilter('events')
 }
 

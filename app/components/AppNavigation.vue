@@ -210,13 +210,6 @@ import EventFilters from '~/components/filters/EventFilters.vue'
 import VenueFilters from '~/components/filters/VenueFilters.vue'
 import { SlidersHorizontal, FunnelX, Building2 } from '@lucide/vue'
 import { useFiltersStore } from "~/stores/filtersStore";
-import type { ApiResponse } from '~/types/api'
-
-interface Portal {
-  uuid: string
-  name: string
-  web_logo_uuid?: string | null
-}
 
 const { t } = useI18n()
 
@@ -237,66 +230,44 @@ const {
 
 const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
-const config = useRuntimeConfig()
-const { $api } = useNuxtApp()
-
-const activePortal = ref<Portal | null>(null)
+const { activePortal, activatePortal, clearPortal } = usePortal()
 const isPortalActive = computed(() => Boolean(eventFilters.eventPortalIdentifier))
-const portalLogoUrl = computed(() => {
-  const logoUuid = activePortal.value?.web_logo_uuid
+const portalLogoUrl = computed(() => activePortal.value?.web_logo_url ?? null)
 
-  if (!logoUuid) {
-    return null
+onMounted(async () => {
+  const portalIdentifier = eventFilters.eventPortalIdentifier
+
+  if (portalIdentifier && !activePortal.value) {
+    try {
+      await activatePortal(portalIdentifier)
+    } catch (error) {
+      console.error('Failed restoring portal:', error)
+    }
   }
-
-  const apiUrl = config.public.apiUrl.replace(/\/$/, '')
-  return `${apiUrl}/api/image/${encodeURIComponent(logoUuid)}?width=480&type=png&quality=80`
 })
 
-watch(
-    () => eventFilters.eventPortalIdentifier,
-    async (portalIdentifier) => {
-      activePortal.value = null
-
-      if (!portalIdentifier) {
-        return
-      }
-
-      const requestedPortalIdentifier = portalIdentifier
-
-      try {
-        const response = await $api<ApiResponse<Portal>>(
-            `/api/portal2/${encodeURIComponent(portalIdentifier)}`
-        )
-
-        if (eventFilters.eventPortalIdentifier === requestedPortalIdentifier) {
-          activePortal.value = response.data
-        }
-      } catch (error) {
-        console.error('Failed loading portal:', error)
-      }
-    },
-    { immediate: true }
-)
-
 const logoLink = computed(() => {
-  if (eventFilters.eventPortalIdentifier) {
-    return localePath('/portal/home')
+  const portalIdentifier = eventFilters.eventPortalIdentifier
+
+  if (portalIdentifier) {
+    return localePath(`/portal/${portalIdentifier}/info`)
   }
 
   return localePath('/')
 })
 
 const portalEventsLink = computed(() => {
-  if (!eventFilters.eventPortalUuid) {
+  const portalIdentifier = eventFilters.eventPortalIdentifier
+
+  if (!portalIdentifier) {
     return localePath('events')
   }
 
-  return localePath(`/portal/${eventFilters.eventPortalUuid}`)
+  return localePath(`/portal/${portalIdentifier}/events`)
 })
 
 function endPortal() {
-  eventFilters.eventPortalUuid = null
+  clearPortal()
   eventFilters.setFilter('events')
   router.push(localePath('events'))
 }
