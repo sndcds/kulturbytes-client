@@ -1,11 +1,11 @@
 <template>
   <div class="layout">
 
-    <AppNavigation>
+    <NavigationAppNavigation>
       <template #filters>
         <slot name="filters" />
       </template>
-    </AppNavigation>
+    </NavigationAppNavigation>
 
     <div class="map-layout">
       <slot />

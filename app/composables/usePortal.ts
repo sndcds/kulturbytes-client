@@ -56,6 +56,33 @@ export function usePortal() {
         return response.data
     }
 
+    async function initializePortal(identifier?: string) {
+        const requestedIdentifier = identifier?.trim()
+        const portalIdentifier = requestedIdentifier
+            || filtersStore.eventPortalIdentifier
+
+        if (!portalIdentifier) {
+            return null
+        }
+
+        if (
+            activePortal.value
+            && (
+                activePortalIdentifier.value === portalIdentifier
+                || activePortal.value.uuid === filtersStore.eventPortalUuid
+            )
+        ) {
+            return activePortal.value
+        }
+
+        try {
+            return await activatePortal(portalIdentifier)
+        } catch (error) {
+            console.error('Failed restoring portal:', error)
+            return null
+        }
+    }
+
     function clearPortal() {
         activePortal.value = null
         activePortalIdentifier.value = null
@@ -66,6 +93,7 @@ export function usePortal() {
     return {
         activePortal,
         activatePortal,
+        initializePortal,
         clearPortal,
     }
 }

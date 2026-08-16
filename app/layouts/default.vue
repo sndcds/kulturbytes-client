@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
 
-    <AppNavigation />
+    <NavigationAppNavigation />
 
     <main>
       <slot />
