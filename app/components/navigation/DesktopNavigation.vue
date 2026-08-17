@@ -11,7 +11,6 @@
 
       <div class="secondary-links">
         <NavigationSearch
-          v-if="hasFilters"
           variant="desktop"
           :filters-open="filtersOpen"
           @toggle="emit('toggle-filters')"
@@ -41,7 +40,6 @@ import NavigationSearch from './NavigationSearch.vue'
 defineProps<{
   eventsLink: string
   filtersOpen: boolean
-  hasFilters: boolean
   canExitPortal: boolean
 }>()
 

@@ -38,7 +38,7 @@ defineI18nRoute({
 })
 
 definePageMeta({
-  filters: true
+  filters: 'events'
 })
 
 onUnmounted(() => {

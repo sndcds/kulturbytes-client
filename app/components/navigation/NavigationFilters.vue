@@ -1,6 +1,6 @@
 <template>
   <Transition name="filters">
-    <div v-if="open && hasFilters" id="navigation-filters" class="filter-panel">
+    <div v-if="open && filtersStore.filterType" id="navigation-filters" class="filter-panel">
       <div class="filter-inner">
         <button class="close-button" :aria-label="t('filter.close')" @click="emit('close')">✕</button>
         <div class="filter-content">
@@ -18,7 +18,6 @@ import VenueFilters from '~/components/filters/VenueFilters.vue'
 
 defineProps<{
   open: boolean
-  hasFilters: boolean
 }>()
 
 const emit = defineEmits<{ close: [] }>()

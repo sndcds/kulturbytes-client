@@ -16,7 +16,7 @@ defineI18nRoute({
 })
 
 definePageMeta({
-  filters: true
+  filters: 'events'
 })
 
 const filtersStore = useFiltersStore()

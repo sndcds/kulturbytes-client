@@ -35,13 +35,14 @@ type EventFilterPayload = {
     }
 }
 
+export type FilterType = 'events' | 'venues'
 type EventFilterTab = 'location' | 'types' | 'age' | 'price'
 
 export const useFiltersStore = defineStore(
     'filters',
     () => {
         // UI state
-        const filterType = ref<string | null>(null)
+        const filterType = ref<FilterType | null>(null)
         const eventFilterTab = ref<EventFilterTab>('location')
 
         // Event filters
@@ -101,7 +102,7 @@ export const useFiltersStore = defineStore(
             return count
         })
 
-        function setFilter(type: string | null) {
+        function setFilter(type: FilterType | null) {
             filterType.value = type
         }
 

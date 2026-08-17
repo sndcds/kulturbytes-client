@@ -7,7 +7,6 @@
     <DesktopNavigation
       :events-link="portalEventsLink"
       :filters-open="filtersOpen"
-      :has-filters="hasFilters"
       :can-exit-portal="canExitPortal"
       @toggle-filters="toggleFilters"
       @info-opened="closeFilters"
@@ -25,7 +24,6 @@
 
     <NavigationFilters
       :open="filtersOpen"
-      :has-filters="hasFilters"
       @close="closeFilters"
     />
   </header>
@@ -35,6 +33,7 @@
 import DesktopNavigation from './DesktopNavigation.vue'
 import MobileNavigation from './MobileNavigation.vue'
 import NavigationFilters from './NavigationFilters.vue'
+import type { FilterType } from '~/stores/filtersStore'
 
 const route = useRoute()
 const router = useRouter()
@@ -42,9 +41,30 @@ const localePath = useLocalePath()
 const filtersStore = useFiltersStore()
 const { clearPortal } = usePortal()
 const { isPortalActive, navigationStyle } = useNavigationStyle()
-const filtersOpen = ref(false)
+const filtersOpenRoute = useState<string | null>(
+  'navigation-filters-open-route',
+  () => null
+)
+const openFiltersAfterNavigation = useState(
+  'navigation-filters-open-after-navigation',
+  () => false
+)
+const filtersOpen = computed({
+  get: () => filtersOpenRoute.value === route.path,
+  set: (open: boolean) => {
+    filtersOpenRoute.value = open ? route.path : null
+  },
+})
 
-const hasFilters = computed(() => Boolean(route.meta?.filters))
+const routeFilterType = computed<FilterType | null>(() => {
+  const filterType = route.meta?.filters
+
+  if (filterType === 'events' || filterType === 'venues') {
+    return filterType
+  }
+
+  return null
+})
 const canExitPortal = computed(() => Boolean(filtersStore.eventPortalUuid))
 const portalEventsLink = computed(() => {
   const portalIdentifier = filtersStore.eventPortalIdentifier
@@ -54,20 +74,30 @@ const portalEventsLink = computed(() => {
     : localePath('events')
 })
 
-function toggleFilters() {
-  if (!hasFilters.value) {
-    router.push(portalEventsLink.value).then(() => {
-      nextTick(() => {
-        filtersOpen.value = true
-      })
-    })
+async function toggleFilters() {
+  if (filtersOpen.value) {
+    closeFilters()
     return
   }
 
-  filtersOpen.value = !filtersOpen.value
+  const currentFilterType = routeFilterType.value
+
+  if (currentFilterType) {
+    filtersStore.setFilter(currentFilterType)
+    filtersOpen.value = true
+    return
+  }
+
+  openFiltersAfterNavigation.value = true
+  const navigationFailure = await router.push(portalEventsLink.value)
+
+  if (navigationFailure) {
+    openFiltersAfterNavigation.value = false
+  }
 }
 
 function closeFilters() {
+  openFiltersAfterNavigation.value = false
   filtersOpen.value = false
 }
 
@@ -77,7 +107,28 @@ function endPortal() {
   router.push(localePath('events'))
 }
 
-watch(() => route.path, closeFilters)
+function openPendingFilters() {
+  const filterType = routeFilterType.value
+
+  if (!openFiltersAfterNavigation.value || !filterType) return false
+
+  filtersStore.setFilter(filterType)
+  filtersOpen.value = true
+  openFiltersAfterNavigation.value = false
+  return true
+}
+
+watch(
+  [() => route.path, routeFilterType],
+  () => {
+    if (openPendingFilters()) return
+
+    filtersOpen.value = false
+  },
+  { flush: 'post' }
+)
+
+onMounted(openPendingFilters)
 </script>
 
 <style scoped lang="scss">
