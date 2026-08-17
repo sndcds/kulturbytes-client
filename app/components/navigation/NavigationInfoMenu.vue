@@ -2,127 +2,128 @@
   <div
     ref="infoNav"
     class="info-nav"
-    :class="{ open: infoMenuVisible }"
-    @mouseenter="openInfoMenu"
-    @mouseleave="closeInfoMenuIfUnfocused"
-    @focusin="openInfoMenu"
-    @focusout="closeInfoMenuIfUnfocused"
+    :class="[`info-nav--${variant}`, { open: infoOpen, active: infoRouteActive }]"
+    @mouseenter="variant === 'desktop' && openInfoMenu()"
+    @mouseleave="variant === 'desktop' && closeInfoMenuIfUnfocused()"
+    @focusin="variant === 'desktop' && openInfoMenu()"
+    @focusout="variant === 'desktop' && closeInfoMenuIfUnfocused()"
   >
     <button
       type="button"
       class="info-button"
       aria-haspopup="menu"
-      :aria-expanded="infoMenuVisible"
+      :aria-expanded="infoOpen"
+      :aria-current="infoRouteActive ? 'page' : undefined"
       @click="toggleInfoMenu"
       @keydown.esc="closeInfoMenu"
     >
-      {{ t('nav.info') }}
+      <Info v-if="variant === 'mobile'" :size="21" aria-hidden="true" />
+      <span>{{ t('nav.info') }}</span>
     </button>
 
-    <div class="info-menu info-menu-desktop" role="menu">
-      <NuxtLink :to="localePath('about')" role="menuitem" @click="closeMenus">{{ t('nav.about') }}</NuxtLink>
-      <NuxtLink :to="localePath('/privacy')" role="menuitem" @click="closeMenus">{{ t('nav.privacy') }}</NuxtLink>
-      <NuxtLink :to="localePath('/terms')" role="menuitem" @click="closeMenus">{{ t('nav.terms') }}</NuxtLink>
-      <NuxtLink :to="localePath('/legal')" role="menuitem" @click="closeMenus">{{ t('nav.legal') }}</NuxtLink>
-    </div>
-
-    <div class="info-menu-mobile">
-      <NuxtLink :to="localePath('about')" @click="closeMenus">{{ t('nav.about') }}</NuxtLink>
-      <NuxtLink :to="localePath('/privacy')" @click="closeMenus">{{ t('nav.privacy') }}</NuxtLink>
-      <NuxtLink :to="localePath('/terms')" @click="closeMenus">{{ t('nav.terms') }}</NuxtLink>
-      <NuxtLink :to="localePath('/legal')" @click="closeMenus">{{ t('nav.legal') }}</NuxtLink>
+    <div v-show="infoOpen" class="info-menu" role="menu">
+      <NuxtLink :to="localePath('about')" role="menuitem" @click="closeMenus">
+        {{ t('nav.about') }}
+      </NuxtLink>
+      <NuxtLink :to="localePath('/privacy')" role="menuitem" @click="closeMenus">
+        {{ t('nav.privacy') }}
+      </NuxtLink>
+      <NuxtLink :to="localePath('/terms')" role="menuitem" @click="closeMenus">
+        {{ t('nav.terms') }}
+      </NuxtLink>
+      <NuxtLink :to="localePath('/legal')" role="menuitem" @click="closeMenus">
+        {{ t('nav.legal') }}
+      </NuxtLink>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Info } from '@lucide/vue'
+
+defineProps<{
+  variant: 'desktop' | 'mobile'
+}>()
+
 const emit = defineEmits<{
   opened: []
   navigate: []
 }>()
 
 const { t } = useI18n()
+const route = useRoute()
 const localePath = useLocalePath()
 const infoOpen = ref(false)
 const infoNav = ref<HTMLElement | null>(null)
-const isMobileNavigation = ref(false)
-const infoMenuVisible = computed(() => isMobileNavigation.value || infoOpen.value)
+const infoRoutes = computed(() => [
+  localePath('about'),
+  localePath('/privacy'),
+  localePath('/terms'),
+  localePath('/legal'),
+])
+const infoRouteActive = computed(() => infoRoutes.value.includes(route.path))
 
 function openInfoMenu() {
-  if (!isMobileNavigation.value) {
-    infoOpen.value = true
-    emit('opened')
-  }
+  if (infoOpen.value) return
+
+  infoOpen.value = true
+  emit('opened')
 }
 
 function closeInfoMenu() {
-  if (!isMobileNavigation.value) infoOpen.value = false
+  infoOpen.value = false
 }
 
 function toggleInfoMenu() {
-  if (!isMobileNavigation.value) {
-    infoOpen.value = !infoOpen.value
-    if (infoOpen.value) emit('opened')
-  }
+  infoOpen.value ? closeInfoMenu() : openInfoMenu()
 }
 
 function closeInfoMenuIfUnfocused() {
-  if (isMobileNavigation.value) return
-
   requestAnimationFrame(() => {
-    if (!infoNav.value?.contains(document.activeElement)) infoOpen.value = false
+    if (!infoNav.value?.contains(document.activeElement)) closeInfoMenu()
   })
 }
 
 function closeInfoMenuOnOutsideClick(event: MouseEvent) {
   if (
-    !isMobileNavigation.value
-    && infoOpen.value
+    infoOpen.value
     && infoNav.value
     && event.target instanceof Node
     && !infoNav.value.contains(event.target)
   ) {
-    infoOpen.value = false
+    closeInfoMenu()
   }
 }
 
-function updateNavigationMode() {
-  isMobileNavigation.value = window.matchMedia('(max-width: 768px)').matches
-}
-
 function closeMenus() {
-  infoOpen.value = false
+  closeInfoMenu()
   emit('navigate')
 }
 
-onMounted(() => {
-  updateNavigationMode()
-  window.addEventListener('resize', updateNavigationMode)
-  document.addEventListener('click', closeInfoMenuOnOutsideClick)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateNavigationMode)
-  document.removeEventListener('click', closeInfoMenuOnOutsideClick)
-})
+watch(() => route.path, closeInfoMenu)
+onMounted(() => document.addEventListener('click', closeInfoMenuOnOutsideClick))
+onBeforeUnmount(() => document.removeEventListener('click', closeInfoMenuOnOutsideClick))
 
 defineExpose({ closeInfoMenu })
 </script>
 
 <style scoped lang="scss">
-.info-nav { position: relative; }
+.info-nav {
+  position: relative;
+}
 
 .info-button {
-  position: relative;
-  padding: .25rem;
-  color: var(--kbts-fg);
-  background: transparent;
   border: 0;
-  text-decoration: none;
-  font-weight: 400;
+  background: transparent;
+  color: var(--kbts-fg);
   font: inherit;
   cursor: pointer;
-  transition: color .25s ease;
+}
+
+.info-nav--desktop .info-button {
+  position: relative;
+  padding: .25rem;
+  font-weight: 400;
 
   &::after {
     content: "";
@@ -138,14 +139,21 @@ defineExpose({ closeInfoMenu })
     transition: transform .25s ease;
   }
 
-  &:hover::after { transform: scaleX(1); }
-}
+  &:hover::after,
+  &:focus-visible::after,
+  &[aria-expanded="true"]::after,
+  &[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
 
-.info-menu-mobile { display: none; }
+  &[aria-current="page"] {
+    font-weight: 700;
+  }
+}
 
 .info-menu {
   position: absolute;
-  top: 100%;
+  z-index: 120;
   min-width: 180px;
   padding: .5rem;
   display: flex;
@@ -155,10 +163,6 @@ defineExpose({ closeInfoMenu })
   border: 1px solid var(--kbts-border);
   border-radius: 8px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, .12);
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(0, -.25rem);
-  transition: opacity .18s ease, transform .18s ease;
 
   a {
     padding: .65rem .75rem;
@@ -167,58 +171,55 @@ defineExpose({ closeInfoMenu })
     font-weight: 400;
     border-radius: 6px;
     white-space: nowrap;
-    transition: background .18s ease;
 
     &:hover,
-    &:focus-visible { background: rgba(0, 0, 0, .06); }
-    &.router-link-active { font-weight: 700; }
-  }
-}
+    &:focus-visible {
+      background: var(--kbts-card-bg);
+    }
 
-.info-nav.open .info-menu {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-@media (max-width: 768px) {
-  .info-nav {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .info-button {
-    padding: 1rem .75rem;
-    font-size: 1.2rem;
-    text-align: left;
-    border-radius: 6px;
-
-    &::after { display: none; }
-    &:hover,
-    &:focus-visible { background: rgba(0, 0, 0, .05); }
-  }
-
-  .info-menu-desktop { display: none; }
-
-  .info-menu-mobile {
-    padding: 0 0 0 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-
-    a {
-      padding: .45rem .75rem;
-      font-size: 1.05rem;
-      color: var(--kbts-fg);
-      border-radius: .25rem;
-
-      &:hover,
-      &:focus-visible { background: rgba(0, 0, 0, .04); }
-      &.router-link-active {
-        font-weight: 700;
-        color: var(--kbts-fg);
-      }
+    &.router-link-active {
+      font-weight: 700;
     }
   }
+}
+
+.info-nav--desktop .info-menu {
+  top: calc(100% + .65rem);
+  left: 0;
+}
+
+.info-nav--mobile {
+  min-width: 0;
+}
+
+.info-nav--mobile .info-button {
+  width: 100%;
+  min-height: var(--kbts-mobile-nav-height);
+  padding: .5rem .25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  color: var(--kbts-muted-fg);
+  font-size: .72rem;
+  font-weight: 500;
+
+  &:hover,
+  &:focus-visible,
+  &[aria-expanded="true"],
+  &[aria-current="page"] {
+    color: var(--kbts-fg);
+  }
+
+  &[aria-current="page"] {
+    font-weight: 700;
+    box-shadow: inset 0 2px var(--kbts-fg);
+  }
+}
+
+.info-nav--mobile .info-menu {
+  right: .25rem;
+  bottom: calc(100% + .5rem);
 }
 </style>

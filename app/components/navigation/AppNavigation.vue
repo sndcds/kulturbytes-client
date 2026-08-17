@@ -4,72 +4,72 @@
     :class="{ 'portal-navigation': isPortalActive }"
     :style="navigationStyle"
   >
-    <div class="nav-inner">
-      <NavigationLogo />
-      <NavigationLinks
-        ref="navigationLinks"
-        :open="open"
-        :has-filters="hasFilters"
-        :filters-open="filtersOpen"
-        @toggle-filters="toggleFilters"
-        @reset-filters="resetFilters"
-        @info-opened="filtersOpen = false"
-        @navigate="open = false"
-      />
-      <NavigationActions
-          type="mobile"
-          @toggle-navigation="toggleNavigation" />
-    </div>
+    <DesktopNavigation
+      :events-link="portalEventsLink"
+      :filters-open="filtersOpen"
+      :has-filters="hasFilters"
+      :can-exit-portal="canExitPortal"
+      @toggle-filters="toggleFilters"
+      @info-opened="closeFilters"
+      @exit-portal="endPortal"
+    />
+
+    <MobileNavigation
+      :events-link="portalEventsLink"
+      :filters-open="filtersOpen"
+      :has-filters="hasFilters"
+      :can-exit-portal="canExitPortal"
+      @toggle-filters="toggleFilters"
+      @info-opened="closeFilters"
+      @exit-portal="endPortal"
+    />
 
     <NavigationFilters
       :open="filtersOpen"
       :has-filters="hasFilters"
-      @close="filtersOpen = false"
+      @close="closeFilters"
     />
   </header>
 </template>
 
 <script setup lang="ts">
-import NavigationActions from './NavigationActions.vue'
+import DesktopNavigation from './DesktopNavigation.vue'
+import MobileNavigation from './MobileNavigation.vue'
 import NavigationFilters from './NavigationFilters.vue'
-import NavigationLinks from './NavigationLinks.vue'
-import NavigationLogo from './NavigationLogo.vue'
 
 const route = useRoute()
+const router = useRouter()
+const localePath = useLocalePath()
 const filtersStore = useFiltersStore()
+const { clearPortal } = usePortal()
 const { isPortalActive, navigationStyle } = useNavigationStyle()
-const open = ref(false)
 const filtersOpen = ref(false)
-const navigationLinks = ref<InstanceType<typeof NavigationLinks> | null>(null)
-const hasFilters = computed(() => Boolean(route.meta?.filters))
 
-function resetFilters() {
-  filtersStore.resetFilters()
-}
+const hasFilters = computed(() => Boolean(route.meta?.filters))
+const canExitPortal = computed(() => Boolean(filtersStore.eventPortalUuid))
+const portalEventsLink = computed(() => {
+  const portalIdentifier = filtersStore.eventPortalIdentifier
+
+  return portalIdentifier
+    ? localePath(`/portal/${portalIdentifier}/events`)
+    : localePath('events')
+})
 
 function toggleFilters() {
   filtersOpen.value = !filtersOpen.value
-
-  if (filtersOpen.value) {
-    open.value = false
-    navigationLinks.value?.closeInfoMenu()
-  }
 }
 
-function toggleNavigation() {
-  open.value = !open.value
-
-  if (open.value) filtersOpen.value = false
+function closeFilters() {
+  filtersOpen.value = false
 }
 
-watch(
-  () => route.path,
-  () => {
-    open.value = false
-    filtersOpen.value = false
-    navigationLinks.value?.closeInfoMenu()
-  }
-)
+function endPortal() {
+  clearPortal()
+  filtersStore.setFilter('events')
+  router.push(localePath('events'))
+}
+
+watch(() => route.path, closeFilters)
 </script>
 
 <style scoped lang="scss">
@@ -79,29 +79,5 @@ watch(
   z-index: 100;
   background: var(--kbts-bg);
   border-bottom: 1px solid var(--kbts-border);
-}
-
-.nav-inner {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-  display: flex;
-  align-items: flex-end;
-}
-
-.portal-navigation .nav-inner {
-  height: var(--kbts-nav-height);
-  padding: 0 1rem 1rem 1rem;
-}
-
-@media (max-width: 768px) {
-  .nav-inner {
-    padding: .75rem 1rem;
-  }
-  .portal-navigation .nav-inner {
-    padding: 0 1rem;
-  }
 }
 </style>

@@ -55,7 +55,8 @@ useHead({
 <style scoped lang="scss">
 .layout {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -64,12 +65,24 @@ useHead({
   display:flex;
   flex-direction:column;
   width:100%;
-  height: calc(100vh - 66px);
+  flex: 1;
+  min-height: 0;
   overflow:hidden;
 }
 
 .map-layout > * {
   flex:1;
   min-height:0;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    height: calc(
+      100dvh
+      - var(--kbts-mobile-nav-height)
+      - env(safe-area-inset-bottom)
+    );
+    min-height: 0;
+  }
 }
 </style>

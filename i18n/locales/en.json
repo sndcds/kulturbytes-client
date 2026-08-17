@@ -9,6 +9,8 @@
     "info": "Info",
     "end_portal": "Exit portal",
     "language": "Choose language",
+    "primary_navigation": "Primary navigation",
+    "mobile_navigation": "Mobile navigation",
     "about": "About",
     "support": "Support",
     "contact": "Contact",
@@ -79,7 +81,8 @@
   "address": "Address",
   "organization": "Organization",
   "filter": {
-    "search": "Search"
+    "search": "Search",
+    "close": "Close filters"
   },
   "event": {
     "no_events_found": "No events found",

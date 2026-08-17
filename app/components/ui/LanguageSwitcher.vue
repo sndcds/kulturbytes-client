@@ -1,5 +1,9 @@
 <template>
-  <div ref="switcher" class="language-switcher">
+  <div
+    ref="switcher"
+    class="language-switcher"
+    :class="`language-switcher--${variant}`"
+  >
     <button
         type="button"
         class="language-button"
@@ -32,6 +36,12 @@
 
 <script setup lang="ts">
 import { Languages } from '@lucide/vue'
+
+withDefaults(defineProps<{
+  variant?: 'desktop' | 'mobile-navigation'
+}>(), {
+  variant: 'desktop',
+})
 
 const { t, locale: currentLocale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
@@ -128,17 +138,34 @@ onBeforeUnmount(() => document.removeEventListener('click', closeOnOutsideClick)
   font-weight: 400;
 }
 
-@media (max-width: 768px) {
+.language-switcher--mobile-navigation {
+  min-width: 0;
+
   .language-button {
     width: 100%;
-    padding: 1rem .75rem;
-    font-size: 1.2rem;
+    min-height: var(--kbts-mobile-nav-height);
+    padding: .5rem .25rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: .2rem;
+    color: var(--kbts-muted-fg);
+    font-size: .72rem;
+
+    &:hover,
+    &:focus-visible,
+    &[aria-expanded="true"] {
+      color: var(--kbts-fg);
+    }
+  }
+
+  .current-language {
+    font-size: .72rem;
   }
 
   .language-menu {
-    position: static;
-    margin: 0 0 .5rem .75rem;
-    box-shadow: none;
+    top: auto;
+    right: .25rem;
+    bottom: calc(100% + .5rem);
   }
 }
 </style>

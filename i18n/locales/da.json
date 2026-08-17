@@ -9,6 +9,8 @@
     "info": "Info",
     "end_portal": "Afslut portal",
     "language": "Vælg sprog",
+    "primary_navigation": "Primær navigation",
+    "mobile_navigation": "Mobil navigation",
     "about": "Om os",
     "support": "Support",
     "contact": "Kontakt",
@@ -79,7 +81,8 @@
   "address": "Adresse",
   "organization": "Organisation",
   "filter": {
-    "search": "Find"
+    "search": "Find",
+    "close": "Luk filtre"
   },
   "event": {
     "no_events_found": "Ingen begivenheder fundet",

@@ -59,4 +59,10 @@ main {
   margin: 0 auto;
   padding: 2rem 1rem;
 }
+
+@media (max-width: 768px) {
+  main {
+    padding-bottom: calc(2rem + var(--kbts-mobile-nav-height) + env(safe-area-inset-bottom));
+  }
+}
 </style>

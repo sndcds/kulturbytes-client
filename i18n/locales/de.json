@@ -9,6 +9,8 @@
     "info": "Info",
     "end_portal": "Portal Ende",
     "language": "Sprache wählen",
+    "primary_navigation": "Hauptnavigation",
+    "mobile_navigation": "Mobile Navigation",
     "about": "Über uns",
     "support": "Support",
     "contact": "Kontakt",
@@ -79,7 +81,8 @@
   "address": "Adresse",
   "organization": "Organisation",
   "filter": {
-    "search": "Suche"
+    "search": "Suche",
+    "close": "Filter schließen"
   },
   "event": {
     "no_events_found": "Es wurden keine Veranstaltungen gefunden",
