@@ -82,7 +82,9 @@
   "organization": "Organisation",
   "filter": {
     "search": "Find",
-    "close": "Luk filtre"
+    "close": "Luk filtre",
+    "settings": "Filterindstillinger",
+    "reset": "Nulstil alle"
   },
   "event": {
     "no_events_found": "Ingen begivenheder fundet",

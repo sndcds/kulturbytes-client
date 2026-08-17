@@ -82,7 +82,9 @@
   "organization": "Organization",
   "filter": {
     "search": "Search",
-    "close": "Close filters"
+    "close": "Close filters",
+    "settings": "Filter settings",
+    "reset": "Reset all"
   },
   "event": {
     "no_events_found": "No events found",

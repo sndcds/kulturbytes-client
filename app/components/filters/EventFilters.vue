@@ -4,6 +4,7 @@ import ChipSelect from '~/components/ui/ChipSelect.vue'
 import { useFiltersStore } from '~/stores/filtersStore'
 import Checkbox from '~/components/ui/Checkbox.vue'
 import TypeGenreSelect from '~/components/event/ui/TypeGenreSelect.vue'
+import { Undo2 } from '@lucide/vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -107,6 +108,18 @@ async function saveFilter() {
 <template>
 
   <div class="filters">
+    <div class="filter-header">
+      <span class="filter-title">{{ t('filter.settings') }}</span>
+      <button
+          type="button"
+          class="reset-button"
+          @click="eventFilters.resetFilters"
+      >
+        <Undo2 :size="16" aria-hidden="true" />
+        <span>{{ t('filter.reset') }}</span>
+      </button>
+    </div>
+
     <CategorySelector
         v-model="eventCategories"
     />
@@ -347,6 +360,50 @@ async function saveFilter() {
   flex-direction: column;
   gap: 0.6rem;
   background: white;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .15rem;
+}
+
+.filter-title {
+  color: var(--kbts-muted-fg);
+  font-size: .82rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+.reset-button {
+  padding: .35rem .55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  border: 0;
+  border-radius: .25rem;
+  background: transparent;
+  color: var(--kbts-fg);
+  font: inherit;
+  font-size: .82rem;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--kbts-card-bg);
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-header {
+    align-items: flex-start;
+  }
+
+  .reset-button {
+    flex-shrink: 0;
+  }
 }
 
 input {

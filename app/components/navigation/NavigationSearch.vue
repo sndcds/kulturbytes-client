@@ -10,7 +10,7 @@
   >
     <SearchX v-if="filtersOpen" :size="iconSize" aria-hidden="true" />
     <Search v-else :size="iconSize" aria-hidden="true" />
-    <span :class="{ 'visually-hidden': variant === 'mobile' }">
+    <span>
       {{ t('filter.search') }}
     </span>
   </button>
@@ -20,13 +20,13 @@
 import { Search, SearchX } from '@lucide/vue'
 
 const props = defineProps<{
-  variant: 'desktop' | 'mobile'
+  variant: 'desktop' | 'mobile-navigation'
   filtersOpen: boolean
 }>()
 
 const emit = defineEmits<{ toggle: [] }>()
 const { t } = useI18n()
-const iconSize = computed(() => props.variant === 'mobile' ? 23 : 18)
+const iconSize = computed(() => props.variant === 'mobile-navigation' ? 21 : 18)
 </script>
 
 <style scoped lang="scss">
@@ -71,28 +71,26 @@ const iconSize = computed(() => props.variant === 'mobile' ? 23 : 18)
   }
 }
 
-.navigation-search--mobile {
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border-radius: 50%;
+.navigation-search--mobile-navigation {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--kbts-mobile-nav-height);
+  padding: .5rem .25rem;
+  flex-direction: column;
+  gap: .2rem;
+  color: var(--kbts-muted-fg);
+  font-size: .72rem;
+  font-weight: 500;
 
   &:hover,
   &:focus-visible,
   &[aria-expanded="true"] {
-    background: var(--kbts-card-bg);
+    color: var(--kbts-fg);
   }
-}
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  &[aria-expanded="true"] {
+    font-weight: 700;
+    box-shadow: inset 0 2px var(--kbts-fg);
+  }
 }
 </style>

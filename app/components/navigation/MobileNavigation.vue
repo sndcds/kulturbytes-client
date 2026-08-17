@@ -15,12 +15,7 @@
           <LogOut :size="21" aria-hidden="true" />
         </button>
 
-        <NavigationSearch
-          v-if="hasFilters"
-          variant="mobile"
-          :filters-open="filtersOpen"
-          @toggle="emit('toggle-filters')"
-        />
+        <NavigationInfoMenu variant="mobile-top" @opened="emit('info-opened')" />
       </div>
     </div>
 
@@ -35,7 +30,11 @@
         <span>{{ t('nav.venues') }}</span>
       </NuxtLink>
 
-      <NavigationInfoMenu variant="mobile" @opened="emit('info-opened')" />
+      <NavigationSearch
+        variant="mobile-navigation"
+        :filters-open="filtersOpen"
+        @toggle="emit('toggle-filters')"
+      />
       <LanguageSwitcher variant="mobile-navigation" />
     </nav>
   </div>
@@ -51,7 +50,6 @@ import NavigationSearch from './NavigationSearch.vue'
 defineProps<{
   eventsLink: string
   filtersOpen: boolean
-  hasFilters: boolean
   canExitPortal: boolean
 }>()
 

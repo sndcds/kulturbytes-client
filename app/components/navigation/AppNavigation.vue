@@ -17,7 +17,6 @@
     <MobileNavigation
       :events-link="portalEventsLink"
       :filters-open="filtersOpen"
-      :has-filters="hasFilters"
       :can-exit-portal="canExitPortal"
       @toggle-filters="toggleFilters"
       @info-opened="closeFilters"
@@ -56,6 +55,15 @@ const portalEventsLink = computed(() => {
 })
 
 function toggleFilters() {
+  if (!hasFilters.value) {
+    router.push(portalEventsLink.value).then(() => {
+      nextTick(() => {
+        filtersOpen.value = true
+      })
+    })
+    return
+  }
+
   filtersOpen.value = !filtersOpen.value
 }
 

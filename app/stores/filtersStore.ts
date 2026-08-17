@@ -67,6 +67,40 @@ export const useFiltersStore = defineStore(
         // Portal mode
         const eventPortalIdentifier = ref<string | null>(null)
 
+        const activeFilterCount = computed(() => {
+            let count = 0
+
+            if (eventCategories.value?.length) count += 1
+            if (eventDateSpan.value && eventDateSpan.value !== 'all') count += 1
+            if (eventSearch.value.trim()) count += 1
+
+            if (eventCity.value.trim()) count += 1
+            if (eventPostalCode.value.trim()) count += 1
+            if (eventVenue.value.trim()) count += 1
+
+            if (eventLocationFlag.value) {
+                count += 1
+                if (eventLocationRadius.value !== null) count += 1
+            }
+
+            if (eventTypeIds.value.length) count += 1
+            if (eventGenreIds.value.length) count += 1
+
+            if (eventAgeFrom.value !== null) count += 1
+            if (eventAgeTo.value !== null) count += 1
+
+            if (eventPriceType.value) {
+                count += 1
+
+                if (eventPriceType.value === 'max_price') {
+                    if (eventPriceCurrency.value.trim()) count += 1
+                    if (eventMaxPrice.value !== null) count += 1
+                }
+            }
+
+            return count
+        })
+
         function setFilter(type: string | null) {
             filterType.value = type
         }
@@ -249,6 +283,8 @@ export const useFiltersStore = defineStore(
             eventPortalUuid,
 
             eventPortalIdentifier,
+
+            activeFilterCount,
 
             eventDateRange,
             hasValidEvnetDateRange,

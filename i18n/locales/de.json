@@ -82,7 +82,9 @@
   "organization": "Organisation",
   "filter": {
     "search": "Suche",
-    "close": "Filter schließen"
+    "close": "Filter schließen",
+    "settings": "Filtereinstellung",
+    "reset": "Alles zurücksetzen"
   },
   "event": {
     "no_events_found": "Es wurden keine Veranstaltungen gefunden",

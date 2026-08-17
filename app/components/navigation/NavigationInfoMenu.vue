@@ -17,7 +17,7 @@
       @click="toggleInfoMenu"
       @keydown.esc="closeInfoMenu"
     >
-      <Info v-if="variant === 'mobile'" :size="21" aria-hidden="true" />
+      <Info v-if="variant === 'mobile-top'" :size="20" aria-hidden="true" />
       <span>{{ t('nav.info') }}</span>
     </button>
 
@@ -42,7 +42,7 @@
 import { Info } from '@lucide/vue'
 
 defineProps<{
-  variant: 'desktop' | 'mobile'
+  variant: 'desktop' | 'mobile-top'
 }>()
 
 const emit = defineEmits<{
@@ -188,38 +188,35 @@ defineExpose({ closeInfoMenu })
   left: 0;
 }
 
-.info-nav--mobile {
+.info-nav--mobile-top {
   min-width: 0;
 }
 
-.info-nav--mobile .info-button {
-  width: 100%;
-  min-height: var(--kbts-mobile-nav-height);
-  padding: .5rem .25rem;
+.info-nav--mobile-top .info-button {
+  min-height: 42px;
+  padding: .5rem .65rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .2rem;
-  color: var(--kbts-muted-fg);
-  font-size: .72rem;
-  font-weight: 500;
+  gap: .4rem;
+  border-radius: .25rem;
+  color: var(--kbts-fg);
+  font-size: .9rem;
 
   &:hover,
   &:focus-visible,
   &[aria-expanded="true"],
   &[aria-current="page"] {
-    color: var(--kbts-fg);
+    background: var(--kbts-card-bg);
   }
 
   &[aria-current="page"] {
     font-weight: 700;
-    box-shadow: inset 0 2px var(--kbts-fg);
   }
 }
 
-.info-nav--mobile .info-menu {
-  right: .25rem;
-  bottom: calc(100% + .5rem);
+.info-nav--mobile-top .info-menu {
+  top: calc(100% + .5rem);
+  right: 0;
 }
 </style>
