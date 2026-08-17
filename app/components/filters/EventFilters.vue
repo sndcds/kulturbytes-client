@@ -112,6 +112,7 @@ async function saveFilter() {
     />
 
     <input
+        class="search-text"
         v-model="eventSearchInput"
         :placeholder="t('event.search_placeholder')"
     />
@@ -362,6 +363,10 @@ input {
     color: var(--kbts-muted-fg);
     opacity: 1;
   }
+}
+
+.search-text {
+  font-size: 1.3rem;
 }
 
 .input-fields-container {

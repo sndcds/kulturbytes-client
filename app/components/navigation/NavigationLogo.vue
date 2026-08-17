@@ -23,7 +23,12 @@ const { activePortal } = usePortal()
 const isPortalActive = computed(() =>
   Boolean(filtersStore.eventPortalIdentifier)
 )
-const portalLogoUrl = computed(() => activePortal.value?.web_logo_url ?? null)
+
+const portalLogoUrl = computed(() => {
+  const url = activePortal.value?.web_logo_url
+  return url ? `${url}?type=png` : null
+})
+
 const logoLink = computed(() => {
   const portalIdentifier = filtersStore.eventPortalIdentifier
 

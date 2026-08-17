@@ -16,7 +16,9 @@
         @info-opened="filtersOpen = false"
         @navigate="open = false"
       />
-      <NavigationActions type="mobile" @toggle-navigation="toggleNavigation" />
+      <NavigationActions
+          type="mobile"
+          @toggle-navigation="toggleNavigation" />
     </div>
 
     <NavigationFilters
@@ -75,7 +77,7 @@ watch(
   position: sticky;
   top: 0;
   z-index: 100;
-  background: white;
+  background: var(--kbts-bg);
   border-bottom: 1px solid var(--kbts-border);
 }
 
@@ -91,11 +93,15 @@ watch(
 
 .portal-navigation .nav-inner {
   height: var(--kbts-nav-height);
-  padding: 0 1rem;
+  padding: 0 1rem 1rem 1rem;
 }
 
 @media (max-width: 768px) {
-  .nav-inner { padding: .75rem 1rem; }
-  .portal-navigation .nav-inner { padding: 0 1rem; }
+  .nav-inner {
+    padding: .75rem 1rem;
+  }
+  .portal-navigation .nav-inner {
+    padding: 0 1rem;
+  }
 }
 </style>

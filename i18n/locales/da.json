@@ -79,7 +79,7 @@
   "address": "Adresse",
   "organization": "Organisation",
   "filter": {
-    "button_label": "Filter"
+    "search": "Find"
   },
   "event": {
     "no_events_found": "Ingen begivenheder fundet",

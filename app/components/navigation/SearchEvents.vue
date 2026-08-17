@@ -1,23 +1,21 @@
 <template>
-  <div v-if="type === 'filters' && hasFilters" class="filter-button-group">
+  <div class="filter-button-group">
     <button
-      class="filter-button"
-      :aria-expanded="filtersOpen"
-      aria-label="Toggle filters"
-      @click="emit('toggle-filters')"
+        class="filter-button"
+        :aria-expanded="filtersOpen"
+        aria-label="Toggle filters"
+        @click="emit('toggle-filters')"
     >
-      <Search :size="18" />{{ t('filter.search') }}
+      <Search :size="18" />
+      {{ t('filter.search') }}
     </button>
-    <button class="filter-x" aria-label="Reset filters" @click="emit('reset-filters')">
-      <FunnelX :size="18" />
-    </button>
-  </div>
 
-  <div v-else-if="type === 'mobile'" class="nav-actions">
-    <button class="menu-toggle" aria-label="Toggle navigation" @click="emit('toggle-navigation')">
-      <span />
-      <span />
-      <span />
+    <button
+        class="filter-x"
+        aria-label="Reset filters"
+        @click="emit('reset-filters')"
+    >
+      <FunnelX :size="18" />
     </button>
   </div>
 </template>
@@ -26,7 +24,6 @@
 import { FunnelX, Search } from '@lucide/vue'
 
 withDefaults(defineProps<{
-  type: 'filters' | 'mobile'
   hasFilters?: boolean
   filtersOpen?: boolean
 }>(), {
@@ -37,8 +34,8 @@ withDefaults(defineProps<{
 const emit = defineEmits<{
   'toggle-filters': []
   'reset-filters': []
-  'toggle-navigation': []
 }>()
+
 const { t } = useI18n()
 </script>
 
@@ -79,38 +76,7 @@ const { t } = useI18n()
   border-left-width: 0;
 }
 
-.nav-actions {
-  display: none;
-  align-items: center;
-  gap: 1rem;
-  margin-left: auto;
-}
-
-.menu-toggle {
-  display: none;
-  border: 0;
-  background: none;
-  cursor: pointer;
-
-  span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: #111;
-    margin: 5px;
-  }
-}
-
 @media (max-width: 768px) {
-  .nav-actions {
-    display: flex;
-    gap: .5rem;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
   .filter-button-group {
     padding: .75rem;
   }

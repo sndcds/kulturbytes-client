@@ -3,30 +3,32 @@
     <div class="nav-primary">
       <NuxtLink :to="portalEventsLink">{{ t('nav.events') }}</NuxtLink>
       <NuxtLink :to="localePath('venue-map')">{{ t('nav.venues') }}</NuxtLink>
-      <NavigationActions
-        type="filters"
-        :has-filters="hasFilters"
-        :filters-open="filtersOpen"
-        @toggle-filters="toggleFilters"
-        @reset-filters="emit('reset-filters')"
+      <NavigationInfoMenu
+          ref="infoMenu"
+          @opened="emit('info-opened')"
+          @navigate="emit('navigate')"
       />
+
     </div>
 
     <div class="nav-secondary">
-      <button
+      <NavigationActions
+          type="filters"
+          :has-filters="hasFilters"
+          :filters-open="filtersOpen"
+          @toggle-filters="toggleFilters"
+          @reset-filters="emit('reset-filters')"
+      />
+
+      <span
         v-if="filtersStore.eventPortalUuid"
         type="button"
         class="portal-exit-button"
         @click="endPortal"
       >
         {{ t('nav.end_portal') }}
-      </button>
+      </span>
 
-      <NavigationInfoMenu
-        ref="infoMenu"
-        @opened="emit('info-opened')"
-        @navigate="emit('navigate')"
-      />
       <LanguageSwitcher />
     </div>
   </nav>
@@ -87,6 +89,7 @@ defineExpose({ closeInfoMenu })
 nav {
   display: flex;
   align-items: flex-end;
+  justify-content: center;
   flex: 1;
   margin-left: 2rem;
 }
@@ -95,7 +98,7 @@ nav {
 .nav-secondary {
   display: flex;
   align-items: flex-end;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .nav-secondary { margin-left: auto; }
@@ -169,7 +172,10 @@ nav {
     padding: 2rem;
     overflow-y: auto;
 
-    &.open { display: flex; }
+    &.open {
+      display: flex;
+      justify-content: flex-start;
+    }
   }
 
   :global(.portal-navigation nav) { top: var(--kbts-nav-height); }

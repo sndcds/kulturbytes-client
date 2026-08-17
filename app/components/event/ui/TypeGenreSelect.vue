@@ -3,7 +3,7 @@
 
     <div class="kbts-chip-container">
       <button
-          v-for="type in visibleTypes"
+          v-for="type in visibleTypesWithCount"
           :key="type.id"
           class="kbts-chip"
           :class="{
@@ -77,6 +77,16 @@ onMounted(async () => {
     eventSummaryStore.loadSummary()
   ])
 })
+
+const visibleTypesWithCount = computed(() =>
+    visibleTypes.value.filter(type => getTypeCount(type.id) > 0)
+)
+
+const visibleGenresWithCount = computed(() =>
+    selectedType.value?.genres?.filter(
+        genre => getGenreCount(genre.id) > 0
+    ) ?? []
+)
 
 /*
  Single source of truth:

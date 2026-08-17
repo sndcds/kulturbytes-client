@@ -103,7 +103,7 @@ function toggleCategory(id: number) {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
-  padding: .5rem 0;
+  padding: .1rem 3rem .1rem 0;
 }
 
 .category-chip {
@@ -113,7 +113,7 @@ function toggleCategory(id: number) {
   align-items: center;
   gap: .45rem;
 
-  padding: .35rem .75rem;
+  padding: .4rem .7rem;
 
   border: 1px solid color-mix(in srgb, var(--chip-color) 0%, transparent);
   border-radius: 999px;
