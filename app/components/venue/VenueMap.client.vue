@@ -13,18 +13,20 @@
 
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount, watch } from 'vue'
 import type { Map as MapLibreMapType } from 'maplibre-gl'
 import type { FeatureCollection } from 'geojson'
 import MapLibreMap from '~/components/map/MapLibreMap.client.vue'
 import {
   useMapLibreLayers,
-  type MapLayerConfig
+  type MapLayerConfig,
 } from '~/composables/useMapLibreLayers'
 import VenuePopup from '~/components/venue/VenuePopup.vue'
 import { useMapsStore } from '~/stores/mapsStore'
 import { useFiltersStore } from '~/stores/filtersStore'
+import type { ApiResponse } from '~/types/api'
 import type { VenueFeature, VenueProperties } from '~/types/mapMarkers'
+import type { PortalBoundaryFeature } from '~/types/portal'
 
 const props =
     withDefaults(
@@ -149,7 +151,9 @@ const maplibregl =
 
 const {
   initializeLayers,
-  updateSources
+  updateSources,
+  addPortalBoundary,
+  removePortalBoundary,
 } = useMapLibreLayers
 (
     {
@@ -161,14 +165,146 @@ const {
 
 const mapsStore = useMapsStore()
 const filtersStore = useFiltersStore()
+const { activePortal } = usePortal()
+const activePortalUuid = computed(
+    () => activePortal.value?.uuid ?? filtersStore.eventPortalUuid
+)
 const center = computed(() => mapsStore.venueMap.center ?? props.center)
 const zoom = computed(() => mapsStore.venueMap.zoom ?? props.zoom)
 const bearing = computed(() => mapsStore.venueMap.bearing ?? 0)
 const pitch = computed(() => mapsStore.venueMap.pitch ?? 0)
 const height = props.height
 
+let mapInstance: MapLibreMapType | null = null
+let boundaryRequest: AbortController | null = null
+let boundaryRequestVersion = 0
+const boundaryCache = new Map<string, PortalBoundaryFeature>()
+
+function isPortalBoundaryFeature(value: unknown): value is PortalBoundaryFeature {
+  if (!value || typeof value !== 'object') {
+    return false
+  }
+
+  const feature = value as Record<string, unknown>
+  const geometry = feature.geometry
+
+  if (!geometry || typeof geometry !== 'object') {
+    return false
+  }
+
+  const candidateGeometry = geometry as Record<string, unknown>
+  const coordinates = candidateGeometry.coordinates
+  const isPosition = (position: unknown) => Array.isArray(position)
+      && position.length >= 2
+      && position.every(
+          coordinate => typeof coordinate === 'number'
+              && Number.isFinite(coordinate)
+      )
+  const isRing = (ring: unknown) => Array.isArray(ring)
+      && ring.length >= 4
+      && ring.every(isPosition)
+  const isPolygon = (polygon: unknown) => Array.isArray(polygon)
+      && polygon.length > 0
+      && polygon.every(isRing)
+
+  return feature.type === 'Feature'
+      && (
+        (candidateGeometry.type === 'Polygon' && isPolygon(coordinates))
+        || (
+          candidateGeometry.type === 'MultiPolygon'
+          && Array.isArray(coordinates)
+          && coordinates.length > 0
+          && coordinates.every(isPolygon)
+        )
+      )
+}
+
+function firstVenueLayerId(map: MapLibreMapType): string | undefined {
+  return [
+    'venues-clusters',
+    'venues-cluster-count',
+    'venues-unclustered',
+    'venues-labels',
+  ].find(layerId => !!map.getLayer(layerId))
+}
+
+function displayPortalBoundary(
+    map: MapLibreMapType,
+    feature: PortalBoundaryFeature
+) {
+  try {
+    addPortalBoundary(map, feature, firstVenueLayerId(map))
+  } catch (error) {
+    console.error('Failed displaying portal boundary:', error)
+  }
+}
+
+async function syncPortalBoundary(portalUuid: string | null) {
+  const map = mapInstance
+
+  boundaryRequestVersion += 1
+  const requestVersion = boundaryRequestVersion
+  boundaryRequest?.abort()
+  boundaryRequest = null
+
+  if (!map) {
+    return
+  }
+
+  removePortalBoundary(map)
+
+  if (!portalUuid) {
+    return
+  }
+
+  const cachedBoundary = boundaryCache.get(portalUuid)
+  if (cachedBoundary) {
+    displayPortalBoundary(map, cachedBoundary)
+    return
+  }
+
+  const controller = new AbortController()
+  boundaryRequest = controller
+  const { $api } = useNuxtApp()
+
+  try {
+    const response = await $api<ApiResponse<unknown>>(
+        `/api/portal/${encodeURIComponent(portalUuid)}/geojson`,
+        { signal: controller.signal }
+    )
+
+    if (!isPortalBoundaryFeature(response.data)) {
+      console.error('Portal boundary response contains invalid GeoJSON')
+      return
+    }
+
+    boundaryCache.set(portalUuid, response.data)
+
+    if (
+        controller.signal.aborted
+        || requestVersion !== boundaryRequestVersion
+        || activePortalUuid.value !== portalUuid
+        || mapInstance !== map
+    ) {
+      return
+    }
+
+    displayPortalBoundary(map, response.data)
+  } catch (error) {
+    if (!controller.signal.aborted) {
+      console.error('Failed loading portal boundary:', error)
+    }
+  } finally {
+    if (boundaryRequest === controller) {
+      boundaryRequest = null
+    }
+  }
+}
+
 async function onMapLoaded(map:MapLibreMapType) {
   await initializeLayers(map)
+  mapInstance = map
+  void syncPortalBoundary(activePortalUuid.value)
   await loadVenues(map)
   map.on(
       'moveend',
@@ -180,6 +316,23 @@ async function onMapLoaded(map:MapLibreMapType) {
   map.on('rotateend', () => saveMapView(map))
   map.on('pitchend', () => saveMapView(map))
 }
+
+watch(activePortalUuid, portalUuid => {
+  void syncPortalBoundary(portalUuid)
+})
+
+onBeforeUnmount(() => {
+  boundaryRequestVersion += 1
+  boundaryRequest?.abort()
+  boundaryRequest = null
+
+  if (mapInstance) {
+    removePortalBoundary(mapInstance)
+    mapInstance = null
+  }
+
+  boundaryCache.clear()
+})
 
 function saveMapView(map: MapLibreMapType) {
   const mapCenter = map.getCenter()

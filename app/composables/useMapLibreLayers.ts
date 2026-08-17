@@ -3,9 +3,9 @@ import { getCurrentInstance, h, render, nextTick } from 'vue'
 import { useNuxtApp } from '#app'
 
 import type {
-    Feature,
     FeatureCollection,
 } from 'geojson'
+import type { PortalBoundaryFeature } from '~/types/portal'
 
 import type {
     Map as MapLibreMap,
@@ -87,6 +87,9 @@ interface Props {
     layers:
         Record<string, MapLayerConfig>
 }
+
+const PORTAL_BOUNDARY_SOURCE_ID = 'portal-boundary-source'
+const PORTAL_BOUNDARY_LAYER_ID = 'portal-boundary-layer'
 
 export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
 
@@ -574,10 +577,56 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
         }
     }
 
+    const removePortalBoundary = (map: MapLibreMap) => {
+        if (map.getLayer(PORTAL_BOUNDARY_LAYER_ID)) {
+            map.removeLayer(PORTAL_BOUNDARY_LAYER_ID)
+        }
+
+        if (map.getSource(PORTAL_BOUNDARY_SOURCE_ID)) {
+            map.removeSource(PORTAL_BOUNDARY_SOURCE_ID)
+        }
+    }
+
+    const addPortalBoundary = (
+        map: MapLibreMap,
+        feature: PortalBoundaryFeature,
+        beforeLayerId?: string
+    ) => {
+        removePortalBoundary(map)
+
+        map.addSource(PORTAL_BOUNDARY_SOURCE_ID, {
+            type: 'geojson',
+            data: feature,
+        })
+
+        try {
+            map.addLayer(
+                {
+                    id: PORTAL_BOUNDARY_LAYER_ID,
+                    type: 'line',
+                    source: PORTAL_BOUNDARY_SOURCE_ID,
+                    paint: {
+                        'line-color': '#243f6e',
+                        'line-opacity': 0.75,
+                        'line-width': 2,
+                    },
+                },
+                beforeLayerId
+            )
+        } catch (error) {
+            if (map.getSource(PORTAL_BOUNDARY_SOURCE_ID)) {
+                map.removeSource(PORTAL_BOUNDARY_SOURCE_ID)
+            }
+            throw error
+        }
+    }
+
     return {
         initializeLayers,
         updateSources,
         removePopup,
         addLayer,
+        addPortalBoundary,
+        removePortalBoundary,
     }
 }

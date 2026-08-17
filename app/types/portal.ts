@@ -1,3 +1,5 @@
+import type { Feature, MultiPolygon, Polygon } from 'geojson'
+
 export interface Portal {
     uuid: string
     slug: string
@@ -15,3 +17,15 @@ export interface Portal {
         } | null
     } | null
 }
+
+export interface PortalBoundaryProperties {
+    description: string | null
+    name: string
+    slug: string
+    uuid: string
+}
+
+export type PortalBoundaryFeature = Feature<
+    Polygon | MultiPolygon,
+    PortalBoundaryProperties
+>
