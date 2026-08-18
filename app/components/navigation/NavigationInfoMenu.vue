@@ -3,10 +3,6 @@
     ref="infoNav"
     class="info-nav"
     :class="[`info-nav--${variant}`, { open: infoOpen, active: infoRouteActive }]"
-    @mouseenter="variant === 'desktop' && openInfoMenu()"
-    @mouseleave="variant === 'desktop' && closeInfoMenuIfUnfocused()"
-    @focusin="variant === 'desktop' && openInfoMenu()"
-    @focusout="variant === 'desktop' && closeInfoMenuIfUnfocused()"
   >
     <button
       type="button"
@@ -76,12 +72,6 @@ function closeInfoMenu() {
 
 function toggleInfoMenu() {
   infoOpen.value ? closeInfoMenu() : openInfoMenu()
-}
-
-function closeInfoMenuIfUnfocused() {
-  requestAnimationFrame(() => {
-    if (!infoNav.value?.contains(document.activeElement)) closeInfoMenu()
-  })
 }
 
 function closeInfoMenuOnOutsideClick(event: MouseEvent) {
