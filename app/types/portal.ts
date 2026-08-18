@@ -5,6 +5,8 @@ export interface Portal {
     slug: string
     org_uuid: string
     name: string
+    description: string
+    main_image_url?: string | null
     web_logo_url?: string | null
     footer_logo_url?: string | null
     config?: {
