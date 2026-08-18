@@ -16,14 +16,12 @@
           @toggle="emit('toggle-filters')"
         />
 
-        <button
+        <KulturbytesIcon
           v-if="canExitPortal"
-          type="button"
-          class="portal-exit-button"
+          :size="38"
+          :aria-label="t('nav.end_portal')"
           @click="emit('exit-portal')"
-        >
-          {{ t('nav.end_portal') }}
-        </button>
+        />
 
         <LanguageSwitcher variant="desktop" />
       </div>
@@ -33,6 +31,7 @@
 
 <script setup lang="ts">
 import LanguageSwitcher from '~/components/ui/LanguageSwitcher.vue'
+import KulturbytesIcon from '~/components/ui/KulturbytesIcon.vue'
 import NavigationInfoMenu from './NavigationInfoMenu.vue'
 import NavigationLogo from './NavigationLogo.vue'
 import NavigationSearch from './NavigationSearch.vue'

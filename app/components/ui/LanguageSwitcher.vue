@@ -143,6 +143,7 @@ onBeforeUnmount(() => document.removeEventListener('click', closeOnOutsideClick)
 
   .language-button {
     width: 100%;
+    height: 100%;
     min-height: var(--kbts-mobile-nav-height);
     padding: .5rem .25rem;
     flex-direction: column;

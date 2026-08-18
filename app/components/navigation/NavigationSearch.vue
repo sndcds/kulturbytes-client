@@ -26,7 +26,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ toggle: [] }>()
 const { t } = useI18n()
-const iconSize = computed(() => props.variant === 'mobile-navigation' ? 21 : 18)
+const iconSize = computed(() => props.variant === 'mobile-navigation' ? 28 : 18)
 </script>
 
 <style scoped lang="scss">

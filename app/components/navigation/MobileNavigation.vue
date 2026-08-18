@@ -4,16 +4,14 @@
       <NavigationLogo />
 
       <div class="mobile-top-actions">
-        <button
+
+        <KulturbytesIcon
           v-if="canExitPortal"
-          type="button"
-          class="portal-exit-button"
+          :size="38"
           :aria-label="t('nav.end_portal')"
           :title="t('nav.end_portal')"
           @click="emit('exit-portal')"
-        >
-          <LogOut :size="21" aria-hidden="true" />
-        </button>
+        />
 
         <NavigationInfoMenu variant="mobile-top" @opened="emit('info-opened')" />
       </div>
@@ -21,12 +19,12 @@
 
     <nav class="mobile-bottom-nav" :aria-label="t('nav.mobile_navigation')">
       <NuxtLink :to="eventsLink" class="mobile-nav-item">
-        <CalendarDays :size="21" aria-hidden="true" />
+        <CalendarDays :size="28" aria-hidden="true" />
         <span>{{ t('nav.events') }}</span>
       </NuxtLink>
 
       <NuxtLink :to="localePath('venue-map')" class="mobile-nav-item">
-        <MapPin :size="21" aria-hidden="true" />
+        <MapPin :size="28" aria-hidden="true" />
         <span>{{ t('nav.venues') }}</span>
       </NuxtLink>
 
@@ -35,6 +33,7 @@
         :filters-open="filtersOpen"
         @toggle="emit('toggle-filters')"
       />
+
       <LanguageSwitcher variant="mobile-navigation" />
     </nav>
   </div>
@@ -42,6 +41,7 @@
 
 <script setup lang="ts">
 import { CalendarDays, LogOut, MapPin } from '@lucide/vue'
+import KulturbytesIcon from '~/components/ui/KulturbytesIcon.vue'
 import LanguageSwitcher from '~/components/ui/LanguageSwitcher.vue'
 import NavigationInfoMenu from './NavigationInfoMenu.vue'
 import NavigationLogo from './NavigationLogo.vue'
