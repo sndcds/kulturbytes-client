@@ -3,12 +3,14 @@
     <div class="mobile-top-bar">
       <NavigationLogo />
 
-      <img
-          v-if="!canExitPortal"
-          src="/images/kulturbytes-typo.svg"
-          class="mobile-top-typo"
-          alt="kulturbytes"
-      />
+      <NuxtLink :to="'/'" class="mobile-nav-item">
+        <img
+            v-if="!canExitPortal"
+            src="/images/kulturbytes-typo.svg"
+            class="mobile-top-typo"
+            alt="kulturbytes"
+        />
+      </NuxtLink>
 
       <div class="mobile-top-actions">
         <KulturbytesIcon

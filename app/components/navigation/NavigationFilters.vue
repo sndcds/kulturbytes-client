@@ -2,9 +2,11 @@
   <Transition name="filters">
     <div v-if="open && filtersStore.filterType" id="navigation-filters" class="filter-panel">
       <div class="filter-inner">
-        <button class="close-button" :aria-label="t('filter.close')" @click="emit('close')">✕</button>
         <div class="filter-content">
-          <EventFilters v-if="filtersStore.filterType === 'events'" />
+          <EventFilters
+              v-if="filtersStore.filterType === 'events'"
+              @close="emit('close')"
+          />
           <VenueFilters v-else-if="filtersStore.filterType === 'venues'" />
         </div>
       </div>

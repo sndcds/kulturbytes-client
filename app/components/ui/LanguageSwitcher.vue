@@ -13,7 +13,7 @@
         @click="open = !open"
         @keydown.esc="close"
     >
-      <Settings :size="20" aria-hidden="true" />
+      <Settings :size="iconSize" aria-hidden="true" />
       <span class="current-language">{{ currentLocale.toUpperCase() }}</span>
     </button>
 
@@ -37,11 +37,15 @@
 <script setup lang="ts">
 import { Settings } from '@lucide/vue'
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   variant?: 'desktop' | 'mobile-navigation'
 }>(), {
   variant: 'desktop',
 })
+
+const iconSize = computed(() =>
+    props.variant === 'mobile-navigation' ? 28 : 18
+)
 
 const { t, locale: currentLocale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()

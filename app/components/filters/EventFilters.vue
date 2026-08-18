@@ -84,6 +84,10 @@ const eventVenueInput = computed({
 })
 
 
+const emit = defineEmits<{
+  close: []
+}>()
+
 async function saveFilter() {
   const payload = eventFilters.buildEventFilterPayload()
   const encodedFilter = encodeEventFilter(JSON.stringify(payload))
@@ -110,14 +114,26 @@ async function saveFilter() {
   <div class="filters">
     <div class="filter-header">
       <span class="filter-title">{{ t('filter.settings') }}</span>
-      <button
-          type="button"
-          class="reset-button"
-          @click="eventFilters.resetFilters"
-      >
-        <Undo2 :size="16" aria-hidden="true" />
-        <span>{{ t('filter.reset') }}</span>
-      </button>
+
+      <div class="filter-header-actions">
+        <button
+            type="button"
+            class="reset-button"
+            @click="eventFilters.resetFilters"
+        >
+          <Undo2 :size="16" aria-hidden="true" />
+          <span>{{ t('filter.reset') }}</span>
+        </button>
+
+        <button
+            type="button"
+            class="close-button"
+            :aria-label="t('filter.close')"
+            @click="emit('close')"
+        >
+          ✕
+        </button>
+      </div>
     </div>
 
     <CategorySelector
@@ -377,6 +393,12 @@ async function saveFilter() {
   letter-spacing: .02em;
 }
 
+.filter-header-actions {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
 .reset-button {
   padding: .35rem .55rem;
   display: inline-flex;
@@ -388,6 +410,26 @@ async function saveFilter() {
   color: var(--kbts-fg);
   font: inherit;
   font-size: .82rem;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--kbts-card-bg);
+  }
+}
+
+.close-button {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: .25rem;
+  background: transparent;
+  color: var(--kbts-fg);
+  font-size: 1rem;
   cursor: pointer;
 
   &:hover,

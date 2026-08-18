@@ -14,9 +14,9 @@ withDefaults(defineProps<Props>(), {
   <svg
       class="uranus-logo"
       :style="{
-      width: typeof size === 'number' ? `${size}px` : size,
-      color,
-    }"
+        width: typeof size === 'number' ? `${size}px` : size,
+        color,
+      }"
       viewBox="0 0 5363 5906"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
