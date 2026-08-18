@@ -4,6 +4,7 @@
       <NavigationLogo />
 
       <img
+          v-if="!canExitPortal"
           src="/images/kulturbytes-typo.svg"
           class="mobile-top-typo"
           alt="kulturbytes"
