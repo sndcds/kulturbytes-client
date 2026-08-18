@@ -13,7 +13,7 @@
         @click="open = !open"
         @keydown.esc="close"
     >
-      <Languages :size="20" aria-hidden="true" />
+      <Settings :size="20" aria-hidden="true" />
       <span class="current-language">{{ currentLocale.toUpperCase() }}</span>
     </button>
 
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { Languages } from '@lucide/vue'
+import { Settings } from '@lucide/vue'
 
 withDefaults(defineProps<{
   variant?: 'desktop' | 'mobile-navigation'

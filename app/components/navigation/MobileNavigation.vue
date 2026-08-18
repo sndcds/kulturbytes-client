@@ -3,8 +3,13 @@
     <div class="mobile-top-bar">
       <NavigationLogo />
 
-      <div class="mobile-top-actions">
+      <img
+          src="/images/kulturbytes-typo.svg"
+          class="mobile-top-typo"
+          alt="kulturbytes"
+      />
 
+      <div class="mobile-top-actions">
         <KulturbytesIcon
           v-if="canExitPortal"
           :size="38"
@@ -13,7 +18,10 @@
           @click="emit('exit-portal')"
         />
 
-        <NavigationInfoMenu variant="mobile-top" @opened="emit('info-opened')" />
+        <NavigationInfoMenu
+            variant="mobile-top"
+            @opened="emit('info-opened')"
+        />
       </div>
     </div>
 
@@ -82,6 +90,13 @@ const localePath = useLocalePath()
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+  }
+
+  .mobile-top-typo {
+    display: block;
+    width: 160px;
+    height: auto;
+    margin-top: 4px;
   }
 
   .mobile-top-actions {
