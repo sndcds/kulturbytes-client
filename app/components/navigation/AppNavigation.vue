@@ -72,9 +72,9 @@ const portalEventsLink = computed(() => {
 
   return portalIdentifier
       ? localePath({
-        name: 'portal-portalIdentifier-events',
+        name: 'portal-portal_identifier-events',
         params: {
-          portalIdentifier
+          portal_identifier: portalIdentifier
         }
       })
       : localePath('events')
