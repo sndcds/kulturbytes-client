@@ -33,7 +33,7 @@ const logoLink = computed(() => {
   const portalIdentifier = filtersStore.eventPortalIdentifier
 
   return portalIdentifier
-    ? localePath(`/portal/${portalIdentifier}/info`)
+    ? localePath(`/portal/${portalIdentifier}`)
     : localePath('/')
 })
 </script>
