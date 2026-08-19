@@ -65,17 +65,9 @@ export function usePortal() {
             return null
         }
 
-        if (
-            activePortal.value
-            && (
-                activePortalIdentifier.value === portalIdentifier
-                || activePortal.value.uuid === filtersStore.eventPortalUuid
-            )
-        ) {
-            return activePortal.value
-        }
-
         try {
+            // Also synchronizes the persisted filter store when the portal
+            // itself has already been restored from the SSR payload.
             return await activatePortal(portalIdentifier)
         } catch (error) {
             console.error('Failed restoring portal:', error)
