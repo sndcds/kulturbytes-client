@@ -66,12 +66,18 @@ const routeFilterType = computed<FilterType | null>(() => {
   return null
 })
 const canExitPortal = computed(() => Boolean(filtersStore.eventPortalUuid))
+
 const portalEventsLink = computed(() => {
   const portalIdentifier = filtersStore.eventPortalIdentifier
 
   return portalIdentifier
-    ? localePath(`/portal/${portalIdentifier}/events`)
-    : localePath('events')
+      ? localePath({
+        name: 'portal-portalIdentifier-events',
+        params: {
+          portalIdentifier
+        }
+      })
+      : localePath('events')
 })
 
 async function toggleFilters() {
