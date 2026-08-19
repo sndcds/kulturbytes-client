@@ -9,8 +9,8 @@ import { ogLocale } from '~/utils/locale'
 
 defineI18nRoute({
   paths: {
-    de: '/portal/[portal_identifier]/events',
-    da: '/portal/[portal_identifier]/events',
+    de: '/portal/[portal_identifier]/veranstaltungen',
+    da: '/portal/[portal_identifier]/begivenheder',
     en: '/portal/[portal_identifier]/events'
   }
 })
