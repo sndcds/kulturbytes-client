@@ -186,13 +186,13 @@ function isPortalBoundaryFeature(value: unknown): value is PortalBoundaryFeature
   }
 
   const feature = value as Record<string, unknown>
-  const geometry = feature.geometry
+  const pointGeometry = feature.point
 
-  if (!geometry || typeof geometry !== 'object') {
+  if (!pointGeometry || typeof pointGeometry !== 'object') {
     return false
   }
 
-  const candidateGeometry = geometry as Record<string, unknown>
+  const candidateGeometry = pointGeometry as Record<string, unknown>
   const coordinates = candidateGeometry.coordinates
   const isPosition = (position: unknown) => Array.isArray(position)
       && position.length >= 2
