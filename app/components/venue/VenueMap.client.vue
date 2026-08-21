@@ -15,7 +15,13 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount, watch } from 'vue'
 import type { Map as MapLibreMapType } from 'maplibre-gl'
-import type { FeatureCollection } from 'geojson'
+import type {
+  FeatureCollection,
+  MultiPolygon,
+  Point,
+  Polygon,
+  Position,
+} from 'geojson'
 import MapLibreMap from '~/components/map/MapLibreMap.client.vue'
 import {
   useMapLibreLayers,
@@ -25,7 +31,12 @@ import VenuePopup from '~/components/venue/VenuePopup.vue'
 import { useMapsStore } from '~/stores/mapsStore'
 import { useFiltersStore } from '~/stores/filtersStore'
 import type { ApiResponse } from '~/types/api'
-import type { VenueFeature, VenueProperties } from '~/types/mapMarkers'
+import type {
+  VenueApiFeature,
+  VenueBuildingFeature,
+  VenueFeature,
+  VenueProperties,
+} from '~/types/mapMarkers'
 import type { PortalBoundaryFeature } from '~/types/portal'
 
 const props =
@@ -42,7 +53,13 @@ const props =
         })
 
 const venues =
-    ref<FeatureCollection>({
+    ref<FeatureCollection<Point, VenueProperties>>({
+      type:'FeatureCollection',
+      features:[]
+    })
+
+const venueBuildings =
+    ref<FeatureCollection<Polygon | MultiPolygon, VenueProperties>>({
       type:'FeatureCollection',
       features:[]
     })
@@ -67,28 +84,123 @@ const markerStyleByVenueType: Record<string, string> = {
   youth_center: 'cultural_place',
 }
 
-function normalizeVenueMarkers(collection: FeatureCollection): FeatureCollection {
+function isPosition(value: unknown): value is Position {
+  return Array.isArray(value)
+      && value.length >= 2
+      && value.every(coordinate => (
+        typeof coordinate === 'number' && Number.isFinite(coordinate)
+      ))
+}
+
+function isPoint(value: unknown): value is Point {
+  if (!value || typeof value !== 'object') {
+    return false
+  }
+
+  const geometry = value as Record<string, unknown>
+  return geometry.type === 'Point' && isPosition(geometry.coordinates)
+}
+
+function isPolygonCoordinates(value: unknown): value is Position[][] {
+  return Array.isArray(value)
+      && value.length > 0
+      && value.every(ring => (
+        Array.isArray(ring)
+        && ring.length >= 4
+        && ring.every(isPosition)
+      ))
+}
+
+function isBuilding(value: unknown): value is Polygon | MultiPolygon {
+  if (!value || typeof value !== 'object') {
+    return false
+  }
+
+  const geometry = value as Record<string, unknown>
+
+  if (geometry.type === 'Polygon') {
+    return isPolygonCoordinates(geometry.coordinates)
+  }
+
+  return geometry.type === 'MultiPolygon'
+      && Array.isArray(geometry.coordinates)
+      && geometry.coordinates.length > 0
+      && geometry.coordinates.every(isPolygonCoordinates)
+}
+
+function isVenueProperties(value: unknown): value is VenueProperties {
+  return !!value && typeof value === 'object'
+}
+
+function withMarkerStyle(properties: VenueProperties): VenueProperties {
+  if (properties.marker_style || !properties.type) {
+    return properties
+  }
+
   return {
-    ...collection,
-    features: collection.features.map((feature) => {
-      const properties = feature.properties as VenueProperties | null
+    ...properties,
+    marker_style: markerStyleByVenueType[properties.type] ?? 'default',
+  }
+}
 
-      if (!properties || properties.marker_style || !properties.type) {
-        return feature
-      }
+function transformVenueData(value: unknown): {
+  points: FeatureCollection<Point, VenueProperties>
+  buildings: FeatureCollection<Polygon | MultiPolygon, VenueProperties>
+} {
+  const points: VenueFeature[] = []
+  const buildings: VenueBuildingFeature[] = []
+  const collection = value as { features?: unknown } | null
+  const features = Array.isArray(collection?.features)
+      ? collection.features
+      : []
 
-      return {
-        ...feature,
-        properties: {
-          ...properties,
-          marker_style: markerStyleByVenueType[properties.type] ?? 'default',
-        },
-      } as VenueFeature
-    }),
+  for (const value of features) {
+    if (!value || typeof value !== 'object') {
+      continue
+    }
+
+    const feature = value as Partial<VenueApiFeature> & { building?: unknown }
+
+    if (!isVenueProperties(feature.properties)) {
+      continue
+    }
+
+    const properties = withMarkerStyle(feature.properties)
+
+    if (isPoint(feature.point)) {
+      points.push({
+        type: 'Feature',
+        geometry: feature.point,
+        properties,
+      })
+    }
+
+    if (isBuilding(feature.building)) {
+      buildings.push({
+        type: 'Feature',
+        geometry: feature.building,
+        properties,
+      })
+    }
+  }
+
+  return {
+    points: { type: 'FeatureCollection', features: points },
+    buildings: { type: 'FeatureCollection', features: buildings },
   }
 }
 
 const layers = computed<Record<string, MapLayerConfig>>(() => ({
+  'venue-buildings': {
+    data: venueBuildings.value,
+    polygonStyle: {
+      fillColor: '#243f6e',
+      fillOpacity: 0.12,
+      outlineColor: '#243f6e',
+      outlineOpacity: 0.55,
+      outlineWidth: 1,
+    },
+  },
   venues: {
     data: venues.value,
     cluster: true,
@@ -367,8 +479,12 @@ async function loadVenues(map: MapLibreMapType) {
       query.portal = filtersStore.eventPortalUuid
     }
 
-    const response = await $api<any>('/api/venues/geojson', { query })
-    venues.value = normalizeVenueMarkers(response.data ?? response)
+    const response = await $api<unknown>('/api/venues/geojson', { query })
+    const transformed = transformVenueData(
+        (response as ApiResponse<unknown>)?.data ?? response
+    )
+    venues.value = transformed.points
+    venueBuildings.value = transformed.buildings
     updateSources(map, layers.value)
   } catch (error) {
     console.error('Failed loading venues:', error)

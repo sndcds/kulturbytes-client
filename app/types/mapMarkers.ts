@@ -1,5 +1,10 @@
 import type { Component } from 'vue'
-import type { Feature, Point } from 'geojson'
+import type {
+    Feature,
+    MultiPolygon,
+    Point,
+    Polygon,
+} from 'geojson'
 
 export interface VenueProperties {
     uuid:string
@@ -16,4 +21,21 @@ export interface VenueProperties {
 }
 
 export type VenueFeature = Feature<Point, VenueProperties>
+export type VenueBuildingFeature = Feature<
+    Polygon | MultiPolygon,
+    VenueProperties
+>
+
+export interface VenueApiFeature {
+    type: 'Feature'
+    point: Point
+    building?: Polygon | MultiPolygon
+    properties: VenueProperties
+}
+
+export interface VenueApiFeatureCollection {
+    type: 'FeatureCollection'
+    features: VenueApiFeature[]
+}
+
 export type MarkerComponent = Component

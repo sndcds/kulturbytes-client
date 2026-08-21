@@ -39,6 +39,14 @@ export interface MapLayerConfig {
     minzoom?: number
     maxzoom?: number
 
+    polygonStyle?: {
+        fillColor?: string
+        fillOpacity?: number
+        outlineColor?: string
+        outlineOpacity?: number
+        outlineWidth?: number
+    }
+
     clusterStyle?: {
         circleColor?: string
         circleRadius?: any
@@ -344,6 +352,31 @@ export function useMapLibreLayers(props: Props, maplibregl: MapLibreModule) {
                 clusterMaxZoom: 14,
             }
         )
+
+        if (config.polygonStyle) {
+            map.addLayer({
+                id: `${name}-fill`,
+                type: 'fill',
+                source: name,
+                paint: {
+                    'fill-color': config.polygonStyle.fillColor ?? '#243f6e',
+                    'fill-opacity': config.polygonStyle.fillOpacity ?? 0.12,
+                },
+            })
+
+            map.addLayer({
+                id: `${name}-outline`,
+                type: 'line',
+                source: name,
+                paint: {
+                    'line-color': config.polygonStyle.outlineColor ?? '#243f6e',
+                    'line-opacity': config.polygonStyle.outlineOpacity ?? 0.55,
+                    'line-width': config.polygonStyle.outlineWidth ?? 1,
+                },
+            })
+
+            return
+        }
 
         /*
          * Cluster circle layer
