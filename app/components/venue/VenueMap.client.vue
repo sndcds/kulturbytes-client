@@ -195,10 +195,10 @@ const layers = computed<Record<string, MapLayerConfig>>(() => ({
     data: venueBuildings.value,
     polygonStyle: {
       fillColor: '#243f6e',
-      fillOpacity: 0.12,
+      fillOpacity: 0.5,
       outlineColor: '#243f6e',
-      outlineOpacity: 0.55,
-      outlineWidth: 1,
+      outlineOpacity: 1,
+      outlineWidth: 2,
     },
   },
   venues: {
@@ -292,42 +292,54 @@ let boundaryRequest: AbortController | null = null
 let boundaryRequestVersion = 0
 const boundaryCache = new Map<string, PortalBoundaryFeature>()
 
-function isPortalBoundaryFeature(value: unknown): value is PortalBoundaryFeature {
+function isPortalBoundaryFeature(
+    value: unknown
+): value is PortalBoundaryFeature {
   if (!value || typeof value !== 'object') {
     return false
   }
 
   const feature = value as Record<string, unknown>
-  const pointGeometry = feature.point
+  const geometry = feature.geometry
 
-  if (!pointGeometry || typeof pointGeometry !== 'object') {
+  if (!geometry || typeof geometry !== 'object') {
     return false
   }
 
-  const candidateGeometry = pointGeometry as Record<string, unknown>
+  const candidateGeometry = geometry as Record<string, unknown>
   const coordinates = candidateGeometry.coordinates
-  const isPosition = (position: unknown) => Array.isArray(position)
+
+  const isPosition = (position: unknown) =>
+      Array.isArray(position)
       && position.length >= 2
       && position.every(
-          coordinate => typeof coordinate === 'number'
+          coordinate =>
+              typeof coordinate === 'number'
               && Number.isFinite(coordinate)
       )
-  const isRing = (ring: unknown) => Array.isArray(ring)
+
+  const isRing = (ring: unknown) =>
+      Array.isArray(ring)
       && ring.length >= 4
       && ring.every(isPosition)
-  const isPolygon = (polygon: unknown) => Array.isArray(polygon)
+
+  const isPolygon = (polygon: unknown) =>
+      Array.isArray(polygon)
       && polygon.length > 0
       && polygon.every(isRing)
 
   return feature.type === 'Feature'
       && (
-        (candidateGeometry.type === 'Polygon' && isPolygon(coordinates))
-        || (
-          candidateGeometry.type === 'MultiPolygon'
-          && Array.isArray(coordinates)
-          && coordinates.length > 0
-          && coordinates.every(isPolygon)
-        )
+          (
+              candidateGeometry.type === 'Polygon'
+              && isPolygon(coordinates)
+          )
+          || (
+              candidateGeometry.type === 'MultiPolygon'
+              && Array.isArray(coordinates)
+              && coordinates.length > 0
+              && coordinates.every(isPolygon)
+          )
       )
 }
 

@@ -29,5 +29,10 @@ export interface PortalBoundaryProperties {
 
 export type PortalBoundaryFeature = Feature<
     Polygon | MultiPolygon,
-    PortalBoundaryProperties
+    {
+        description: string | null
+        name: string
+        slug: string
+        uuid: string
+    }
 >
