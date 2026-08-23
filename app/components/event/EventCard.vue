@@ -184,10 +184,10 @@ const aiLabelImage = computed(() =>
 
 .kbts-event-ai-label {
   position: absolute;
-  left: .75rem;
-  bottom: .75rem;
+  left: .25rem;
+  bottom: .25rem;
   z-index: 2;
   width: auto;
-  height: 2rem;
+  height: 4rem;
 }
 </style>
