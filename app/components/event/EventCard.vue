@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { BadgeCheck } from '@lucide/vue'
 import { imageUrl } from '~/utils/image'
-import { type CalendarEvent } from '~/types/calendarEvent'
+import { type CalendarEvent, type ImageAiLabel } from '~/types/calendarEvent'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
 import EventTypesDisplay from '~/components/event/EventTypesDisplay.vue'
 
@@ -11,6 +11,18 @@ const localePath = useLocalePath()
 const props = defineProps<{
   event: CalendarEvent
 }>()
+
+const aiLabelImages: Partial<Record<ImageAiLabel, string>> = {
+  ai: '/ai_labels/label_ai_black_transparent.svg',
+  ai_generated: '/ai_labels/label_ai_generated_black_transparent.svg',
+  ai_modified: '/ai_labels/label_ai_modified_black_transparent.svg'
+}
+
+const aiLabelImage = computed(() =>
+  props.event.image_ai_label
+    ? aiLabelImages[props.event.image_ai_label]
+    : undefined
+)
 </script>
 
 
@@ -42,6 +54,13 @@ const props = defineProps<{
           />
         </div>
       </div>
+
+      <img
+          v-if="aiLabelImage"
+          :src="aiLabelImage"
+          alt=""
+          class="kbts-event-ai-label"
+      >
 
       <EventPriceBadge
           v-if="event.price_type && ['free', 'donation'].includes(event.price_type)"
@@ -161,5 +180,14 @@ const props = defineProps<{
   position: absolute;
   top: .75rem;
   left: .75rem;
+}
+
+.kbts-event-ai-label {
+  position: absolute;
+  left: .75rem;
+  bottom: .75rem;
+  z-index: 2;
+  width: auto;
+  height: 2rem;
 }
 </style>

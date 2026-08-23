@@ -2,6 +2,8 @@
 
 import type { EventType } from "./eventItem"
 
+export type ImageAiLabel = 'none' | 'ai' | 'ai_generated' | 'ai_modified'
+
 
 export interface CalendarEvent {
     uuid: string
@@ -34,6 +36,7 @@ export interface CalendarEvent {
 
     image_uuid?: string
     image_path?: string
+    image_ai_label: ImageAiLabel | null
 
     org_uuid: string
     org_name: string
