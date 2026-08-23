@@ -1,9 +1,7 @@
 // types/event.ts
 
 import type { EventType } from "./eventItem"
-
-export type ImageAiLabel = 'none' | 'ai' | 'ai_generated' | 'ai_modified'
-
+import type { ImageAiLabel } from "./image"
 
 export interface CalendarEvent {
     uuid: string

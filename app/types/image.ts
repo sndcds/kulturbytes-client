@@ -1,3 +1,5 @@
+export type ImageAiLabel = 'none' | 'ai' | 'ai_generated' | 'ai_modified'
+
 export interface Image {
     uuid: string
     identifier: string

@@ -151,3 +151,12 @@ a {
         white-space: nowrap;
     }
 }
+
+.kbts-event-ai-label {
+    position: absolute;
+    left: .25rem;
+    bottom: .25rem;
+    z-index: 2;
+    width: auto;
+    height: 1.5rem;
+}

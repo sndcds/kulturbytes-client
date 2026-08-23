@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { BadgeCheck } from '@lucide/vue'
 import { imageUrl } from '~/utils/image'
-import { type CalendarEvent, type ImageAiLabel } from '~/types/calendarEvent'
+import { type CalendarEvent } from '~/types/calendarEvent'
+import { type ImageAiLabel } from '~/types/image'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
 import EventTypesDisplay from '~/components/event/EventTypesDisplay.vue'
 
@@ -12,16 +13,10 @@ const props = defineProps<{
   event: CalendarEvent
 }>()
 
-const aiLabelImages: Partial<Record<ImageAiLabel, string>> = {
-  ai: '/ai_labels/label_ai_black_transparent.svg',
-  ai_generated: '/ai_labels/label_ai_generated_black_transparent.svg',
-  ai_modified: '/ai_labels/label_ai_modified_black_transparent.svg'
-}
-
 const aiLabelImage = computed(() =>
-  props.event.image_ai_label
-    ? aiLabelImages[props.event.image_ai_label]
-    : undefined
+    props.event.image_ai_label
+        ? aiLabelImages[props.event.image_ai_label]
+        : undefined
 )
 </script>
 
@@ -188,6 +183,6 @@ const aiLabelImage = computed(() =>
   bottom: .25rem;
   z-index: 2;
   width: auto;
-  height: 4rem;
+  height: 1.5rem;
 }
 </style>

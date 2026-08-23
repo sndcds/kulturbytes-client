@@ -23,12 +23,19 @@
               backgroundImage: `url(${imageUrl(eventImage.url, 960, '16:9')})`
             } : {}"
           >
+            <img
+                v-if="aiLabelImage"
+                :src="aiLabelImage"
+                alt=""
+                class="kbts-event-ai-label"
+            >
           </div>
+
         </div>
 
         <span v-if="imageCredit" class="kbts-event-view-image-caption">
-        {{ imageCredit }}
-      </span>
+          {{ imageCredit }}
+        </span>
       </div>
 
       <div class="kbts-event-view-content">
@@ -439,6 +446,13 @@ const imageCredit = computed(() => {
   return `${t('event.image_by')}: ${creditParts.join(', ')}`
 })
 
+
+const aiLabelImage = computed(() =>
+    eventImage.value.ai_label
+        ? aiLabelImages[eventImage.value.ai_label]
+        : undefined
+)
+
 const venueLogos = computed(() => {
   return event.value?.date?.venue_logos
 })
@@ -798,6 +812,7 @@ const onCopyLink = async () => {
     border-radius: 8px;
 
     .kbts-event-view-image-inner {
+      position: relative;
       width: 100%;
       height: 100%;
       background-size: cover;
