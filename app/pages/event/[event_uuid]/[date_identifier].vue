@@ -27,7 +27,7 @@
                 v-if="aiLabelImage"
                 :src="aiLabelImage"
                 alt=""
-                class="kbts-event-ai-label"
+                class="kbts-image-ai-label"
             >
           </div>
 

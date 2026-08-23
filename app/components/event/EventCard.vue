@@ -54,7 +54,7 @@ const aiLabelImage = computed(() =>
           v-if="aiLabelImage"
           :src="aiLabelImage"
           alt=""
-          class="kbts-event-ai-label"
+          class="kbts-image-ai-label"
       >
 
       <EventPriceBadge
@@ -175,14 +175,5 @@ const aiLabelImage = computed(() =>
   position: absolute;
   top: .75rem;
   left: .75rem;
-}
-
-.kbts-event-ai-label {
-  position: absolute;
-  left: .25rem;
-  bottom: .25rem;
-  z-index: 2;
-  width: auto;
-  height: 1.5rem;
 }
 </style>

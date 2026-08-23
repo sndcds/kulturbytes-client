@@ -16,9 +16,16 @@
           <div
               class="kbts-venue-view-image-inner"
               :style="{
-          backgroundImage: `url(${imageUrl(venueImage.url, 960, '16:9')})`
-        }"
-          />
+                backgroundImage: `url(${imageUrl(venueImage.url, 960, '16:9')})`
+              }"
+          >
+            <img
+                v-if="aiLabelImage"
+                :src="aiLabelImage"
+                alt=""
+                class="kbts-image-ai-label"
+            >
+          </div>
         </div>
 
         <span
@@ -198,6 +205,12 @@ const venue = computed<Venue | undefined>(
     () => venueResponse.value?.data
 )
 
+const aiLabelImage = computed(() =>
+    venueImage.value.ai_label
+        ? aiLabelImages[venueImage.value.ai_label]
+        : undefined
+)
+
 const canonicalUrl = computed(() =>
     new URL(route.path, config.public.siteUrl).href
 )
@@ -355,6 +368,7 @@ useSeoMeta({
     border-radius: 8px;
 
     .kbts-venue-view-image-inner {
+      position: relative;
       width: 100%;
       height: 100%;
       background-size: cover;
