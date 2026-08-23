@@ -3,7 +3,7 @@
       class="kbts-event-price-badge"
       :style="badgeStyle"
   >
-    <Heart
+    <BadgeCheck
         v-if="priceType === 'free'"
         :size="size"
         style="stroke-width: 1.5"
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Heart, HandCoins } from '@lucide/vue'
+import { BadgeCheck, HandCoins } from '@lucide/vue'
 
 const props = withDefaults(
     defineProps<{

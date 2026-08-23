@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Heart } from '@lucide/vue'
+import { BadgeCheck } from '@lucide/vue'
 import { imageUrl } from '~/utils/image'
 import { type CalendarEvent } from '~/types/calendarEvent'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
@@ -34,7 +34,7 @@ const props = defineProps<{
               backgroundImage: `url(${imageUrl(event.image_path, 480, '16:9')})`
             } : {}"
         >
-          <Heart
+          <BadgeCheck
               v-if="!event.image_path"
               class="x_image_icon"
               :size="64"
