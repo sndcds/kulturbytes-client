@@ -24,7 +24,16 @@ export default defineNuxtConfig({
         { name: 'theme-color', content: '#ffffff' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
       ],
-    }
+    },
+    script: [
+      {
+        async: true,
+        src: 'https://plausible.oklabflensburg.de/js/pa-Eke2bW8oyDVoFdCqvfZ7f.js'
+      },
+      {
+        innerHTML: 'window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}}; plausible.init()'
+      }
+    ]
   },
 
   css: [
