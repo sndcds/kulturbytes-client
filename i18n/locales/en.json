@@ -28,7 +28,19 @@
     "events_page": "Discover events",
     "country_list": "Countries",
     "register": "Register",
-    "login": "Login"
+    "login": "Login",
+    "contact": "Get in touch"
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "Do you have a question, a suggestion or something you would like to tell us? Send us a message.",
+    "email": "Email address",
+    "message": "Message",
+    "submit": "Send message",
+    "sending": "Sending …",
+    "success": "Thank you! Your message was sent successfully.",
+    "rate_limit_error": "You have sent too many messages. Please try again later.",
+    "generic_error": "The message could not be sent. Please try again later."
   },
   "map": {
     "website_link": "Website",

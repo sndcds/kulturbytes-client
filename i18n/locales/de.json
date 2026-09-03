@@ -28,7 +28,19 @@
     "events_page": "Finde Veranstaltungen",
     "country_list": "Länderübersicht",
     "register": "Konto erstellen",
-    "login": "Login"
+    "login": "Login",
+    "contact": "Kontakt aufnehmen"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "intro": "Du hast eine Frage, einen Hinweis oder möchtest uns etwas mitteilen? Schreib uns eine Nachricht.",
+    "email": "E-Mail-Adresse",
+    "message": "Nachricht",
+    "submit": "Nachricht senden",
+    "sending": "Wird gesendet …",
+    "success": "Vielen Dank! Deine Nachricht wurde erfolgreich gesendet.",
+    "rate_limit_error": "Du hast zu viele Nachrichten gesendet. Bitte versuche es später noch einmal.",
+    "generic_error": "Die Nachricht konnte nicht gesendet werden. Bitte versuche es später noch einmal."
   },
   "map": {
     "website_link": "Webseite",
