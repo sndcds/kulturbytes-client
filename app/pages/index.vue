@@ -8,9 +8,14 @@
           {{ t('home.discover.text') }}
         </p>
 
-        <NuxtLink :to="localePath('events')" class="button">
-          {{ t('goto.events_page') }}
-        </NuxtLink>
+        <div class="button-row">
+          <NuxtLink :to="localePath('events')" class="button">
+            {{ t('goto.events_page') }}
+          </NuxtLink>
+          <NuxtLink :to="localePath('contact')" class="button">
+            {{ t('goto.contact') }}
+          </NuxtLink>
+        </div>
       </div>
     </div>
 
@@ -200,6 +205,7 @@ useSeoMeta({
 
 .button-row {
   display: flex;
+  flex-wrap: wrap;
   gap: .5rem;
 }
 

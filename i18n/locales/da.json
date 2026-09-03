@@ -28,7 +28,19 @@
     "events_page": "Se begivenheder",
     "country_list": "Lande",
     "register": "Opret en konto",
-    "login": "Login"
+    "login": "Login",
+    "contact": "Kontakt os"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "intro": "Har du et spørgsmål, et forslag eller noget, du gerne vil fortælle os? Send os en besked.",
+    "email": "E-mailadresse",
+    "message": "Besked",
+    "submit": "Send besked",
+    "sending": "Sender …",
+    "success": "Tak! Din besked blev sendt.",
+    "rate_limit_error": "Du har sendt for mange beskeder. Prøv igen senere.",
+    "generic_error": "Beskeden kunne ikke sendes. Prøv igen senere."
   },
   "map": {
     "website_link": "Hjemmeside",
