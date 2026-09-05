@@ -1,31 +1,15 @@
 // utils/formatDate.ts
+import { getStartDateTime } from './date'
 
 export type DateFormatMode = 'numeric' | 'short' | 'long' | 'weekday'
 
 export function formatDate(
     locale: string,
-    date: string | null,
+    date: string | null | undefined,
     mode: DateFormatMode = 'short'
 ): string {
-    if (!date) return ''
-
-    const parts = date.split('-')
-
-    if (parts.length !== 3) return ''
-
-    const year = Number(parts[0])
-    const month = Number(parts[1])
-    const day = Number(parts[2])
-
-    if (
-        Number.isNaN(year) ||
-        Number.isNaN(month) ||
-        Number.isNaN(day)
-    ) {
-        return ''
-    }
-
-    const localDate = new Date(year, month - 1, day)
+    const localDate = getStartDateTime(date)
+    if (!localDate) return ''
 
     const options: Intl.DateTimeFormatOptions =
         mode === 'long'
@@ -59,34 +43,37 @@ export function formatDate(
 
 export function formatTime(
     locale: string,
-    time: string | null
+    time: string | null | undefined
 ) {
     if (!time) return null
+    const localTime = getStartDateTime('2000-01-01', time)
+    if (!localTime) return null
     return new Intl.DateTimeFormat(locale, {
         hour: '2-digit',
         minute: '2-digit'
-    }).format(new Date(`2000-01-01T${time}`))
+    }).format(localTime)
 }
 
 export function formatTimeStr(
     t: (key: string, params?: Record<string, unknown>) => string,
     locale: string,
-    time: string | null
+    time: string | null | undefined
 ) {
     const timeStr = formatTime(locale, time)
-    if (!t) return null
+    if (!timeStr) return null
     return t('time.time', { time: timeStr })
 }
 
 export function formatTimeRangeStr(
     t: (key: string, params?: Record<string, unknown>) => string,
     locale: string,
-    start: string | null,
+    start: string | null | undefined,
     end?: string | null
 ) {
     const startTime = formatTime(locale, start)
-    if (end) {
-        const endTime = formatTime(locale, end)
+    if (!startTime) return null
+    const endTime = formatTime(locale, end)
+    if (endTime) {
         return t('time.range', { start: startTime, end: endTime })
     }
     return t('time.time', { time: startTime })
