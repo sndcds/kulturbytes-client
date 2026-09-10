@@ -173,7 +173,7 @@ useSeoMeta({
   // twitterSite: '@kulturbytes', TODO: Outcomment this if twitterSite is available
   twitterCard: 'summary_large_image',
   twitterTitle: t('home.seo.title'),
-  twitterDescription: truncateText(description.value),
+  twitterDescription: truncateText(description.value, 160),
   twitterImage: `${config.public.siteUrl}/images/social/kulturbytes.webp`,
 
   robots: 'index,follow'

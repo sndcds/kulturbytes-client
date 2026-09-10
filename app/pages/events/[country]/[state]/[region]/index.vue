@@ -230,7 +230,7 @@ const {
 } = await useAsyncData<TypeSummaryResponse>(
     () => `event-summary-${countrySlug.value}-${stateSlug.value}-${regionSlug.value}-${start}`,
     () =>
-        $api('/api/events/type-summary', {
+        $api<TypeSummaryResponse>('/api/events/type-summary', {
           query: {
             start,
             geolist_region: geolistRegion.value,

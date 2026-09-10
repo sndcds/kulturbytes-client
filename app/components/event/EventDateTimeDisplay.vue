@@ -50,6 +50,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { getStartDateTime } from '~/utils/date'
 
 const { locale, t } = useI18n()
 const {
@@ -115,16 +116,13 @@ const model = computed<DisplayModel>(() => {
 })
 
 const formatWeekday = (date: string | null) => {
-  if (!date) {
-    return ''
-  }
-
-  const [year, month, day] = date.split('-').map(Number)
+  const parsedDate = getStartDateTime(date)
+  if (!parsedDate) return ''
 
   const weekday = new Intl.DateTimeFormat(locale.value, {
     weekday: 'short'
   }).format(
-      new Date(year, month - 1, day)
+      parsedDate
   )
   return weekday
 }
