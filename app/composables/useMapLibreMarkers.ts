@@ -39,7 +39,9 @@ export function useMapLibreMarkers(
     }
 
     function getComponent(feature:VenueFeature):Component {
-        const style = feature.properties.marker_style ?? defaultStyle
+        const style =
+            (feature.properties as unknown as Record<string, string | null | undefined>)[styleProperty]
+            ?? defaultStyle
         return (
             markerRegistry[style] ?? markerRegistry[defaultStyle] ?? markerRegistry.default
         )
