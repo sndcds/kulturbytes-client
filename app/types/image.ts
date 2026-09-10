@@ -5,6 +5,7 @@ export interface Image {
     identifier: string
     url: string
 
+    ai_label?: ImageAiLabel | null
     alt?: string
     width?: number
     height?: number

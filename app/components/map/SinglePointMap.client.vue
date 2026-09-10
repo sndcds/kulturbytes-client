@@ -15,7 +15,8 @@ import { computed } from 'vue'
 import type { Map as MapLibreMapType } from 'maplibre-gl'
 import type { FeatureCollection, Point } from 'geojson'
 import MapLibreMap from '~/components/map/MapLibreMap.client.vue'
-import { useMapLibreLayers } from '~/composables/useMapLibreLayers'
+import * as maplibregl from 'maplibre-gl'
+import { useMapLibreLayers, type MapLayerConfig } from '~/composables/useMapLibreLayers'
 
 const DEFAULT_CENTER: [number, number] = [
   9.43,
@@ -49,7 +50,7 @@ const center = computed<[number, number]>(() =>
         : DEFAULT_CENTER
 )
 
-const layers = computed(() => ({
+const layers = computed<Record<string, MapLayerConfig>>(() => ({
   venue: {
     data: {
       type: 'FeatureCollection',
@@ -80,20 +81,11 @@ const layers = computed(() => ({
 
     iconProperty: 'marker_style',
 
-    properties: {
-      name: props.name ?? '',
-      marker_style: 'default'
-    },
-
     unclusteredStyle: {
       iconSize: 2,
       iconAnchor: 'bottom',
       iconAllowOverlap: true,
       iconIgnorePlacement: true
-    },
-
-    popupTitle(feature:any) {
-      return String(feature.properties?.name ?? '')
     }
   }
 }))
@@ -102,7 +94,7 @@ const { initializeLayers } = useMapLibreLayers({
   get layers() {
     return layers.value
   }
-} as any)
+}, maplibregl)
 
 
 async function onMapLoaded(map: MapLibreMapType) {
