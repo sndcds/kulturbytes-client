@@ -17,6 +17,15 @@ definePageMeta({
   layout: 'default'
 })
 
+defineI18nRoute({
+  paths: {
+    de: '/ueber',
+    da: '/om',
+    en: '/about'
+  }
+})
+
+
 useHead({
   title: computed(() => t('nav.about'))
 })

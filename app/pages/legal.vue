@@ -17,6 +17,14 @@ definePageMeta({
   layout: 'default'
 })
 
+defineI18nRoute({
+  paths: {
+    de: '/impressum',
+    da: '/impressum',
+    en: '/legal'
+  }
+})
+
 useHead({
   title: computed(() => t('nav.legal'))
 })

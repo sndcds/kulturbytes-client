@@ -21,13 +21,13 @@
       <NuxtLink :to="localePath('about')" role="menuitem" @click="closeMenus">
         {{ t('nav.about') }}
       </NuxtLink>
-      <NuxtLink :to="localePath('/privacy')" role="menuitem" @click="closeMenus">
+      <NuxtLink :to="localePath('privacy')" role="menuitem" @click="closeMenus">
         {{ t('nav.privacy') }}
       </NuxtLink>
-      <NuxtLink :to="localePath('/terms')" role="menuitem" @click="closeMenus">
+      <NuxtLink :to="localePath('terms')" role="menuitem" @click="closeMenus">
         {{ t('nav.terms') }}
       </NuxtLink>
-      <NuxtLink :to="localePath('/legal')" role="menuitem" @click="closeMenus">
+      <NuxtLink :to="localePath('legal')" role="menuitem" @click="closeMenus">
         {{ t('nav.legal') }}
       </NuxtLink>
     </div>
@@ -53,9 +53,9 @@ const infoOpen = ref(false)
 const infoNav = ref<HTMLElement | null>(null)
 const infoRoutes = computed(() => [
   localePath('about'),
-  localePath('/privacy'),
-  localePath('/terms'),
-  localePath('/legal'),
+  localePath('privacy'),
+  localePath('terms'),
+  localePath('legal'),
 ])
 const infoRouteActive = computed(() => infoRoutes.value.includes(route.path))
 

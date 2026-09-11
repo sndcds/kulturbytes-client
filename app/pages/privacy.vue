@@ -17,6 +17,14 @@ definePageMeta({
   layout: 'default'
 })
 
+defineI18nRoute({
+  paths: {
+    de: '/datenschutz',
+    da: '/privatlivspolitik',
+    en: '/privacy'
+  }
+})
+
 useHead({
   title: computed(() => t('nav.privacy'))
 })

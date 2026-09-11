@@ -79,6 +79,14 @@ definePageMeta({
   layout: 'default'
 })
 
+defineI18nRoute({
+  paths: {
+    de: '/kontakt',
+    da: '/kontakt',
+    en: '/contact'
+  }
+})
+
 useHead({
   title: computed(() => t('contact.title'))
 })

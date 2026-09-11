@@ -28,9 +28,17 @@ definePageMeta({
   layout: 'map'
 })
 
-/**
- * SEO
- */
+defineI18nRoute({
+  paths: {
+    de: '/karte',
+    da: '/kort',
+    en: '/map'
+  }
+})
+
+//------------------------------------------------------------------------------
+// SEO
+//------------------------------------------------------------------------------
 
 const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
 const pageTitle = computed(() => `${t('venues.title')}`)

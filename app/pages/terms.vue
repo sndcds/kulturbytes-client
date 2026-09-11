@@ -17,6 +17,14 @@ definePageMeta({
   layout: 'default'
 })
 
+defineI18nRoute({
+  paths: {
+    de: '/nutzungsbedingungen',
+    da: '/vilkaar',
+    en: '/terms'
+  }
+})
+
 useHead({
   title: computed(() => t('nav.terms'))
 })
