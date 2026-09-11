@@ -19,6 +19,11 @@ export default defineNuxtConfig({
           type: 'font/ttf',
           crossorigin: 'anonymous'
         },
+        {
+          // Mastodon verification
+          rel: 'me',
+          href: 'https://norden.social/@kulturbytes'
+        },
       ],
       meta: [
         { name: 'theme-color', content: '#ffffff' },
