@@ -568,22 +568,13 @@ const eventOrganizer = computed(() => {
 const priceText = computed(() => {
   if (!event.value) return null
 
-  if (event.value.price_type == 'free') {
-    return t('event.price_free')
-  }
-  if (event.value.price_type == 'donation') {
-    return t('event.price_donation')
-  }
-  return formatPrice(t, locale.value, event.value?.min_price, event.value?.max_price, event.value?.currency ?? '')
-})
-
-const showTicketFlags = computed(() => {
-  if (!event.value) {
-    return false
-  }
-  return (
-      event.value.ticket_flags?.length > 0 &&
-      !['free', 'donation'].includes(event.value.price_type)
+  return formatEventPrice(
+      t,
+      locale.value,
+      event.value.price_type,
+      event.value.min_price,
+      event.value.max_price,
+      event.value.currency
   )
 })
 

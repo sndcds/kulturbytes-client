@@ -6,7 +6,7 @@ import { type ImageAiLabel } from '~/types/image'
 import ReleaseChip from '~/components/event/ui/ReleaseChip.vue'
 import EventTypesDisplay from '~/components/event/EventTypesDisplay.vue'
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const localePath = useLocalePath()
 
 const props = defineProps<{
@@ -18,6 +18,39 @@ const aiLabelImage = computed(() =>
         ? aiLabelImages[props.event.image_ai_label]
         : undefined
 )
+
+
+
+const dateLabel = computed(() => {
+  return formatDateTime(
+      locale,
+      props.event.start_date,
+      props.event.start_time,
+      props.event.end_date,
+      props.event.end_time
+  )
+})
+
+const venueLabel = computed(() => {
+  return [props.event.venue_name, props.event.venue_city]
+      .filter(Boolean)
+      .join(' / ')
+})
+
+const priceLabel = computed(() => {
+  const event = props.event
+  if (!event) return null
+
+  return formatEventPrice(
+      t,
+      locale,
+      event.price_type,
+      event.min_price,
+      event.max_price,
+      event.currency
+  )
+})
+
 </script>
 
 
@@ -74,11 +107,9 @@ const aiLabelImage = computed(() =>
 
     <div class="kbts-events-view-card-content">
       <h2>{{ event.title }}</h2>
-
-      {{ formatDate(locale, event.start_date, 'weekday') }} / {{ event.start_time }}
-      <br>
-      {{ event.venue_name }} / {{ event.venue_city }}
-      <br>
+      <div v-if="dateLabel">{{ dateLabel }}</div>
+      <div v-if="venueLabel">{{ venueLabel }}</div>
+      <div v-if="priceLabel">{{ priceLabel }}</div>
 
       <EventTypesDisplay
           v-if="event.event_types?.length"
@@ -123,11 +154,11 @@ const aiLabelImage = computed(() =>
 
   padding: .5rem 1rem;
   font-weight: 300;
-  font-size: .9rem;
+  font-size: 1rem;
 
   h2 {
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 500;
     margin: .5rem 0;
   }
 }
