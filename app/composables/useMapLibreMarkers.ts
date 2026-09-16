@@ -1,15 +1,15 @@
 import { h, render } from 'vue'
 import type { Component } from 'vue'
-import type { VenueFeature } from '~/types/mapMarkers'
+import type { VenueFeature, VenueProperties } from '~/types/mapMarkers'
 import type { Map as MapLibreMap, Marker } from 'maplibre-gl'
-import type { Feature, Point, FeatureCollection } from 'geojson'
+import type { Point, FeatureCollection } from 'geojson'
 import { markerRegistry } from '~/components/map/markers/mapMarkerRegistry'
 
 
 interface MarkerConfig {
     enabled?: boolean
     styleProperty?: string  // example: "cultural-center"
-    idProperty?: string // example: uuid
+    idProperty?: keyof VenueProperties // example: uuid
     defaultStyle?: string // fallback component
 }
 
@@ -21,7 +21,7 @@ interface ManagedMarker {
 
 export function useMapLibreMarkers(
     map: MapLibreMap,
-    maplibregl:any,
+    maplibregl: typeof import('maplibre-gl'),
     config:MarkerConfig = {}
 ){
 
@@ -39,13 +39,15 @@ export function useMapLibreMarkers(
     }
 
     function getComponent(feature:VenueFeature):Component {
-        const style = feature.properties.marker_style ?? defaultStyle
+        const style =
+            (feature.properties as unknown as Record<string, string | null | undefined>)[styleProperty]
+            ?? defaultStyle
         return (
-            markerRegistry[style] ?? markerRegistry[defaultStyle]
+            markerRegistry[style] ?? markerRegistry[defaultStyle] ?? markerRegistry.default
         )
     }
 
-    function createMarker(feature:Feature<Point>){
+    function createMarker(feature:VenueFeature){
         const id = getId(feature)
         const element = document.createElement('div')
         const Component = getComponent(feature)
@@ -78,7 +80,7 @@ export function useMapLibreMarkers(
             {
                 marker,
                 element,
-                feature: feature as VenueFeature
+                feature
             }
         )
     }
@@ -92,7 +94,10 @@ export function useMapLibreMarkers(
             return
         }
 
-        existing.marker.setLngLat(feature.geometry.coordinates)
+        const [longitude, latitude] = feature.geometry.coordinates
+        if (longitude === undefined || latitude === undefined) return
+
+        existing.marker.setLngLat([longitude, latitude])
         Object.assign(existing.feature.properties, feature.properties)
 
     }
@@ -108,16 +113,16 @@ export function useMapLibreMarkers(
         markers.delete(id)
     }
 
-    function syncMarkers(collection:FeatureCollection){
+    function syncMarkers(collection:FeatureCollection<Point, VenueProperties>){
         const incoming = new Set<string>()
 
         for (const feature of collection.features){
             if (feature.geometry.type !== 'Point')
                 continue
 
-            const id = getId(feature as Feature<Point>)
+            const id = getId(feature)
             incoming.add(id)
-            updateMarker(feature as Feature<Point>)
+            updateMarker(feature)
         }
 
         for (const id of markers.keys()){

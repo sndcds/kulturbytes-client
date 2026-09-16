@@ -206,7 +206,7 @@ const venue = computed<Venue | undefined>(
 )
 
 const aiLabelImage = computed(() =>
-    venueImage.value.ai_label
+    venueImage.value?.ai_label
         ? aiLabelImages[venueImage.value.ai_label]
         : undefined
 )

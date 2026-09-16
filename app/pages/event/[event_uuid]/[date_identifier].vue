@@ -448,7 +448,7 @@ const imageCredit = computed(() => {
 
 
 const aiLabelImage = computed(() =>
-    eventImage.value.ai_label
+    eventImage.value?.ai_label
         ? aiLabelImages[eventImage.value.ai_label]
         : undefined
 )

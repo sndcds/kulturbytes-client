@@ -1,4 +1,4 @@
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, shallowRef, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useThemeStore } from '~/stores/themeStore'
 import { useMapLibreLayers } from '~/composables/useMapLibreLayers'
 import type { MapLayerConfig } from '~/composables/useMapLibreLayers'
@@ -23,7 +23,7 @@ export function useMapLibre(
     ) => void
 ) {
     const container = ref<HTMLElement | null>(null)
-    const map = ref<MapLibreMap | null>(null)
+    const map = shallowRef<MapLibreMap | null>(null)
     const themeStore = useThemeStore()
 
     let layersApi:

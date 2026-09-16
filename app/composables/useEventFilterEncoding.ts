@@ -10,7 +10,7 @@ function encodeEventFilter(value: string) {
   }
 
   if (number === 0n) {
-    return BASE62_ALPHABET[0]
+    return '0'
   }
 
   let encoded = ''
