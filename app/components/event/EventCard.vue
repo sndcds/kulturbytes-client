@@ -19,11 +19,9 @@ const aiLabelImage = computed(() =>
         : undefined
 )
 
-
-
 const dateLabel = computed(() => {
   return formatDateTime(
-      locale,
+      locale.value,
       props.event.start_date,
       props.event.start_time,
       props.event.end_date,

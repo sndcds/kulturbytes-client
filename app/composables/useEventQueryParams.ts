@@ -110,7 +110,11 @@ export function useEventQueryParams() {
         }
 
         if (eventVenue.value) {
-            params.append('venue', eventVenue.value + '*')
+            const venues = eventVenue.value
+                .split(',')
+                .map(v => `*${v.trim()}*`)
+                .join(',')
+            params.append('venue', venues)
         }
 
         if (eventLocationFlag.value) {

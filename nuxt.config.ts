@@ -97,7 +97,7 @@ export default defineNuxtConfig({
       cookieKey: 'kulturbytes_locale',
       redirectOn: 'root',
       fallbackLocale: 'de'
-      },
+    },
 
     langDir: 'locales/'
   },

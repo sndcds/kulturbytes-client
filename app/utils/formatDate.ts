@@ -95,6 +95,7 @@ export function formatDateTime(
     endDate: string | null | undefined,
     endTime: string | null | undefined
 ): string {
+
     const startDateStr = formatDate(locale, startDate, 'weekday')
     const startTimeStr = formatTime(locale, startTime)
 

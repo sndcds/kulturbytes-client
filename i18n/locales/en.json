@@ -6,7 +6,7 @@
     "events": "Events",
     "venues": "Venues",
     "map": "Venues",
-    "info": "Info",
+    "info": "Info/Legal",
     "end_portal": "Back to kulturbytes",
     "language": "Choose language",
     "primary_navigation": "Primary navigation",
@@ -16,7 +16,7 @@
     "contact": "Contact",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
-    "legal": "Imprint"
+    "legal": "Legal"
   },
   "error": {
     "not_found_title": "Page not found",
