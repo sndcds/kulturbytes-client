@@ -3,48 +3,168 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>https://kulturbytes.de/</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
     <url>
-        <loc>https://kulturbytes.de/events</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de/da</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
     <url>
-        <loc>https://kulturbytes.de/eventlist</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de/en</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
     <url>
-        <loc>http://kulturbytes.de/eventlist/deutschland</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de/de/orte/karte</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
     <url>
-        <loc>http://kulturbytes.de/eventlist/deutschland/schleswig-holstein</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de/da/steder/kort</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
     <url>
-        <loc>http://kulturbytes.de/eventlist/deutschland/schleswig-holstein/flensburg</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de/en/venues/map</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
     <url>
-        <loc>http://kulturbytes.de/eventlist/deutschland/schleswig-holstein/gluecksburg-ostsee</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de/de/ueber</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
     <url>
-        <loc>http://kulturbytes.de/eventlist/danmark</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de/da/om</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
     <url>
-        <loc>https://kulturbytes.de/about</loc>
-        <lastmod>2026-07-25</lastmod>
+        <loc>https://kulturbytes.de/en/about</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/de/datenschutz</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/da/privatlivspolitik</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/en/privacy</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/de/nutzungsbedingungen</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/da/vilkaar</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/en/terms</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/de/impressum</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/da/impressum</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/en/legal</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/de/veranstaltungen/laender</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/da/begivenheder/lande</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/en/events/countries</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/de/veranstaltungen/deutschland</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/da/begivenheder/deutschland</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/en/events/deutschland</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/de/veranstaltungen/danmark</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/da/begivenheder/danmark</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/en/events/danmark</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/de/veranstaltungen/deutschland/schleswig-holstein</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/da/begivenheder/deutschland/schleswig-holstein</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/en/events/deutschland/schleswig-holstein</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/de/veranstaltungen/danmark/syddanmark</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/da/begivenheder/danmark/syddanmark</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
+    </url>
+
+    <url>
+        <loc>https://kulturbytes.de/en/events/danmark/syddanmark</loc>
+        <lastmod>2026-09-18T10:11:25+00:00</lastmod>
     </url>
 
 </urlset>
