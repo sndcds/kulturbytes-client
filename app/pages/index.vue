@@ -1,6 +1,34 @@
 <template>
   <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre><br>
   <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre><br-->
+  <div class="kbts-articles-grid">
+    <div class="kbts-article kbts-article-hero">
+      <div class="kbts-article-content">
+        <p>
+          Hallo bei <strong>kulturbytes</strong>, der neuen Plattform für
+          Veranstaltungen und Orte, einem Communityprojekt des
+          <a href="https://oklabflensburg.de">OK Lab Flensburg</a>.
+          Schreibe uns gerne, wenn du Verbesserungsvorschläge und Ideen hast,
+          oder du einen Hinweis zu Inhalten auf der Plattform mitteilen möchtest.
+        </p>
+
+        <div class="button-row">
+          <NuxtLink :to="localePath('contact')" class="button">
+            {{ t('goto.contact') }}
+          </NuxtLink>
+          <NuxtLink
+              :to="localePath('about') + '#support-kulturbytes'"
+              class="button"
+          >
+            {{ t('goto.support_us') }}
+          </NuxtLink>
+          <NuxtLink :to="localePath('contact')" class="button">
+            {{ t('goto.for_organizers') }}
+          </NuxtLink>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <EventsView />
 </template>

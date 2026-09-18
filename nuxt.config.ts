@@ -48,6 +48,7 @@ export default defineNuxtConfig({
     '~/assets/css/event.scss',
     '~/assets/css/geolist.scss',
     '~/assets/css/html-content.scss',
+    '~/assets/css/article.scss',
     '~/assets/css/main.scss',
     'maplibre-gl/dist/maplibre-gl.css'
   ],

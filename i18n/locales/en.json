@@ -29,7 +29,9 @@
     "country_list": "Countries",
     "register": "Register",
     "login": "Login",
-    "contact": "Get in touch"
+    "contact": "Get in touch",
+    "support_us": "Support us",
+    "for_organizers": "Are you an organizer?"
   },
   "contact": {
     "title": "Contact",

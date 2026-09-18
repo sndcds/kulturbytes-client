@@ -141,7 +141,7 @@ async function submitContactForm() {
 
 <style scoped lang="scss">
 .contact-page {
-  width: min(100%, 720px);
+  width: min(100%, 1440px);
   margin: 0 auto;
 
   h1 {
@@ -162,8 +162,9 @@ async function submitContactForm() {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  background: var(--kbts-card-bg);
-  border-radius: .5rem;
+
+  border: var(--kbts-card-border);
+  border-radius: var(--kbts-card-border-radius);
 }
 
 .form-field {
