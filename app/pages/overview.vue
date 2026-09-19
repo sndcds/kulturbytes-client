@@ -242,7 +242,9 @@ useSeoMeta({
   }
 
   h2 {
+    color: red;
     font-size: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   p {

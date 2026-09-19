@@ -12,7 +12,7 @@
   border-radius: .5rem;
   padding: 1rem;
 
-  h1, h2 {
+  h1, h2, h3 {
     font-size: 3rem;
     font-weight: 400;
     margin: 0;
@@ -20,6 +20,12 @@
 
   h2 {
     font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
   }
 
   p {
@@ -33,7 +39,6 @@
     border-radius: 99px;
     color: var(--kbts-fg);
     border: 2px solid var(--kbts-fg);
-    margin-top: 2rem;
     transition: all 0.2s;
 
     &:hover {
@@ -51,11 +56,11 @@
   .button-row {
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-end;
+    width: 100%;
+    box-sizing: border-box;
     gap: .5rem;
-  }
-
-  .button {
-    margin-bottom: 2rem !important;
+    padding: .5rem 1rem;
   }
 }
 
@@ -66,8 +71,8 @@
 .kbts-article-content {
   display: flex;
   flex-direction: column;
-  gap: 0;
   align-items: flex-start;
+  gap: 0;
 }
 
 @media (max-width: 900px) {

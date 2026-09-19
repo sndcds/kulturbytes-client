@@ -1,41 +1,69 @@
 <template>
-  <!--pre>headData: {{ JSON.stringify(headData, null, 2) }}</pre><br>
-  <pre>seoData: {{ JSON.stringify(seoData, null, 2) }}</pre><br-->
-  <div class="kbts-articles-grid">
-    <div class="kbts-article kbts-article-hero">
-      <div class="kbts-article-content">
-        <p>
-          Hallo bei <strong>kulturbytes</strong>, der neuen Plattform für
-          Veranstaltungen und Orte, einem Communityprojekt des
-          <a href="https://oklabflensburg.de">OK Lab Flensburg</a>.
-          Schreibe uns gerne, wenn du Verbesserungsvorschläge und Ideen hast,
-          oder du einen Hinweis zu Inhalten auf der Plattform mitteilen möchtest.
-        </p>
 
-        <div class="button-row">
-          <NuxtLink :to="localePath('contact')" class="button">
-            {{ t('goto.contact') }}
-          </NuxtLink>
-          <NuxtLink
-              :to="localePath('about') + '#support-kulturbytes'"
-              class="button"
+  <CTABanner
+      :title="t('home.intro.title')"
+      image-url="images/kulturbytes-logo-typo-2-lines-white-red.svg"
+      image-max-width="400px"
+      image-align="left"
+      image-vertical-align="bottom"
+      background-image="/images/bg/kbts-bg-2026-09.svg"
+      mobile-background-image="/images/bg/kbts-bg-2026-09.svg"
+      :links="[
+    {
+      label: t('home.intro.contact'),
+      to: localePath('contact')
+    },
+    {
+      label: t('home.intro.support'),
+      to: {
+        path: localePath('about'),
+        hash: '#support-kulturbytes'
+      }
+    },
+    {
+      label: t('home.intro.organize'),
+      to: {
+        path: localePath('about'),
+        hash: '#for-organizers'
+      }
+    }
+  ]"
+      background-color="#334"
+      title-color="#eee"
+      text-color="#eee"
+      cta-color="#eee"
+  >
+    <template #description>
+      <i18n-t keypath="home.intro.description">
+        <template #link>
+          <a
+              href="https://oklabflensburg.de"
+              target="_blank"
+              rel="noopener noreferrer"
           >
-            {{ t('goto.support_us') }}
-          </NuxtLink>
-          <NuxtLink :to="localePath('contact')" class="button">
-            {{ t('goto.for_organizers') }}
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
-  </div>
+            OK Lab Flensburg
+            <ExternalLink
+                class="external-link-icon"
+                :size="16"
+                :stroke-width="1.75"
+                aria-hidden="true"
+            />
+          </a>
+        </template>
+      </i18n-t>
+    </template>
+  </CTABanner>
 
   <EventsView />
+
 </template>
 
 <script setup lang="ts">
 import EventsView from '~/components/event/EventsView.vue'
+import CTABanner from '~/components/ui/CTABanner.vue'
 import { useFiltersStore } from '~/stores/filtersStore'
+import { ogLocale } from '~/utils/locale'
+import { ExternalLink } from '@lucide/vue'
 
 const filtersStore = useFiltersStore()
 const { setFilter } = filtersStore
@@ -45,7 +73,6 @@ const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const { decodeEventFilter } = useEventFilterEncoding()
 const { clearPortal } = usePortal()
-import { ogLocale } from '~/utils/locale'
 
 function activateEventsPage() {
   clearPortal()

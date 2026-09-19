@@ -28,10 +28,7 @@
     "events_page": "Discover events",
     "country_list": "Countries",
     "register": "Register",
-    "login": "Login",
-    "contact": "Get in touch",
-    "support_us": "Support us",
-    "for_organizers": "Are you an organizer?"
+    "login": "Login"
   },
   "contact": {
     "title": "Contact",
@@ -54,6 +51,13 @@
       "title": "kulturbytes – The Open Platform for Culture",
       "description": "Discover events, cultural venues and creative activities. A free, open platform connecting cultural organisations, artists and communities.",
       "image_alt": "Graphic illustration of kulturbytes with logo and cultural elements"
+    },
+    "intro": {
+      "title": "Welcome to kulturbytes",
+      "description": "The new platform for events and venues – a community project by OK Lab Flensburg.",
+      "contact": "Contact us",
+      "support": "Support the project",
+      "organize": "Do you organize events?"
     },
     "discover": {
       "title": "Discover",

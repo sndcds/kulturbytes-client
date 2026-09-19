@@ -1,72 +1,134 @@
 <script setup lang="ts">
-const localePath = useLocalePath()
-const { t } = useI18n()
+import { computed } from 'vue'
+import { ArrowRight } from '@lucide/vue'
+
+interface CtaLink {
+  label: string
+  to: string | Record<string, unknown>
+  external?: boolean
+}
+
+type ImageAlign = 'left' | 'center' | 'right'
+type ImageVerticalAlign = 'top' | 'center' | 'bottom'
+
+const props = withDefaults(
+    defineProps<{
+      title: string
+      links: CtaLink[]
+
+      // Foreground image
+      imageUrl?: string
+      imageWidth?: number
+      imageMaxWidth?: number | string
+      imageAlign?: ImageAlign
+      imageVerticalAlign?: ImageVerticalAlign
+
+      // Background images
+      backgroundImage?: string
+      mobileBackgroundImage?: string
+
+      titleColor?: string
+      textColor?: string
+      backgroundColor?: string
+      ctaColor?: string
+    }>(),
+    {
+      imageWidth: 100,
+      imageAlign: 'center',
+      imageVerticalAlign: 'center',
+
+      backgroundImage: undefined,
+      mobileBackgroundImage: undefined,
+
+      titleColor: 'inherit',
+      textColor: 'inherit',
+      backgroundColor: 'transparent',
+      ctaColor: 'inherit'
+    }
+)
+
+const imageContainerStyle = computed(() => ({
+  justifyContent: {
+    left: 'flex-start',
+    center: 'center',
+    right: 'flex-end'
+  }[props.imageAlign],
+
+  alignItems: {
+    top: 'flex-start',
+    center: 'center',
+    bottom: 'flex-end'
+  }[props.imageVerticalAlign]
+}))
+
+const imageStyle = computed(() => ({
+  width: `${props.imageWidth}%`,
+  maxWidth:
+      typeof props.imageMaxWidth === 'number'
+          ? `${props.imageMaxWidth}px`
+          : props.imageMaxWidth
+}))
+
+const style = computed(() => ({
+  '--cta-banner-title-color': props.titleColor,
+  '--cta-banner-text-color': props.textColor,
+  '--cta-banner-background-color': props.backgroundColor,
+  '--cta-banner-cta-color': props.ctaColor,
+  '--cta-banner-background-image': props.backgroundImage
+      ? `url("${props.backgroundImage}")`
+      : 'none',
+  '--cta-banner-mobile-background-image': props.mobileBackgroundImage
+      ? `url("${props.mobileBackgroundImage}")`
+      : props.backgroundImage
+          ? `url("${props.backgroundImage}")`
+          : 'none'
+}))
 </script>
 
 <template>
-  <section class="home-intro">
-    <div class="home-intro__image">
+  <section
+      class="cta-banner"
+      :style="style"
+  >
+    <div
+        v-if="imageUrl"
+        class="cta-banner__image-container"
+        :style="imageContainerStyle"
+    >
       <img
-          src="/images/home/intro.webp"
+          :src="imageUrl"
           alt=""
+          class="cta-banner__image"
+          :style="imageStyle"
       >
     </div>
 
-    <div class="home-intro__content">
-      <div class="home-intro__text">
-        <h1>
-          {{ t('home.intro.title') }}
-        </h1>
+    <div class="cta-banner__content">
+      <div class="cta-banner__text">
+        <h1>{{ title }}</h1>
 
-        <p>
-          {{ t('home.intro.description') }}
-        </p>
+        <div class="cta-banner__description">
+          <slot name="description" />
+        </div>
       </div>
 
-      <nav class="home-intro__actions" aria-label="Weitere Informationen">
+      <nav class="cta-banner__actions">
         <NuxtLink
-            :to="localePath('contact')"
-            class="home-intro__action"
+            v-for="link in links"
+            :key="link.label"
+            :to="link.to"
+            class="cta-banner__action"
         >
-          <span class="home-intro__action-label">
-            {{ t('home.intro.contact') }}
+          <span class="cta-banner__action-label">
+            {{ link.label }}
           </span>
 
-          <span class="home-intro__arrow" aria-hidden="true">
-            <span class="home-intro__arrow-line" />
-            <span class="home-intro__arrow-head" />
-          </span>
-        </NuxtLink>
-
-        <NuxtLink
-            :to="{
-            path: localePath('contact'),
-            hash: '#support-kulturbytes'
-          }"
-            class="home-intro__action"
-        >
-          <span class="home-intro__action-label">
-            {{ t('home.intro.support') }}
-          </span>
-
-          <span class="home-intro__arrow" aria-hidden="true">
-            <span class="home-intro__arrow-line" />
-            <span class="home-intro__arrow-head" />
-          </span>
-        </NuxtLink>
-
-        <NuxtLink
-            :to="localePath('contact')"
-            class="home-intro__action"
-        >
-          <span class="home-intro__action-label">
-            {{ t('home.intro.organize') }}
-          </span>
-
-          <span class="home-intro__arrow" aria-hidden="true">
-            <span class="home-intro__arrow-line" />
-            <span class="home-intro__arrow-head" />
-          </span>
+          <ArrowRight
+              class="cta-banner__arrow"
+              :size="32"
+              :stroke-width="1.5"
+              aria-hidden="true"
+          />
         </NuxtLink>
       </nav>
     </div>
@@ -74,29 +136,44 @@ const { t } = useI18n()
 </template>
 
 <style scoped lang="scss">
-.home-intro {
+.cta-banner {
   display: grid;
-  grid-template-columns: 40% 60%;
-  min-height: 32rem;
+  grid-template-columns: 50% 50%;
+
   margin-bottom: 3rem;
+
   overflow: hidden;
 
-  &__image {
-    min-height: 100%;
+  background-color: var(--cta-banner-background-color);
+  background-image: var(--cta-banner-background-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 
-    img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  border-radius: var(--kbts-border-radius);
+
+  &__image-container {
+    display: flex;
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    min-height: 0;
+    padding: 2rem;
+  }
+
+  &__image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
   }
 
   &__content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
+    grid-column: 2;
+    grid-row: 1;
     padding: 2.5rem 3rem 1.5rem;
   }
 
@@ -105,40 +182,48 @@ const { t } = useI18n()
 
     h1 {
       margin: 0 0 1.25rem;
+      color: var(--cta-banner-title-color);
     }
+  }
 
-    p {
-      margin: 0;
-      max-width: 38rem;
-      line-height: 1.6;
+  &__description {
+    max-width: 38rem;
+    color: var(--cta-banner-text-color);
+    line-height: 1.6;
+
+    :deep(a) {
+      color: inherit;
+      text-decoration: none;
+      text-underline-offset: 0.15em;
+
+      &:hover {
+        text-decoration-thickness: 2px;
+      }
     }
   }
 
   &__actions {
     width: 100%;
-    margin-top: 3rem;
+    margin-top: 1rem;
   }
 
   &__action {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
-
-    min-height: 4rem;
-    padding: 0.9rem 0;
-
-    color: inherit;
+    gap: 1rem;
+    min-height: 1rem;
+    padding: 0.5rem 0;
+    color: var(--cta-banner-cta-color);
     text-decoration: none;
-
-    border-top: var(--kbts-card-border);
+    border-top: 1px dotted currentColor;
 
     &:last-child {
-      border-bottom: var(--kbts-card-border);
+      border-bottom: 1px dotted currentColor;
     }
 
     &:hover {
-      .home-intro__arrow {
+      .cta-banner__arrow {
         transform: translateX(0.5rem);
       }
     }
@@ -154,58 +239,60 @@ const { t } = useI18n()
   }
 
   &__arrow {
-    display: flex;
-    align-items: center;
-    width: 4rem;
     flex-shrink: 0;
-
     transition: transform 180ms ease;
-  }
-
-  &__arrow-line {
-    flex: 1;
-    height: 1px;
-    background: currentColor;
-  }
-
-  &__arrow-head {
-    width: 0.55rem;
-    height: 0.55rem;
-    flex-shrink: 0;
-
-    border-top: 1px solid currentColor;
-    border-right: 1px solid currentColor;
-
-    transform: rotate(45deg);
   }
 }
 
 @media (max-width: 700px) {
-  .home-intro {
+  .cta-banner {
     grid-template-columns: 1fr;
-    min-height: 0;
+    background-image: var(--cta-banner-mobile-background-image);
 
-    &__image {
-      aspect-ratio: 16 / 9;
-      min-height: 0;
+    &__image-container {
+      display: none;
     }
 
     &__content {
-      padding: 1.5rem 0 0;
+      grid-column: 1;
+      grid-row: 1;
+      padding: 1.75rem 1.5rem 1.5rem;
+    }
+
+    &__text {
+      h1 {
+        margin-bottom: 1rem;
+      }
+    }
+
+    &__description {
+      line-height: 1.55;
     }
 
     &__actions {
-      margin-top: 2.5rem;
+      margin-top: 2rem;
     }
 
     &__action {
-      min-height: 3.75rem;
+      font-size: 1.3rem;
+      min-height: 4rem;
+      padding: 0.75rem 0;
+      gap: 1rem;
+    }
+
+    &__action-label {
+      line-height: 1.35;
+    }
+
+    &__arrow {
+      width: 28px;
+      height: 28px;
     }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-intro__arrow {
+  .cta-banner__arrow {
     transition: none;
   }
 }

@@ -28,10 +28,7 @@
     "events_page": "Finde Veranstaltungen",
     "country_list": "Länderübersicht",
     "register": "Konto erstellen",
-    "login": "Login",
-    "contact": "Schreibe uns",
-    "support_us": "Unterstütze das Projekt",
-    "for_organizers": "Organisiert du Veranstaltungen?"
+    "login": "Login"
   },
   "contact": {
     "title": "Kontakt",
@@ -54,6 +51,13 @@
       "title": "kulturbytes – Die offene Plattform für Kultur",
       "description": "Entdecke Veranstaltungen, Kulturorte und kulturelle Angebote. Die offene, kostenlose Plattform für Kulturinstitutionen, Initiativen und Kulturschaffende.",
       "image_alt": "Grafische Darstellung von kulturbytes mit Logo und kulturellen Motiven"
+    },
+    "intro": {
+      "title": "Hallo bei kulturbytes",
+      "description": "Die neue Plattform für Veranstaltungen und Orte, ein Communityprojekt des {link}",
+      "contact": "Schreibe uns",
+      "support": "Unterstütze das Projekt",
+      "organize": "Organisiert du Veranstaltungen?"
     },
     "discover": {
       "title": "Entdecke",
