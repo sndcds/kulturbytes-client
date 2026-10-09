@@ -396,6 +396,8 @@ const route = useRoute()
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const config = useRuntimeConfig()
+const switchLocalePath = useSwitchLocalePath()
+
 const requestUrl = useRequestURL()
 const themeStore = useThemeStore()
 const { countryName } = useCountryName()
@@ -636,7 +638,7 @@ const eventSchema = computed(() => {
         }
         : undefined,
 
-    url: `https://kulturbytes.de/event/${e.uuid}/${d.slug}`,
+    url: canonicalUrl.value,
   }
 })
 
@@ -663,7 +665,8 @@ useHead(() => ({
 }))
 
 
-const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
+const pageUrl = computed(() => canonicalUrl.value)
+
 const description = computed(() => truncateText(event.value?.summary || event.value?.description, 160))
 
 useSeoMeta({
