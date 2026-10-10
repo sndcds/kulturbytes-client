@@ -6,6 +6,7 @@
           <EventFilters
               v-if="filtersStore.filterType === 'events'"
               @close="emit('close')"
+              @show="emit('show')"
           />
           <VenueFilters v-else-if="filtersStore.filterType === 'venues'" />
         </div>
@@ -22,7 +23,7 @@ defineProps<{
   open: boolean
 }>()
 
-const emit = defineEmits<{ close: [] }>()
+const emit = defineEmits<{ close: [], show: [] }>()
 const filtersStore = useFiltersStore()
 const { t } = useI18n()
 </script>

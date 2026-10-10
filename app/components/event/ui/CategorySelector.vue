@@ -14,6 +14,7 @@ const selected = defineModel<number[] | null>({
 const props = withDefaults(
     defineProps<{
       multiple?: boolean
+      compact?: boolean
     }>(),
     {
       multiple: true,
@@ -78,17 +79,18 @@ function toggleCategory(id: number) {
 
 
 <template>
-  <div class="category-selector">
+  <div class="category-selector" :class="{ compact: props.compact }">
     <button
         v-for="cat in categories"
         :key="cat.id"
         type="button"
         class="category-chip"
         :class="{ selected: isSelected(cat.id) }"
+        :aria-pressed="isSelected(cat.id)"
         :style="{ '--chip-color': cat.color }"
         @click="toggleCategory(cat.id)"
     >
-      <span class="indicator" />
+      <span v-if="!props.compact" class="indicator" />
 
       <span>
         {{ t(cat.label) }}
@@ -104,6 +106,16 @@ function toggleCategory(id: number) {
   flex-wrap: wrap;
   gap: .5rem;
   padding: .1rem 3rem .1rem 0;
+}
+
+.category-selector.compact {
+  padding-right: 0;
+  gap: .35rem;
+
+  .category-chip {
+    padding: .35rem .65rem;
+    border-color: color-mix(in srgb, var(--chip-color) 40%, transparent);
+  }
 }
 
 .category-chip {
