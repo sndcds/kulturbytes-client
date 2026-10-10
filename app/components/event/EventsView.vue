@@ -1,5 +1,5 @@
 <template>
-  <div class="kbts-events-view-layout" data-event-results tabindex="-1">
+  <div ref="resultsElement" class="kbts-events-view-layout" data-event-results tabindex="-1">
 
     <!--pre v-if="apiResponse">{{ apiResponse.data.last_event_date_uuid }}</pre>
     <pre v-if="apiResponse">{{ apiResponse.data.last_event_start_at }}</pre-->
@@ -89,6 +89,7 @@ const {
 } = storeToRefs(eventFilters)
 
 const events = ref<CalendarEvent[]>([])
+const resultsElement = ref<HTMLElement | null>(null)
 const editingStore = useEventFilterEditingStore()
 const { build, filterKey, getSnapshot } = useEventQueryParams()
 const requestsPaused = computed(() => editingStore.isMobileFilterEditing)
@@ -206,6 +207,8 @@ async function loadEvents() {
   const version = requestVersion
   requestController = new AbortController()
   const signal = requestController.signal
+  const firstPage = cursor.value === null
+  let receivedPage = false
 
   try {
     const params = await build({
@@ -221,6 +224,7 @@ async function loadEvents() {
     if (version !== requestVersion || requestsPaused.value || disposed) return
 
     events.value.push(...response.data.events)
+    receivedPage = true
     hasMore.value = response.data.events.length >= PAGE_SIZE
     cursor.value = {
       date_uuid: response.data.last_event_date_uuid,
@@ -232,6 +236,10 @@ async function loadEvents() {
     if (version === requestVersion && !disposed) {
       loading.value = false
       await nextTick()
+      if (version === requestVersion && !disposed && receivedPage && firstPage && props.useFilters) {
+        // Clearing the list can temporarily clamp document scroll before new cards render.
+        editingStore.restoreScrollPosition(resultsElement.value)
+      }
       setupObserver()
     }
   }

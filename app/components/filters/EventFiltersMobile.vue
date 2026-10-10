@@ -9,6 +9,7 @@ import { useEventSummaryStore } from '~/stores/eventSummaryStore'
 
 const { t } = useI18n()
 const eventFilters = useFiltersStore()
+const editingStore = useEventFilterEditingStore()
 
 const {
   eventFilterTab,
@@ -92,6 +93,7 @@ onMounted(() => {
   const root = document.documentElement
   const scrollX = window.scrollX
   const scrollY = window.scrollY
+  editingStore.setScrollPosition({ x: scrollX, y: scrollY })
   const previousStyles = {
     position: body.style.position, top: body.style.top,
     left: body.style.left, width: body.style.width, overflow: body.style.overflow,
@@ -119,6 +121,7 @@ onMounted(() => {
 onBeforeUnmount(() => releaseDialog?.())
 
 function finish(showResults = false) {
+  if (showResults) editingStore.showResultsOnApply()
   releaseDialog?.()
   if (showResults) emit('show')
   else emit('close')

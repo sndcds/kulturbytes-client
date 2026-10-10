@@ -73,7 +73,10 @@ const canExitPortal = computed(() => Boolean(filtersStore.eventPortalUuid))
 // Own the session in navigation so route changes and viewport changes also finish it.
 watch([filtersOpen, routeFilterType, isMobile, openFiltersAfterNavigation], ([open, type, mobile, pending]) => {
   if (mobile === true && (pending || (open && type === 'events'))) editingStore.beginMobileFilterEditing()
-  else editingStore.finishMobileFilterEditing()
+  else {
+    if (type !== 'events') editingStore.setScrollPosition(null)
+    editingStore.finishMobileFilterEditing()
+  }
 }, { flush: 'sync' })
 
 onBeforeUnmount(() => editingStore.finishMobileFilterEditing())
