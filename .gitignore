@@ -23,3 +23,8 @@ logs
 .env.*
 !.env.example
 output.zip
+
+# Local test artifacts
+playwright-report
+test-results
+coverage

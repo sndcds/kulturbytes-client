@@ -25,6 +25,7 @@
     <NavigationFilters
       :open="filtersOpen"
       @close="closeFilters"
+      @show="showResults"
     />
   </header>
 </template>
@@ -39,6 +40,8 @@ const route = useRoute()
 const router = useRouter()
 const localePath = useLocalePath()
 const filtersStore = useFiltersStore()
+const editingStore = useEventFilterEditingStore()
+const { isMobile } = useMobileViewport()
 const { clearPortal } = usePortal()
 const { isPortalActive, navigationStyle } = useNavigationStyle()
 const filtersOpenRoute = useState<string | null>(
@@ -66,6 +69,17 @@ const routeFilterType = computed<FilterType | null>(() => {
   return null
 })
 const canExitPortal = computed(() => Boolean(filtersStore.eventPortalUuid))
+
+// Own the session in navigation so route changes and viewport changes also finish it.
+watch([filtersOpen, routeFilterType, isMobile, openFiltersAfterNavigation], ([open, type, mobile, pending]) => {
+  if (mobile === true && (pending || (open && type === 'events'))) editingStore.beginMobileFilterEditing()
+  else {
+    if (type !== 'events') editingStore.setScrollPosition(null)
+    editingStore.finishMobileFilterEditing()
+  }
+}, { flush: 'sync' })
+
+onBeforeUnmount(() => editingStore.finishMobileFilterEditing())
 
 const portalEventsLink = computed(() => {
   const portalIdentifier = filtersStore.eventPortalIdentifier
@@ -103,8 +117,22 @@ async function toggleFilters() {
 }
 
 function closeFilters() {
+  const restoreMobileFocus = editingStore.isMobileFilterEditing
   openFiltersAfterNavigation.value = false
   filtersOpen.value = false
+  if (restoreMobileFocus) {
+    void nextTick(() => {
+      document.querySelector<HTMLElement>('.navigation-search--mobile-navigation')?.focus({ preventScroll: true })
+    })
+  }
+}
+
+async function showResults() {
+  closeFilters()
+  await nextTick()
+  const results = document.querySelector<HTMLElement>('[data-event-results]')
+  results?.focus({ preventScroll: true })
+  results?.scrollIntoView({ block: 'start' })
 }
 
 function endPortal() {

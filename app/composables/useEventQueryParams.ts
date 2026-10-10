@@ -1,8 +1,10 @@
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 import { useFiltersStore } from '~/stores/filtersStore'
 import { getCurrentGeoPosition } from '~/utils/geoLocation'
 
 interface BuildOptions {
+    filterSnapshot?: EventQuerySnapshot
     includePagination?: boolean
     includeFilters?: boolean
     venueUuids?: string
@@ -54,7 +56,22 @@ export function useEventQueryParams() {
         eventPortalUuid: eventPortalUuid.value,
     }))
 
+    // Capture all fields before any asynchronous geolocation work.
+    function getSnapshot() {
+        const current = watchedFilters.value
+        return {
+            ...current,
+            eventCategories: current.eventCategories ? [...current.eventCategories] : null,
+            eventDateRange: { ...current.eventDateRange },
+            eventTypeIds: [...current.eventTypeIds],
+            eventGenreIds: [...current.eventGenreIds],
+        }
+    }
+
+    const filterKey = computed(() => JSON.stringify(getSnapshot()))
+
     async function build(options: BuildOptions = {}) {
+        const snapshot = options.filterSnapshot ?? getSnapshot()
         const params = new URLSearchParams()
 
         if (options.includePagination) {
@@ -81,51 +98,51 @@ export function useEventQueryParams() {
             return params
         }
 
-        if (eventPortalUuid.value) {
-            params.append('portal', eventPortalUuid.value)
+        if (snapshot.eventPortalUuid) {
+            params.append('portal', snapshot.eventPortalUuid)
         }
 
-        if (eventCategories.value?.length) {
-            params.append('categories', eventCategories.value.join(','))
+        if (snapshot.eventCategories?.length) {
+            params.append('categories', snapshot.eventCategories.join(','))
         }
 
-        if (eventSearch.value) {
-            params.append('search', eventSearch.value)
+        if (snapshot.eventSearch) {
+            params.append('search', snapshot.eventSearch)
         }
 
-        if (eventDateRange.value.startDate) {
-            params.append('start', eventDateRange.value.startDate)
+        if (snapshot.eventDateRange.startDate) {
+            params.append('start', snapshot.eventDateRange.startDate)
         }
 
-        if (eventDateRange.value.endDate) {
-            params.append('end', eventDateRange.value.endDate)
+        if (snapshot.eventDateRange.endDate) {
+            params.append('end', snapshot.eventDateRange.endDate)
         }
 
-        if (eventCity.value) {
-            params.append('city', eventCity.value + '*')
+        if (snapshot.eventCity) {
+            params.append('city', snapshot.eventCity + '*')
         }
 
-        if (eventPostalCode.value) {
-            params.append('postal_code', eventPostalCode.value + '*')
+        if (snapshot.eventPostalCode) {
+            params.append('postal_code', snapshot.eventPostalCode + '*')
         }
 
-        if (eventVenue.value) {
-            const venues = eventVenue.value
+        if (snapshot.eventVenue) {
+            const venues = snapshot.eventVenue
                 .split(',')
                 .map(v => `*${v.trim()}*`)
                 .join(',')
             params.append('venue', venues)
         }
 
-        if (eventLocationFlag.value) {
+        if (snapshot.eventLocationFlag) {
             try {
                 const position = await getCurrentGeoPosition()
 
                 params.append('lat', position.coords.latitude.toString())
                 params.append('lon', position.coords.longitude.toString())
-                if (eventLocationRadius.value) {
+                if (snapshot.eventLocationRadius) {
                     params.append(
-                        'radius', String(eventLocationRadius.value * 1000)
+                        'radius', String(snapshot.eventLocationRadius * 1000)
                     )
                 }
             } catch (err) {
@@ -133,14 +150,14 @@ export function useEventQueryParams() {
             }
         }
 
-        if (eventTypeIds.value.length === 1) {
-            const typeId = eventTypeIds.value[0]
+        if (snapshot.eventTypeIds.length === 1) {
+            const typeId = snapshot.eventTypeIds[0]
 
             if (typeId !== undefined) {
-                if (eventGenreIds.value.length) {
+                if (snapshot.eventGenreIds.length) {
                     params.append(
                         'genres',
-                        eventGenreIds.value.join(',')
+                        snapshot.eventGenreIds.join(',')
                     )
                 } else {
                     params.append(
@@ -152,20 +169,20 @@ export function useEventQueryParams() {
         }
 
         const age =
-            eventAgeFrom.value && eventAgeTo.value
-                ? `${eventAgeFrom.value},${eventAgeTo.value}`
-                : eventAgeFrom.value || eventAgeTo.value
+            snapshot.eventAgeFrom && snapshot.eventAgeTo
+                ? `${snapshot.eventAgeFrom},${snapshot.eventAgeTo}`
+                : snapshot.eventAgeFrom || snapshot.eventAgeTo
 
         if (age) {
             params.append('age', String(age))
         }
 
-        if (eventPriceType.value === 'max_price') {
-            if (eventMaxPrice.value) {
-                params.append('price', String(eventMaxPrice.value) + ',' + eventPriceCurrency.value)
+        if (snapshot.eventPriceType === 'max_price') {
+            if (snapshot.eventMaxPrice) {
+                params.append('price', String(snapshot.eventMaxPrice) + ',' + snapshot.eventPriceCurrency)
             }
-        } else if (eventPriceType.value) {
-            params.append('price', eventPriceType.value)
+        } else if (snapshot.eventPriceType) {
+            params.append('price', snapshot.eventPriceType)
         }
 
         return params
@@ -173,6 +190,10 @@ export function useEventQueryParams() {
 
     return {
         build,
-        watchedFilters
+        watchedFilters,
+        getSnapshot,
+        filterKey,
     }
 }
+
+export type EventQuerySnapshot = ReturnType<ReturnType<typeof useEventQueryParams>['getSnapshot']>

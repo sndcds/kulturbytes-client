@@ -102,7 +102,12 @@
     "search": "Search",
     "close": "Close filters",
     "settings": "Filter settings",
-    "reset": "Reset all"
+    "reset": "Reset all",
+    "results": "{count} results",
+    "results_loading": "Counting results …",
+    "results_error": "Result count unavailable",
+    "show_results": "Show results",
+    "currency": "Currency"
   },
   "event": {
     "no_events_found": "No events found",

@@ -63,7 +63,9 @@ const { locale } = useI18n()
 
 const {
   typeSummary,
-  genreSummary
+  genreSummary,
+  loading,
+  error,
 } = storeToRefs(eventSummaryStore)
 
 const {
@@ -79,7 +81,7 @@ onMounted(async () => {
 })
 
 const visibleTypesWithCount = computed(() =>
-    visibleTypes.value.filter(type => getTypeCount(type.id) > 0)
+    visibleTypes.value.filter(type => loading.value || error.value || selectedTypeId.value === type.id || getTypeCount(type.id) > 0)
 )
 
 const visibleGenresWithCount = computed(() =>

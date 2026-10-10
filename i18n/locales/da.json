@@ -102,7 +102,12 @@
     "search": "Find",
     "close": "Luk filtre",
     "settings": "Filterindstillinger",
-    "reset": "Nulstil alle"
+    "reset": "Nulstil alle",
+    "results": "{count} resultater",
+    "results_loading": "Beregner resultater …",
+    "results_error": "Antal resultater er ikke tilgængeligt",
+    "show_results": "Vis resultater",
+    "currency": "Valuta"
   },
   "event": {
     "no_events_found": "Ingen begivenheder fundet",

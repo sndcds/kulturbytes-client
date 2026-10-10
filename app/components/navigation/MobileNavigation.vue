@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <nav class="mobile-bottom-nav" :aria-label="t('nav.mobile_navigation')">
+    <nav v-show="!editingStore.isMobileFilterEditing" class="mobile-bottom-nav" :aria-label="t('nav.mobile_navigation')">
       <NuxtLink :to="eventsLink" class="mobile-nav-item">
         <CalendarDays :size="28" aria-hidden="true" />
         <span>{{ t('nav.events') }}</span>
@@ -71,6 +71,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const editingStore = useEventFilterEditingStore()
 const localePath = useLocalePath()
 </script>
 

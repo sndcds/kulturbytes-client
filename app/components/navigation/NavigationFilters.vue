@@ -1,11 +1,12 @@
 <template>
   <Transition name="filters">
-    <div v-if="open && filtersStore.filterType" id="navigation-filters" class="filter-panel">
+    <div v-if="open && filtersStore.filterType" id="navigation-filters" class="filter-panel" :class="{ 'event-filter-panel': filtersStore.filterType === 'events' }">
       <div class="filter-inner">
         <div class="filter-content">
           <EventFilters
               v-if="filtersStore.filterType === 'events'"
               @close="emit('close')"
+              @show="emit('show')"
           />
           <VenueFilters v-else-if="filtersStore.filterType === 'venues'" />
         </div>
@@ -22,7 +23,7 @@ defineProps<{
   open: boolean
 }>()
 
-const emit = defineEmits<{ close: [] }>()
+const emit = defineEmits<{ close: [], show: [] }>()
 const filtersStore = useFiltersStore()
 const { t } = useI18n()
 </script>
@@ -37,6 +38,13 @@ const { t } = useI18n()
 }
 
 @media (max-width: 768px) {
+  .event-filter-panel {
+    border-top: 0;
+    overflow: visible;
+
+    .filter-inner { padding: 0; }
+  }
+
   .filter-panel {
     max-height: calc(
       100dvh

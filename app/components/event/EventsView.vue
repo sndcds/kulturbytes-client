@@ -1,5 +1,5 @@
 <template>
-  <div class="kbts-events-view-layout">
+  <div ref="resultsElement" class="kbts-events-view-layout" data-event-results tabindex="-1">
 
     <!--pre v-if="apiResponse">{{ apiResponse.data.last_event_date_uuid }}</pre>
     <pre v-if="apiResponse">{{ apiResponse.data.last_event_start_at }}</pre-->
@@ -48,9 +48,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useFiltersStore } from '~/stores/filtersStore'
 import type { CalendarEvent, CalendarEventsResponse } from '~/types/calendarEvent'
 import { debounce } from '~/utils/debounce'
+import { useEventFilterEditingStore } from '~/stores/eventFilterEditingStore'
+import { useEventQueryParams } from '~/composables/useEventQueryParams'
 
 const PAGE_SIZE = 20
 const props = withDefaults(
@@ -73,32 +77,25 @@ const {
   eventDateSpan,
   eventDateRange,
   eventSearch,
-  eventDateStart,
-  eventDateEnd,
   eventCity,
   eventPostalCode,
   eventLocationFlag,
-  eventLocationRadius,
   eventVenue,
   eventTypeIds,
   eventGenreIds,
   eventAgeFrom,
   eventAgeTo,
   eventPriceType,
-  eventPriceCurrency,
-  eventMaxPrice
 } = storeToRefs(eventFilters)
 
 const events = ref<CalendarEvent[]>([])
-const summaryStore = useEventSummaryStore()
-const {
-  build,
-  watchedFilters
-} = useEventQueryParams()
-
-const {
-  totalEventCount
-} = storeToRefs(summaryStore)
+const resultsElement = ref<HTMLElement | null>(null)
+const editingStore = useEventFilterEditingStore()
+const { build, filterKey, getSnapshot } = useEventQueryParams()
+const requestsPaused = computed(() => editingStore.isMobileFilterEditing)
+let requestVersion = 0
+let requestController: AbortController | undefined
+let disposed = false
 
 const loading = ref(false)
 const resettingFilters = ref(false)
@@ -114,13 +111,12 @@ let observer: IntersectionObserver | null = null
 function setupObserver() {
   observer?.disconnect()
 
-  if (!loadTrigger.value) return
+  if (requestsPaused.value || disposed || loading.value || error.value || !hasMore.value || !loadTrigger.value) return
 
   observer = new IntersectionObserver(
       async ([entry]) => {
         if (entry && entry.isIntersecting) {
           await loadEvents()
-          setupObserver()
         }
       },
       {
@@ -172,125 +168,131 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  observer?.disconnect()
+  disposed = true
+  reloadEvents.cancel()
+  invalidateRequest()
 })
 
+function invalidateRequest() {
+  requestVersion++
+  requestController?.abort()
+  loading.value = false
+  observer?.disconnect()
+}
+
 function resetEvents() {
+  if (requestsPaused.value || disposed) return
+  invalidateRequest()
   events.value = []
   cursor.value = null
   hasMore.value = true
+  error.value = null
 }
 
 async function resetEventFilters() {
   reloadEvents.cancel()
   resettingFilters.value = true
   eventFilters.resetFilters()
-
   await nextTick()
-
   resettingFilters.value = false
-  resetEvents()
-  await loadEvents()
+  await refreshEvents()
 }
 
 async function loadEvents() {
-  if (loading.value || !hasMore.value) return
+  // Central guard also covers queued observer callbacks, resets and delayed reloads.
+  if (requestsPaused.value || disposed || loading.value || !hasMore.value) return
 
   loading.value = true
+  error.value = null
+  const version = requestVersion
+  requestController = new AbortController()
+  const signal = requestController.signal
+  const firstPage = cursor.value === null
+  let receivedPage = false
 
   try {
     const params = await build({
       includePagination: true,
       includeFilters: props.useFilters,
+      filterSnapshot: editingStore.appliedFilters,
       venueUuids: props.venueUuid,
       limit: PAGE_SIZE,
       cursor: cursor.value
     })
-
-    const url = `/api/events?${params}`
-    const response = await $api<CalendarEventsResponse>(url)
+    if (version !== requestVersion || requestsPaused.value || disposed) return
+    const response = await $api<CalendarEventsResponse>(`/api/events?${params}`, { signal })
+    if (version !== requestVersion || requestsPaused.value || disposed) return
 
     events.value.push(...response.data.events)
-
-    if (response.data.events.length < PAGE_SIZE) {
-      hasMore.value = false
-    }
-
+    receivedPage = true
+    hasMore.value = response.data.events.length >= PAGE_SIZE
     cursor.value = {
       date_uuid: response.data.last_event_date_uuid,
       start_at: response.data.last_event_start_at
     }
-
+  } catch {
+    if (version === requestVersion && !disposed) error.value = 'Failed to load events'
   } finally {
-    loading.value = false
-
-    // force observer recalculation
-    await nextTick()
+    if (version === requestVersion && !disposed) {
+      loading.value = false
+      await nextTick()
+      if (version === requestVersion && !disposed && receivedPage && firstPage && props.useFilters) {
+        // Clearing the list can temporarily clamp document scroll before new cards render.
+        editingStore.restoreScrollPosition(resultsElement.value)
+      }
+      setupObserver()
+    }
   }
 }
 
-
-const reloadEvents = debounce(async () => {
+async function refreshEvents() {
+  if (requestsPaused.value || disposed) return
+  reloadEvents.cancel()
   resetEvents()
   await loadEvents()
-}, 500)
+}
+
+const reloadEvents = debounce(refreshEvents, 500)
+
+// Pause synchronously, before a pending request or observer can commit its response.
+watch(requestsPaused, paused => {
+  if (!paused) return
+  reloadEvents.cancel()
+  invalidateRequest()
+}, { flush: 'sync' })
 
 watch(
-    [
-      eventSearch,
-      eventCity,
-      eventPostalCode,
-      eventLocationRadius,
-      eventVenue,
-      eventAgeFrom,
-      eventAgeTo,
-      eventDateStart,
-      eventDateEnd,
-    ],
-    () => {
-      if (!props.useFilters || resettingFilters.value) {
+    [filterKey, eventDateSpan, requestsPaused],
+    ([key, dateSpan, paused], [previousKey, previousDateSpan, wasPaused]) => {
+      if (paused || resettingFilters.value) return
+      if (wasPaused) {
+        // One batched transition applies every draft change, including a last-keystroke close.
+        void refreshEvents()
         return
       }
-
-      reloadEvents()
+      if (!props.useFilters || (key === previousKey && dateSpan === previousDateSpan)) return
+      const current = getSnapshot()
+      const previous = JSON.parse(previousKey)
+      const immediateFields = [
+        'eventCategories', 'eventLocationFlag', 'eventTypeIds', 'eventGenreIds',
+        'eventPriceType', 'eventPriceCurrency', 'eventMaxPrice', 'eventPortalUuid',
+      ] as const
+      const immediateChange = immediateFields.some(field =>
+          JSON.stringify(current[field]) !== JSON.stringify(previous[field])
+      ) || eventDateSpan.value !== previousDateSpan
+      if (immediateChange) void refreshEvents()
+      else reloadEvents()
     },
-    { deep: true }
 )
 
-watch(
-    [
-      eventCategories,
-      eventDateSpan,
-      eventLocationFlag,
-      eventTypeIds,
-      eventGenreIds,
-      eventPriceType,
-      eventPriceCurrency,
-      eventMaxPrice
-    ],
-    async () => {
-      if (!props.useFilters || resettingFilters.value) {
-        return
-      }
+watch(() => props.venueUuid, () => void refreshEvents())
 
-      resetEvents()
-      await loadEvents()
-    },
-    { deep: true }
-)
-
-watch(
-    () => props.venueUuid,
-    async () => {
-      resetEvents()
-      await loadEvents()
-    }
-)
 </script>
 
 <style scoped lang="scss">
 .kbts-events-view-layout {
   margin-top: 2rem;
+  scroll-margin-top: var(--kbts-nav-height, 4rem);
   h1 {
     font-size: 2rem;
     font-weight: 300;
