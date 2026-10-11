@@ -101,6 +101,7 @@
   "filter": {
     "search": "Suche",
     "close": "Filter schließen",
+    "close_search": "Suche Schließen",
     "settings": "Filtereinstellung",
     "reset": "Alles zurücksetzen",
     "results": "{count} Ergebnisse",

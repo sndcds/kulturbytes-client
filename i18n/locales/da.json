@@ -101,6 +101,7 @@
   "filter": {
     "search": "Find",
     "close": "Luk filtre",
+    "close_search": "Luk søgning",
     "settings": "Filterindstillinger",
     "reset": "Nulstil alle",
     "results": "{count} resultater",

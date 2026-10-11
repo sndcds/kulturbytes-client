@@ -1,6 +1,7 @@
 <template>
 
   <CTABanner
+      v-show="!filtersOpen"
       :title="t('home.intro.title')"
       image-url="images/kulturbytes-logo-typo-2-lines-white-red.svg"
       image-max-width="400px"
@@ -68,6 +69,8 @@ import { ExternalLink } from '@lucide/vue'
 const filtersStore = useFiltersStore()
 const { setFilter } = filtersStore
 const route = useRoute()
+const filtersOpenRoute = useState<string | null>('navigation-filters-open-route', () => null)
+const filtersOpen = computed(() => filtersOpenRoute.value === route.path)
 const localePath = useLocalePath()
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()

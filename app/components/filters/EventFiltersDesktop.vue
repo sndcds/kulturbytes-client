@@ -4,6 +4,7 @@ import ChipSelect from '~/components/ui/ChipSelect.vue'
 import { useFiltersStore } from '~/stores/filtersStore'
 import Checkbox from '~/components/ui/Checkbox.vue'
 import TypeGenreSelect from '~/components/event/ui/TypeGenreSelect.vue'
+import { useEventSummaryStore } from '~/stores/eventSummaryStore'
 import { Undo2 } from '@lucide/vue'
 
 const { t } = useI18n()
@@ -12,6 +13,10 @@ const route = useRoute()
 const localePath = useLocalePath()
 const { encodeEventFilter } = useEventFilterEncoding()
 const eventFilters = useFiltersStore()
+const summaryStore = useEventSummaryStore()
+const { totalEventCount, loading, error } = storeToRefs(summaryStore)
+
+onMounted(() => void summaryStore.loadSummary())
 
 const {
   eventFilterTab,
@@ -115,25 +120,14 @@ async function saveFilter() {
     <div class="filter-header">
       <span class="filter-title">{{ t('filter.settings') }}</span>
 
-      <div class="filter-header-actions">
-        <button
-            type="button"
-            class="reset-button"
-            @click="eventFilters.resetFilters"
-        >
-          <Undo2 :size="16" aria-hidden="true" />
-          <span>{{ t('filter.reset') }}</span>
-        </button>
-
-        <button
-            type="button"
-            class="close-button"
-            :aria-label="t('filter.close')"
-            @click="emit('close')"
-        >
-          ✕
-        </button>
-      </div>
+      <button
+          type="button"
+          class="close-button"
+          :aria-label="t('filter.close')"
+          @click="emit('close')"
+      >
+        ✕
+      </button>
     </div>
 
     <CategorySelector
@@ -365,6 +359,27 @@ async function saveFilter() {
       {{ t('event.filter.save_filter') }}
     </button-->
 
+    <footer class="filter-footer">
+      <button
+          type="button"
+          class="reset-button"
+          @click="eventFilters.resetFilters"
+      >
+        <Undo2 :size="16" aria-hidden="true" />
+        <span>{{ t('filter.reset') }}</span>
+      </button>
+
+      <div class="filter-results">
+        <span class="result-count" role="status" aria-live="polite" :aria-busy="loading" :class="{ loading }">
+          <template v-if="error">{{ t('filter.results_error') }}</template>
+          <template v-else-if="totalEventCount !== null">{{ t('filter.results', { count: totalEventCount }) }}</template>
+        </span>
+        <button type="button" class="kbts-button close-search-button" @click="emit('close')">
+          {{ t('filter.close_search') }}
+        </button>
+      </div>
+    </footer>
+
   </div>
 
 </template>
@@ -393,16 +408,26 @@ async function saveFilter() {
   letter-spacing: .02em;
 }
 
-.filter-header-actions {
+.filter-footer {
+  margin-top: .4rem;
+  padding-top: .4rem;
+  border-top: 1px solid var(--kbts-border);
+}
+
+.filter-results {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: .5rem;
 }
 
 .reset-button {
+  width: 100%;
+  min-height: 44px;
   padding: .35rem .55rem;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: .4rem;
   border: 0;
   border-radius: .25rem;
@@ -438,15 +463,17 @@ async function saveFilter() {
   }
 }
 
-@media (max-width: 480px) {
-  .filter-header {
-    align-items: flex-start;
-  }
-
-  .reset-button {
-    flex-shrink: 0;
-  }
+.close-search-button {
+  flex-shrink: 0;
+  min-height: 44px;
+  align-self: auto;
+  padding: .6rem 1.4rem;
+  background: var(--kbts-fg);
+  color: var(--kbts-bg);
 }
+
+.result-count { font-size: 1.4rem; }
+.result-count.loading { color: var(--kbts-muted-fg); }
 
 input {
   box-sizing: border-box;
