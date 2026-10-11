@@ -104,7 +104,6 @@
     "settings": "Filtereinstellung",
     "reset": "Alles zurücksetzen",
     "results": "{count} Ergebnisse",
-    "results_loading": "Ergebnisse werden berechnet …",
     "results_error": "Ergebniszahl nicht verfügbar",
     "show_results": "Anzeigen",
     "currency": "Währung"
@@ -119,7 +118,9 @@
       "sports": "Sport",
       "leisure": "Freizeit",
       "family": "Familie",
-      "society": "Gesellschaft"
+      "society": "Gesellschaft",
+      "creative": "Kreativ",
+      "food_and_drink": "Essen & Trinken"
     },
     "search_placeholder": "Wonach suchst du?",
     "date_span": {

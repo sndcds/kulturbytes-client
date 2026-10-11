@@ -6,6 +6,7 @@ import Checkbox from '~/components/ui/Checkbox.vue'
 import TypeGenreSelect from '~/components/event/ui/TypeGenreSelect.vue'
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useEventSummaryStore } from '~/stores/eventSummaryStore'
+import { RotateCcw } from '@lucide/vue'
 
 const { t } = useI18n()
 const eventFilters = useFiltersStore()
@@ -374,19 +375,24 @@ function onTabKeydown(event: KeyboardEvent) {
     </div>
     <footer class="mobile-filter-footer">
       <div class="mobile-filter-actions">
-        <button type="button" class="text-action" @click="eventFilters.resetFilters()">
+        <button
+            style="width: 100%"
+            type="button"
+            class="text-action"
+            @click="eventFilters.resetFilters()"
+        >
+          <RotateCcw :size="16" aria-hidden="true" />
           {{ t('event.filter.reset_filters') }}
         </button>
-        <button type="button" class="text-action" @click="finish()">
+
+        <!--button type="button" class="text-action" @click="finish()">
           {{ t('filter.close') }}
-        </button>
+        </button-->
       </div>
       <div class="mobile-filter-results">
         <span class="result-count" role="status" aria-live="polite" :aria-busy="loading" :class="{ loading }">
-          <template v-if="loading">{{ t('filter.results_loading') }}</template>
-          <template v-else-if="error">{{ t('filter.results_error') }}</template>
+          <template v-if="error">{{ t('filter.results_error') }}</template>
           <template v-else-if="totalEventCount !== null">{{ t('filter.results', { count: totalEventCount }) }}</template>
-          <template v-else>{{ t('filter.results_loading') }}</template>
         </span>
         <button type="button" class="kbts-button show-results-button" @click="finish(true)">
           {{ t('filter.show_results') }}
@@ -473,7 +479,7 @@ function onTabKeydown(event: KeyboardEvent) {
   color: var(--kbts-bg);
 }
 
-.result-count { font-size: .9rem; }
+.result-count { font-size: 1.4rem; }
 .result-count.loading { color: var(--kbts-muted-fg); }
 button:focus-visible { outline: 2px solid var(--kbts-chip-bg-active); outline-offset: 2px; }
 
@@ -492,15 +498,39 @@ input {
   &::placeholder { color: var(--kbts-muted-fg); opacity: 1; }
 }
 
-.input-fields-container { display: flex; gap: .8rem; flex-wrap: wrap; }
-.input-field { display: flex; flex-direction: column; gap: .4rem; min-width: 0; flex: 1 1 130px; }
+.input-fields-container {
+  display: flex;
+  gap: .8rem;
+  flex-wrap: wrap;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  min-width: 0;
+  flex: 1 1 130px;
+}
+
 label { font-size: .86rem; margin-left: .5rem; }
-.filter-tabs { display: flex; flex-direction: column; gap: .75rem; min-width: 0; }
-.filter-tab-list { display: flex; gap: .15rem; overflow-x: auto; padding: .25rem; }
+
+.filter-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  min-width: 0;
+}
+
+.filter-tab-list {
+  display: flex;
+  gap: .15rem;
+  overflow-x: auto;
+  padding: .25rem;
+}
+
 .filter-tab {
   flex: 0 0 auto;
-  min-height: 44px;
-  padding: .35rem .65rem;
+  padding: .4rem .6rem;
   border: 0;
   border-radius: 999px;
   background: transparent;
@@ -511,7 +541,23 @@ label { font-size: .86rem; margin-left: .5rem; }
   cursor: pointer;
   &.active { background: var(--kbts-fg); color: var(--kbts-bg); }
 }
-.location-radius-field { display: flex; align-items: center; gap: .75rem; width: 100%; }
-.price-filter-panel { display: flex; flex-direction: column; gap: .8rem; }
-:deep(.kbts-chip) { max-width: 100%; overflow-wrap: anywhere; text-align: left; }
+
+.location-radius-field {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: 100%;
+}
+
+.price-filter-panel {
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+}
+
+:deep(.kbts-chip) {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
 </style>

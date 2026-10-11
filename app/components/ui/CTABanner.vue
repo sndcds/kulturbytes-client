@@ -105,7 +105,7 @@ const style = computed(() => ({
 
     <div class="cta-banner__content">
       <div class="cta-banner__text">
-        <h1>{{ title }}</h1>
+        <!--h1>{{ title }}</h1-->
 
         <div class="cta-banner__description">
           <slot name="description" />
@@ -181,7 +181,8 @@ const style = computed(() => ({
     max-width: 42rem;
 
     h1 {
-      margin: 0 0 1.25rem;
+      font-weight: 500;
+      margin: 0 0 0.5rem;
       color: var(--cta-banner-title-color);
     }
   }
@@ -209,6 +210,7 @@ const style = computed(() => ({
 
   &__action {
     display: flex;
+    font-size: 1.2rem;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
@@ -216,11 +218,7 @@ const style = computed(() => ({
     padding: 0.5rem 0;
     color: var(--cta-banner-cta-color);
     text-decoration: none;
-    border-top: 1px dotted currentColor;
-
-    &:last-child {
-      border-bottom: 1px dotted currentColor;
-    }
+    border-top: 1px solid color-mix(in srgb, currentColor 35%, transparent);
 
     &:hover {
       .cta-banner__arrow {
@@ -274,14 +272,13 @@ const style = computed(() => ({
     }
 
     &__action {
-      font-size: 1.3rem;
-      min-height: 4rem;
-      padding: 0.75rem 0;
+      font-size: 1.2rem;
+      padding: 0.5rem 0;
       gap: 1rem;
     }
 
     &__action-label {
-      line-height: 1.35;
+      line-height: 1.2;
     }
 
     &__arrow {

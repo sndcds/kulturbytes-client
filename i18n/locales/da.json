@@ -104,7 +104,6 @@
     "settings": "Filterindstillinger",
     "reset": "Nulstil alle",
     "results": "{count} resultater",
-    "results_loading": "Beregner resultater …",
     "results_error": "Antal resultater er ikke tilgængeligt",
     "show_results": "Vis resultater",
     "currency": "Valuta"
@@ -119,7 +118,9 @@
       "sports": "Sport",
       "leisure": "Fritid",
       "family": "Familie",
-      "society": "Samfund"
+      "society": "Samfund",
+      "creative": "Kreativt",
+      "food_and_drink": "Mad & drikke"
     },
     "search_placeholder": "Hvad søger du?",
     "date_span": {

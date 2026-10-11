@@ -104,7 +104,6 @@
     "settings": "Filter settings",
     "reset": "Reset all",
     "results": "{count} results",
-    "results_loading": "Counting results …",
     "results_error": "Result count unavailable",
     "show_results": "Show results",
     "currency": "Currency"
@@ -119,7 +118,9 @@
       "sports": "Sports",
       "leisure": "Leisure",
       "family": "Family",
-      "society": "Society"
+      "society": "Society",
+      "creative": "Creative",
+      "food_and_drink": "Food & drink"
     },
     "search_placeholder": "What are you looking for?",
     "date_span": {

@@ -52,6 +52,16 @@ const categories: Category[] = [
     label: "event.category.society",
     color: "var(--event-category-society-color)",
   },
+  {
+    id: 7,
+    label: "event.category.creative",
+    color: "var(--event-category-creative-color)",
+  },
+  {
+    id: 8,
+    label: "event.category.food_and_drink",
+    color: "var(--event-category-food-and-drink-color)",
+  },
 ]
 
 function isSelected(id: number) {
