@@ -17,11 +17,12 @@
             class="kbts-event-view-image-outer"
         >
           <div
+              v-if="eventImage"
               class="kbts-event-view-image-inner"
               :class="{ 'has-placeholder': !eventImage }"
               :style="eventImage ? {
-              backgroundImage: `url(${imageUrl(eventImage.url, 960, '16:9')})`
-            } : {}"
+                backgroundImage: `url(${imageUrl(eventImage.url, 960, '16:9')})`
+              } : {}"
           >
             <img
                 v-if="aiLabelImage"
@@ -30,7 +31,6 @@
                 class="kbts-image-ai-label"
             >
           </div>
-
         </div>
 
         <span v-if="imageCredit" class="kbts-event-view-image-caption">

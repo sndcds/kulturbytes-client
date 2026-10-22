@@ -1,6 +1,6 @@
 <template>
 
-  <CTABanner
+  <!--CTABanner
       v-show="!filtersOpen"
       :title="t('home.intro.title')"
       image-url="images/kulturbytes-logo-typo-2-lines-white-red.svg"
@@ -53,7 +53,7 @@
         </template>
       </i18n-t>
     </template>
-  </CTABanner>
+  </CTABanner-->
 
   <EventsView />
 

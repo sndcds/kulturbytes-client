@@ -98,7 +98,7 @@ const localePath = useLocalePath()
 
   .mobile-top-typo {
     display: block;
-    width: 160px;
+    width: 130px;
     height: auto;
     margin-top: 4px;
   }

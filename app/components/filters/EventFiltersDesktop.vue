@@ -409,12 +409,16 @@ async function saveFilter() {
 }
 
 .filter-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: .4rem;
   padding-top: .4rem;
   border-top: 1px solid var(--kbts-border);
 }
 
 .filter-results {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -422,7 +426,6 @@ async function saveFilter() {
 }
 
 .reset-button {
-  width: 100%;
   min-height: 44px;
   padding: .35rem .55rem;
   display: inline-flex;
@@ -434,13 +437,15 @@ async function saveFilter() {
   background: transparent;
   color: var(--kbts-fg);
   font: inherit;
-  font-size: .82rem;
+  font-size: 1rem;
   cursor: pointer;
 
+  /*
   &:hover,
   &:focus-visible {
     background: var(--kbts-card-bg);
   }
+  */
 }
 
 .close-button {

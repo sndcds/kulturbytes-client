@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BadgeCheck } from '@lucide/vue'
+import { Image } from '@lucide/vue'
 import { imageUrl } from '~/utils/image'
 import { type CalendarEvent } from '~/types/calendarEvent'
 import { type ImageAiLabel } from '~/types/image'
@@ -72,7 +72,7 @@ const priceLabel = computed(() => {
               backgroundImage: `url(${imageUrl(event.image_path, 480, '16:9')})`
             } : {}"
         >
-          <BadgeCheck
+          <Image
               v-if="!event.image_path"
               class="x_image_icon"
               :size="64"
@@ -191,8 +191,8 @@ const priceLabel = computed(() => {
   justify-content: center;
 
   &.has-placeholder {
-    background: palegreen;
-    color: white;
+    background: #888888;
+    color: #cccccc;
   }
 
   &:hover {
