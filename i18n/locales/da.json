@@ -41,6 +41,14 @@
     "rate_limit_error": "Du har sendt for mange beskeder. Prøv igen senere.",
     "generic_error": "Beskeden kunne ikke sendes. Prøv igen senere."
   },
+  "image_viewer": {
+    "title": "Billedgalleri",
+    "open": "Åbn billede: {title}",
+    "close": "Luk billedvisning",
+    "navigation": "Vælg et billede",
+    "show": "Vis billede {index} af {count}",
+    "position": "Billede {index} af {count}"
+  },
   "map": {
     "website_link": "Hjemmeside",
     "details_link": "Detaljer"

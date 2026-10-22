@@ -41,6 +41,14 @@
     "rate_limit_error": "Du hast zu viele Nachrichten gesendet. Bitte versuche es später noch einmal.",
     "generic_error": "Die Nachricht konnte nicht gesendet werden. Bitte versuche es später noch einmal."
   },
+  "image_viewer": {
+    "title": "Bildergalerie",
+    "open": "Bild öffnen: {title}",
+    "close": "Bildansicht schließen",
+    "navigation": "Bild auswählen",
+    "show": "Bild {index} von {count} anzeigen",
+    "position": "Bild {index} von {count}"
+  },
   "map": {
     "website_link": "Webseite",
     "details_link": "Details"
