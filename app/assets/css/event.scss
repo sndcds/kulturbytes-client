@@ -45,6 +45,7 @@
 .kbts-event-view-organizer-logo { order: 3; }
 .kbts-event-view-venue-logo { order: 3; }
 .kbts-event-view-content { order: 6; }
+.kbts-event-view-gallery { order: 7; }
 .kbts-event-view-links { order: 7; }
 .kbts-event-view-price { order: 8; }
 .kbts-event-view-participation { order: 9; }
@@ -140,6 +141,37 @@
     padding-left: 0.8rem;
     border-left: 0.2rem solid var(--kbts-blockquote-deco);
   }
+}
+
+.kbts-event-view-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.kbts-event-view-gallery-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.kbts-event-view-gallery-image {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 0.4rem;
+}
+
+.kbts-event-view-gallery-thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .kbts-event-view-links {

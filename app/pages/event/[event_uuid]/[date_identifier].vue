@@ -76,6 +76,47 @@
         />
       </div>
 
+      <!-- Gallery -->
+      <div
+          v-if="galleryImages.length"
+          class="kbts-event-view-gallery"
+      >
+        <figure
+            v-for="image in galleryImages"
+            :key="image.uuid"
+            class="kbts-event-view-gallery-item"
+        >
+          <a
+              :href="image.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="kbts-event-view-gallery-image"
+          >
+            <img
+                :src="imageUrl(image.url, 480, '3:2')"
+                :alt="image.alt || event.title"
+                width="480"
+                height="320"
+                loading="lazy"
+                decoding="async"
+                class="kbts-event-view-gallery-thumbnail"
+            >
+            <img
+                v-if="image.ai_label && aiLabelImages[image.ai_label]"
+                :src="aiLabelImages[image.ai_label]"
+                alt=""
+                class="kbts-image-ai-label"
+            >
+          </a>
+          <figcaption
+              v-if="getImageCredit(image)"
+              class="kbts-event-view-image-caption"
+          >
+            {{ getImageCredit(image) }}
+          </figcaption>
+        </figure>
+      </div>
+
       <!-- Links -->
       <div
           v-if="event.event_links && event.event_links.length > 0 || event.source_link"
@@ -359,6 +400,7 @@ import { formatPrice } from '~/utils/formatPrice'
 import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
 import ActionIcon from '~/components/ui/ActionIcon.vue'
 import type { EventDate, EventItem, EventResponse } from '~/types/eventItem'
+import type { Image } from '~/types/image'
 import EventAllDatesList from '~/components/event/EventAllDatesList.vue'
 import IconTextLink from '~/components/ui/IconTextLink.vue'
 import Accordion from '~/components/ui/Accordion.vue'
@@ -420,9 +462,7 @@ const canonicalUrl = computed(() =>
     new URL(route.path, config.public.siteUrl).href
 )
 
-const imageCredit = computed(() => {
-  const image = event.value?.images?.main
-
+function getImageCredit(image?: Image) {
   if (!image) {
     return null
   }
@@ -446,11 +486,13 @@ const imageCredit = computed(() => {
   }
 
   return `${t('event.image_by')}: ${creditParts.join(', ')}`
-})
+}
+
+const imageCredit = computed(() => getImageCredit(event.value?.images?.main))
 
 
 const aiLabelImage = computed(() =>
-    eventImage.value.ai_label
+    eventImage.value?.ai_label
         ? aiLabelImages[eventImage.value.ai_label]
         : undefined
 )
@@ -536,6 +578,15 @@ if (error.value?.statusCode === 404) {
 
 const event = computed(() => eventResponse.value?.data)
 const eventImage = computed(() => event.value?.images?.main)
+const galleryImages = computed(() => {
+  const images = event.value?.images
+
+  return [
+    images?.gallery_image_1,
+    images?.gallery_image_2,
+    images?.gallery_image_3,
+  ].filter((image): image is Image => Boolean(image?.url))
+})
 const venueLink = computed(() => {
   const venueIdentifier = event.value?.date.venue_slug || event.value?.date.venue_uuid
 
