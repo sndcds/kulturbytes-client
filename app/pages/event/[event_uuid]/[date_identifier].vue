@@ -16,13 +16,16 @@
             v-if="eventImage"
             class="kbts-event-view-image-outer"
         >
-          <div
+          <button
               v-if="eventImage"
+              type="button"
               class="kbts-event-view-image-inner"
+              :aria-label="t('image_viewer.open', { title: eventImage.alt || event.title })"
               :class="{ 'has-placeholder': !eventImage }"
               :style="eventImage ? {
                 backgroundImage: `url(${imageUrl(eventImage.url, 960, '16:9')})`
               } : {}"
+              @click="openImage(eventImage)"
           >
             <img
                 v-if="aiLabelImage"
@@ -30,7 +33,7 @@
                 alt=""
                 class="kbts-image-ai-label"
             >
-          </div>
+          </button>
         </div>
 
         <span v-if="imageCredit" class="kbts-event-view-image-caption">
@@ -86,11 +89,11 @@
             :key="image.uuid"
             class="kbts-event-view-gallery-item"
         >
-          <a
-              :href="image.url"
-              target="_blank"
-              rel="noopener noreferrer"
+          <button
+              type="button"
               class="kbts-event-view-gallery-image"
+              :aria-label="t('image_viewer.open', { title: image.alt || event.title })"
+              @click="openImage(image)"
           >
             <img
                 :src="imageUrl(image.url, 480, '3:2')"
@@ -107,7 +110,7 @@
                 alt=""
                 class="kbts-image-ai-label"
             >
-          </a>
+          </button>
           <figcaption
               v-if="getImageCredit(image)"
               class="kbts-event-view-image-caption"
@@ -387,6 +390,14 @@
 
     </div>
 
+    <ImageGalleryModal
+        v-if="selectedImageIndex !== null"
+        :images="viewerImages"
+        :initial-index="selectedImageIndex"
+        :title="event.title"
+        @close="selectedImageIndex = null"
+    />
+
     <!--pre>{{ event }}</pre--->
 
     <!--p v-if="error">Error loading event</p-->
@@ -401,6 +412,7 @@ import SinglePointMap from '~/components/map/SinglePointMap.client.vue'
 import ActionIcon from '~/components/ui/ActionIcon.vue'
 import type { EventDate, EventItem, EventResponse } from '~/types/eventItem'
 import type { Image } from '~/types/image'
+import ImageGalleryModal from '~/components/ui/ImageGalleryModal.vue'
 import EventAllDatesList from '~/components/event/EventAllDatesList.vue'
 import IconTextLink from '~/components/ui/IconTextLink.vue'
 import Accordion from '~/components/ui/Accordion.vue'
@@ -587,6 +599,17 @@ const galleryImages = computed(() => {
     images?.gallery_image_3,
   ].filter((image): image is Image => Boolean(image?.url))
 })
+const selectedImageIndex = ref<number | null>(null)
+const viewerImages = computed(() => [eventImage.value, ...galleryImages.value]
+    .filter((image): image is Image => Boolean(image?.url))
+    .map(image => ({ ...image, credit: getImageCredit(image) }))
+)
+
+function openImage(image: Image) {
+  const index = viewerImages.value.findIndex(item => item.uuid === image.uuid)
+  if (index >= 0) selectedImageIndex.value = index
+}
+
 const venueLink = computed(() => {
   const venueIdentifier = event.value?.date.venue_slug || event.value?.date.venue_uuid
 
@@ -858,6 +881,9 @@ const onCopyLink = async () => {
 
     .kbts-event-view-image-inner {
       position: relative;
+      padding: 0;
+      border: 0;
+      cursor: zoom-in;
       width: 100%;
       height: 100%;
       background-size: cover;

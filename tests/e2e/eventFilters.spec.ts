@@ -53,7 +53,7 @@ async function openFilters(page: Page) {
   await page.getByRole('button', { name: 'Suche', exact: true }).filter({ visible: true }).click()
 }
 
-test('mobile editing loads summaries only; reset and both apply actions have exact request counts', async ({ page }) => {
+test('mobile editing loads summaries only; reset, Escape and Show results have exact request counts', async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) > 768, 'Mobile viewports')
   const { eventRequests, summaryRequests, browserErrors } = await setup(page)
   const initial = eventRequests.length
@@ -72,7 +72,7 @@ test('mobile editing loads summaries only; reset and both apply actions have exa
   expect(eventRequests).toHaveLength(initial)
   await expect(dialog).toBeVisible()
   await dialog.getByRole('searchbox').fill('last keystroke')
-  await dialog.getByRole('button', { name: 'Filter schließen' }).click()
+  await page.keyboard.press('Escape')
   await expect(dialog).toBeHidden()
   await expect.poll(() => eventRequests.length).toBe(initial + 1)
   expect(eventRequests.at(-1)?.searchParams.get('search')).toBe('last keystroke')
@@ -127,7 +127,7 @@ test('mobile footer stays visible with long filters and document scroll is resto
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   await page.screenshot({ path: testInfo.outputPath('mobile-filter-footer.png') })
   const initial = eventRequests.length
-  await dialog.getByRole('button', { name: 'Filter schließen' }).click()
+  await page.keyboard.press('Escape')
   await expect(page.locator('#navigation-filters')).toBeHidden()
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrollY)
   expect(await page.evaluate(() => document.body.style.position)).toBe('')
@@ -157,7 +157,7 @@ test('mobile count distinguishes loading, zero and errors; Escape applies filter
   const dialog = page.getByRole('dialog')
   await expect(dialog.getByRole('status')).toHaveText('42 Ergebnisse')
   await dialog.getByRole('searchbox').fill('zero')
-  await expect(dialog.getByRole('status')).toHaveText('Ergebnisse werden berechnet …')
+  await expect(dialog.getByRole('status')).toHaveAttribute('aria-busy', 'true')
   await expect(dialog.getByRole('status')).toHaveText('0 Ergebnisse')
   await dialog.getByRole('searchbox').fill('error')
   await expect(dialog.getByRole('status')).toHaveText('Ergebniszahl nicht verfügbar')

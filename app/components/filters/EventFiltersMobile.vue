@@ -4,7 +4,8 @@ import ChipSelect from '~/components/ui/ChipSelect.vue'
 import { useFiltersStore } from '~/stores/filtersStore'
 import Checkbox from '~/components/ui/Checkbox.vue'
 import TypeGenreSelect from '~/components/event/ui/TypeGenreSelect.vue'
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { useModalDialog } from '~/composables/useModalDialog'
 import { useEventSummaryStore } from '~/stores/eventSummaryStore'
 import { RotateCcw } from '@lucide/vue'
 
@@ -87,43 +88,15 @@ const emit = defineEmits<{ close: [], show: [] }>()
 const summaryStore = useEventSummaryStore()
 const { totalEventCount, loading, error } = storeToRefs(summaryStore)
 const dialog = ref<HTMLDialogElement | null>(null)
-let releaseDialog: (() => void) | undefined
+const { close: closeDialog } = useModalDialog(dialog, position => editingStore.setScrollPosition(position))
 
 onMounted(() => {
-  const body = document.body
-  const root = document.documentElement
-  const scrollX = window.scrollX
-  const scrollY = window.scrollY
-  editingStore.setScrollPosition({ x: scrollX, y: scrollY })
-  const previousStyles = {
-    position: body.style.position, top: body.style.top,
-    left: body.style.left, width: body.style.width, overflow: body.style.overflow,
-  }
-  const rootOverflow = root.style.overflow
-  const rootScrollbarGutter = root.style.scrollbarGutter
-  const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
-  Object.assign(body.style, { position: 'fixed', top: `-${scrollY}px`, left: `-${scrollX}px`, width: '100%', overflow: 'hidden' })
-  root.style.overflow = 'hidden'
-  // The global stable scrollbar gutter would otherwise leave a 15px gap beside the dialog.
-  root.style.scrollbarGutter = 'auto'
-  dialog.value?.showModal()
-  releaseDialog = () => {
-    dialog.value?.close()
-    Object.assign(body.style, previousStyles)
-    root.style.overflow = rootOverflow
-    root.style.scrollbarGutter = rootScrollbarGutter
-    window.scrollTo(scrollX, scrollY)
-    previousFocus?.focus({ preventScroll: true })
-    releaseDialog = undefined
-  }
   void summaryStore.loadSummary()
 })
 
-onBeforeUnmount(() => releaseDialog?.())
-
 function finish(showResults = false) {
   if (showResults) editingStore.showResultsOnApply()
-  releaseDialog?.()
+  closeDialog()
   if (showResults) emit('show')
   else emit('close')
 }

@@ -162,6 +162,11 @@
 .kbts-event-view-gallery-image {
   position: relative;
   display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
   aspect-ratio: 3 / 2;
   overflow: hidden;
   border-radius: 0.4rem;
@@ -172,6 +177,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.kbts-event-view-image-inner:focus-visible,
+.kbts-event-view-gallery-image:focus-visible {
+  outline: 2px solid var(--kbts-fg);
+  outline-offset: -3px;
 }
 
 .kbts-event-view-links {

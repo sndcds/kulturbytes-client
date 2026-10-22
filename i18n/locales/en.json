@@ -41,6 +41,14 @@
     "rate_limit_error": "You have sent too many messages. Please try again later.",
     "generic_error": "The message could not be sent. Please try again later."
   },
+  "image_viewer": {
+    "title": "Image gallery",
+    "open": "Open image: {title}",
+    "close": "Close image viewer",
+    "navigation": "Choose an image",
+    "show": "Show image {index} of {count}",
+    "position": "Image {index} of {count}"
+  },
   "map": {
     "website_link": "Website",
     "details_link": "Details"
