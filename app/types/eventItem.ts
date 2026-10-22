@@ -86,6 +86,9 @@ export interface EventItem {
 
     images: {
         main: Image
+        gallery_image_1?: Image | null
+        gallery_image_2?: Image | null
+        gallery_image_3?: Image | null
     }
 
     event_types: EventType[]
