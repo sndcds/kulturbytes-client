@@ -1,6 +1,8 @@
 <template>
   <div ref="resultsElement" class="kbts-events-view-layout" data-event-results tabindex="-1">
 
+    <ActiveEventFilters v-if="props.useFilters" @reset="resetEventFilters" />
+
     <!--pre v-if="apiResponse">{{ apiResponse.data.last_event_date_uuid }}</pre>
     <pre v-if="apiResponse">{{ apiResponse.data.last_event_start_at }}</pre-->
 
@@ -55,6 +57,7 @@ import type { CalendarEvent, CalendarEventsResponse } from '~/types/calendarEven
 import { debounce } from '~/utils/debounce'
 import { useEventFilterEditingStore } from '~/stores/eventFilterEditingStore'
 import { useEventQueryParams } from '~/composables/useEventQueryParams'
+import ActiveEventFilters from '~/components/filters/ActiveEventFilters.vue'
 
 const PAGE_SIZE = 20
 const props = withDefaults(
@@ -146,8 +149,8 @@ const hasActiveFilters = computed(() => {
       eventLocationFlag.value ||
       eventTypeIds.value.length ||
       eventGenreIds.value.length ||
-      eventAgeFrom.value ||
-      eventAgeTo.value ||
+      Number.isFinite(eventAgeFrom.value) ||
+      Number.isFinite(eventAgeTo.value) ||
       eventPriceType.value
   )
 })
