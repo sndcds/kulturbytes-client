@@ -22,11 +22,9 @@
               class="kbts-event-view-image-inner"
               :aria-label="t('image_viewer.open', { title: eventImage.alt || event.title })"
               :class="{ 'has-placeholder': !eventImage }"
-              :style="eventImage ? {
-                backgroundImage: `url(${imageUrl(eventImage.url, 960, '16:9')})`
-              } : {}"
               @click="openImage(eventImage)"
           >
+            <img :src="imageUrl(eventImage.url, 960, '16:9')" :alt="eventImage.alt ?? event.title" :title="eventImage.alt ?? event.title" />
             <img
                 v-if="aiLabelImage"
                 :src="aiLabelImage"
@@ -886,13 +884,17 @@ const onCopyLink = async () => {
       cursor: zoom-in;
       width: 100%;
       height: 100%;
-      background-size: cover;
-      background-position: center;
+      aspect-ratio: 16 / 9;
       display: flex;
       align-items: center;
       justify-content: center;
-
       transition: transform 0.2s ease;
+
+      img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
 
       &.has-placeholder {
         background: palegreen;
