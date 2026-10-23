@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { useEventFilterEncoding } from '../../app/composables/useEventFilterEncoding'
 
 function eventPage(search: string, paginated: boolean) {
   const events = paginated ? [] : Array.from({ length: 20 }, (_, i) => ({
@@ -11,7 +12,7 @@ function eventPage(search: string, paginated: boolean) {
   return { data: { events, last_event_date_uuid: 'cursor', last_event_start_at: '2026-10-10' } }
 }
 
-async function setup(page: Page) {
+async function setup(page: Page, path = '/de') {
   const eventRequests: URL[] = []
   const summaryRequests: URL[] = []
   const browserErrors: string[] = []
@@ -44,7 +45,7 @@ async function setup(page: Page) {
       await route.fulfill({ json: { data: { de: { types }, en: { types }, da: { types } } } })
     } else await route.fulfill({ json: { data: {} } })
   })
-  await page.goto('/de')
+  await page.goto(path)
   await expect(page.locator('.kbts-events-view-card')).toHaveCount(20)
   return { eventRequests, summaryRequests, browserErrors }
 }
@@ -52,6 +53,52 @@ async function setup(page: Page) {
 async function openFilters(page: Page) {
   await page.getByRole('button', { name: 'Suche', exact: true }).filter({ visible: true }).click()
 }
+
+test('active filter chips wrap, remove individual filters and reset the event query', async ({ page }, testInfo) => {
+  const search = 'Ein besonders langer Suchbegriff für Veranstaltungen ohne Leerzeichen: ' + 'Kultur'.repeat(24)
+  const encoded = useEventFilterEncoding().encodeEventFilter(JSON.stringify({
+    categories: [1, 2], search,
+    date: { span: 'range', start: '2026-10-23', end: '2026-10-25' },
+    location: { city: 'Flensburg', postalCode: '24937', venue: 'Kühlhaus' },
+    types: [1], genres: [1], age: { from: 0, to: 18 },
+    price: { type: 'max_price', max: 12.5, currency: 'EUR' },
+  }))
+  const { eventRequests, browserErrors } = await setup(page, `/de?filter=${encoded}`)
+  const bar = page.getByRole('region', { name: 'Aktive Filter', exact: true })
+  await expect(bar).toBeVisible()
+  await expect(bar.locator('.active-event-filter-chip')).toHaveCount(12)
+  await expect(bar.getByRole('button', { name: 'Filter entfernen: Langer Veranstaltungstyp 1', exact: true })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  expect(await bar.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThanOrEqual(
+    await page.locator('.kbts-events-view-grid').evaluate(element => element.getBoundingClientRect().top),
+  )
+  await bar.screenshot({ path: testInfo.outputPath('active-event-filters.png') })
+  const initial = eventRequests.length
+
+  await bar.getByRole('button', { name: 'Filter entfernen: Kultur', exact: true }).click()
+  await expect.poll(() => eventRequests.length).toBe(initial + 1)
+  expect(eventRequests.at(-1)?.searchParams.get('categories')).toBe('2')
+  expect(eventRequests.at(-1)?.searchParams.get('search')).toBe(search)
+
+  // Keyboard activation removes only the genre and restores the broader type query.
+  const genre = bar.getByRole('button', { name: 'Filter entfernen: Genre', exact: true })
+  await genre.focus()
+  await page.keyboard.press('Enter')
+  await expect.poll(() => eventRequests.length).toBe(initial + 2)
+  expect(eventRequests.at(-1)?.searchParams.has('genres')).toBe(false)
+  expect(eventRequests.at(-1)?.searchParams.get('event_types')).toBe('1')
+
+  await bar.getByRole('button', { name: 'Filter entfernen: Langer Veranstaltungstyp 1', exact: true }).click()
+  await expect.poll(() => eventRequests.length).toBe(initial + 3)
+  expect(eventRequests.at(-1)?.searchParams.has('event_types')).toBe(false)
+  expect(eventRequests.at(-1)?.searchParams.get('age')).toBe('0,18')
+
+  await bar.getByRole('button', { name: 'Alles zurücksetzen', exact: true }).click()
+  await expect(bar).toHaveCount(0)
+  await expect.poll(() => eventRequests.length).toBe(initial + 4)
+  expect([...eventRequests.at(-1)!.searchParams.keys()]).toEqual(['limit'])
+  expect(browserErrors).toEqual([])
+})
 
 test('mobile editing loads summaries only; reset, Escape and Show results have exact request counts', async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) > 768, 'Mobile viewports')

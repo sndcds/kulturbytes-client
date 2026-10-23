@@ -20,6 +20,7 @@ export function useEventQueryParams() {
 
     const {
         eventCategories,
+        eventDateSpan,
         eventSearch,
         eventDateRange,
         eventCity,
@@ -39,6 +40,7 @@ export function useEventQueryParams() {
 
     const watchedFilters = computed(() => ({
         eventCategories: eventCategories.value,
+        eventDateSpan: eventDateSpan.value,
         eventSearch: eventSearch.value,
         eventDateRange: eventDateRange.value,
         eventCity: eventCity.value,
@@ -168,17 +170,19 @@ export function useEventQueryParams() {
             }
         }
 
+        const hasAgeFrom = Number.isFinite(snapshot.eventAgeFrom)
+        const hasAgeTo = Number.isFinite(snapshot.eventAgeTo)
         const age =
-            snapshot.eventAgeFrom && snapshot.eventAgeTo
+            hasAgeFrom && hasAgeTo
                 ? `${snapshot.eventAgeFrom},${snapshot.eventAgeTo}`
-                : snapshot.eventAgeFrom || snapshot.eventAgeTo
+                : hasAgeFrom ? snapshot.eventAgeFrom : hasAgeTo ? snapshot.eventAgeTo : null
 
-        if (age) {
+        if (age !== null) {
             params.append('age', String(age))
         }
 
         if (snapshot.eventPriceType === 'max_price') {
-            if (snapshot.eventMaxPrice) {
+            if (Number.isFinite(snapshot.eventMaxPrice)) {
                 params.append('price', String(snapshot.eventMaxPrice) + ',' + snapshot.eventPriceCurrency)
             }
         } else if (snapshot.eventPriceType) {
