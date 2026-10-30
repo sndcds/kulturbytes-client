@@ -1,15 +1,20 @@
 import { test, expect, type Page } from '@playwright/test'
 import { useEventFilterEncoding } from '../../app/composables/useEventFilterEncoding'
 
-function eventPage(search: string, paginated: boolean) {
+function eventPage(search: string, paginated: boolean, referenceDate: string) {
   const events = paginated ? [] : Array.from({ length: 20 }, (_, i) => ({
     uuid: `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
+    date_uuid: `00000000-0000-4000-8001-${String(i).padStart(12, '0')}`,
     date_slug: `test-${i}`, title: `${search || 'Event'} ${i}`,
     start_date: '2026-10-10', start_time: '19:00', end_date: '2026-10-10', end_time: '21:00',
     venue_name: 'Test venue', venue_city: 'Flensburg', price_type: null,
     image_ai_label: null, event_types: [], categories: [1], release_status: 'released',
   }))
-  return { data: { events, last_event_date_uuid: 'cursor', last_event_start_at: '2026-10-10' } }
+  return { data: {
+    events, last_event_date_uuid: paginated ? null : 'cursor',
+    last_event_start_at: paginated ? null : `${referenceDate}T23:59`,
+    pagination_reference_date: referenceDate,
+  } }
 }
 
 async function setup(page: Page, path = '/de') {
@@ -25,7 +30,11 @@ async function setup(page: Page, path = '/de') {
     const url = new URL(route.request().url())
     if (url.pathname === '/api/events') {
       eventRequests.push(url)
-      await route.fulfill({ json: eventPage(url.searchParams.get('search') ?? '', url.searchParams.has('last_event_date_uuid')) })
+      await route.fulfill({ json: eventPage(
+        url.searchParams.get('search') ?? '',
+        url.searchParams.has('last_event_date_uuid'),
+        url.searchParams.get('start') ?? '2026-10-10',
+      ) })
     } else if (url.pathname === '/api/events/type-summary') {
       summaryRequests.push(url)
       const search = url.searchParams.get('search')
@@ -64,6 +73,7 @@ test('active filter chips wrap, remove individual filters and reset the event qu
     price: { type: 'max_price', max: 12.5, currency: 'EUR' },
   }))
   const { eventRequests, browserErrors } = await setup(page, `/de?filter=${encoded}`)
+  expect(eventRequests[0]!.searchParams.getAll('start')).toEqual(['2026-10-23'])
   const bar = page.getByRole('region', { name: 'Aktive Filter', exact: true })
   await expect(bar).toBeVisible()
   await expect(bar.locator('.active-event-filter-chip')).toHaveCount(12)
@@ -96,7 +106,8 @@ test('active filter chips wrap, remove individual filters and reset the event qu
   await bar.getByRole('button', { name: 'Alles zurücksetzen', exact: true }).click()
   await expect(bar).toHaveCount(0)
   await expect.poll(() => eventRequests.length).toBe(initial + 4)
-  expect([...eventRequests.at(-1)!.searchParams.keys()]).toEqual(['limit'])
+  expect([...eventRequests.at(-1)!.searchParams.keys()].sort()).toEqual(['limit', 'start'])
+  expect(eventRequests.at(-1)!.searchParams.getAll('start')).toHaveLength(1)
   expect(browserErrors).toEqual([])
 })
 

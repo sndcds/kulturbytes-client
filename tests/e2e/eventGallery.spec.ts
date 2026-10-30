@@ -37,10 +37,13 @@ async function setup(page: Page, singleImage = false) {
       await route.fulfill({ json: { data: { ...event, images: singleImage ? { main: images[0] } : event.images } } })
     } else if (url.pathname === '/api/events') {
       const items = url.searchParams.has('last_event_date_uuid') ? [] : [{
-        ...event, ...event.date, uuid: event.uuid, date_slug: event.date.slug,
+        ...event, ...event.date, uuid: event.uuid, date_uuid: event.date.uuid, date_slug: event.date.slug,
         release_status: 'released', categories: [1],
       }]
-      await route.fulfill({ json: { data: { events: items, last_event_date_uuid: 'cursor', last_event_start_at: '2026-10-22' } } })
+      await route.fulfill({ json: { data: {
+        events: items, last_event_date_uuid: 'cursor', last_event_start_at: '2026-10-22T19:30',
+        pagination_reference_date: url.searchParams.get('start') ?? '2026-10-22',
+      } } })
     } else if (url.pathname === '/api/events/type-summary') {
       await route.fulfill({ json: { data: { total_event_count: 1, type_summary: [], genre_summary: [] } } })
     } else if (url.pathname === '/api/event/type-genre-lookup') {

@@ -9,7 +9,7 @@
     <div class="kbts-events-view-grid">
       <EventCard
           v-for="event in events"
-          :key="event.uuid"
+          :key="event.date_uuid"
           :event="event"
       />
     </div>
@@ -53,8 +53,9 @@
 import { computed, ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useFiltersStore } from '~/stores/filtersStore'
-import type { CalendarEvent, CalendarEventsResponse } from '~/types/calendarEvent'
+import type { CalendarEvent, CalendarEventsResponse, EventPaginationCursor } from '~/types/calendarEvent'
 import { debounce } from '~/utils/debounce'
+import { formatDateInputValue } from '~/utils/eventDateRange'
 import { useEventFilterEditingStore } from '~/stores/eventFilterEditingStore'
 import { useEventQueryParams } from '~/composables/useEventQueryParams'
 import ActiveEventFilters from '~/components/filters/ActiveEventFilters.vue'
@@ -103,10 +104,7 @@ let disposed = false
 const loading = ref(false)
 const resettingFilters = ref(false)
 const hasMore = ref(true)
-const cursor = ref<{
-  date_uuid: string
-  start_at: string
-} | null>(null)
+const cursor = ref<EventPaginationCursor | null>(null)
 
 const loadTrigger = ref<HTMLElement | null>(null)
 let observer: IntersectionObserver | null = null
@@ -220,8 +218,7 @@ async function loadEvents() {
       filterSnapshot: editingStore.appliedFilters,
       venueUuids: props.venueUuid,
       limit: PAGE_SIZE,
-      referenceDate: cursor.value?.reference_date
-          ?? new Date().toISOString().slice(0, 10),
+      referenceDate: formatDateInputValue(new Date()),
       cursor: cursor.value
     })
     if (version !== requestVersion || requestsPaused.value || disposed) return
@@ -230,11 +227,10 @@ async function loadEvents() {
 
     events.value.push(...response.data.events)
     receivedPage = true
-    hasMore.value = response.data.events.length >= PAGE_SIZE
-
     if (
         response.data.last_event_date_uuid &&
-        response.data.last_event_start_at
+        response.data.last_event_start_at &&
+        response.data.pagination_reference_date
     ) {
       cursor.value = {
         date_uuid: response.data.last_event_date_uuid,
@@ -244,6 +240,7 @@ async function loadEvents() {
     } else {
       cursor.value = null
     }
+    hasMore.value = response.data.events.length >= PAGE_SIZE && cursor.value !== null
   } catch (err: unknown) {
     if (err instanceof Error && err.name === 'AbortError') {
       return
