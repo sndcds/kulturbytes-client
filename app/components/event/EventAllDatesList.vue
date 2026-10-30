@@ -1,7 +1,7 @@
 <template>
   <div v-if="sortedDates.length > 1">
     <h3>
-      {{ t('event.all_dates') }}
+      {{ t('event.upcoming_dates') }}
     </h3>
 
     <NuxtLink

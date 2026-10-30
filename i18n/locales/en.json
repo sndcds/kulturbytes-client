@@ -167,6 +167,7 @@
     },
     "more_dates": "More dates",
     "all_dates": "All dates",
+    "upcoming_dates": "Upcoming dates",
     "release_status": {
       "draft": "Draft",
       "review": "Under review",
