@@ -220,6 +220,8 @@ async function loadEvents() {
       filterSnapshot: editingStore.appliedFilters,
       venueUuids: props.venueUuid,
       limit: PAGE_SIZE,
+      referenceDate: cursor.value?.reference_date
+          ?? new Date().toISOString().slice(0, 10),
       cursor: cursor.value
     })
     if (version !== requestVersion || requestsPaused.value || disposed) return
@@ -229,12 +231,34 @@ async function loadEvents() {
     events.value.push(...response.data.events)
     receivedPage = true
     hasMore.value = response.data.events.length >= PAGE_SIZE
-    cursor.value = {
-      date_uuid: response.data.last_event_date_uuid,
-      start_at: response.data.last_event_start_at
+
+    if (
+        response.data.last_event_date_uuid &&
+        response.data.last_event_start_at
+    ) {
+      cursor.value = {
+        date_uuid: response.data.last_event_date_uuid,
+        start_at: response.data.last_event_start_at,
+        reference_date: response.data.pagination_reference_date
+      }
+    } else {
+      cursor.value = null
     }
-  } catch {
-    if (version === requestVersion && !disposed) error.value = 'Failed to load events'
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      return
+    }
+
+    console.error('[EventsView] Failed to load events:', err)
+
+    if (version === requestVersion && !disposed) {
+      error.value = err instanceof Error
+          ? err.message
+          : 'Failed to load events'
+    }
+
+    // if (version === requestVersion && !disposed) error.value = 'Failed to load events'
+
   } finally {
     if (version === requestVersion && !disposed) {
       loading.value = false

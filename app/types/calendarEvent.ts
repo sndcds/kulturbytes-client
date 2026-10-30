@@ -61,8 +61,9 @@ export interface CalendarEvent {
 
 export interface CalendarEventsData {
     events: CalendarEvent[]
-    last_event_date_uuid: string
-    last_event_start_at: string
+    last_event_date_uuid: string | null
+    last_event_start_at: string | null
+    pagination_reference_date: string
 }
 
 export interface UranusApiMetadata {

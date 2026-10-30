@@ -9,9 +9,11 @@ interface BuildOptions {
     includeFilters?: boolean
     venueUuids?: string
     limit?: number
+    referenceDate?: string
     cursor?: {
         date_uuid: string
         start_at: string
+        reference_date: string
     } | null
 }
 
@@ -79,19 +81,16 @@ export function useEventQueryParams() {
         if (options.includePagination) {
             params.append('limit', String(options.limit ?? 20))
 
-            if (options.cursor) {
-                params.append(
-                    'last_event_date_uuid',
-                    options.cursor.date_uuid
-                )
+            params.append(
+                'start',
+                options.cursor?.reference_date ?? options.referenceDate ?? ''
+            )
 
-                params.append(
-                    'last_event_start_at',
-                    options.cursor.start_at
-                )
+            if (options.cursor) {
+                params.append('last_event_date_uuid', options.cursor.date_uuid)
+                params.append('last_event_start_at', options.cursor.start_at)
             }
         }
-
         if (options.venueUuids) {
             params.append('venue_uuids', options.venueUuids)
         }

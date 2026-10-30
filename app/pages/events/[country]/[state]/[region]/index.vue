@@ -146,6 +146,9 @@ const localePath = useLocalePath()
 const PAGE_SIZE = 20
 
 const start = new Date().toISOString().slice(0, 10)
+const paginationReferenceDate = computed(() =>
+    stringQueryParam('start') || start
+)
 
 interface TypeSummaryResponse {
   data: {
@@ -184,7 +187,8 @@ const currentCursor = computed(() => {
 
   return {
     date_uuid: dateUuid,
-    start_at: startAt
+    start_at: startAt,
+    reference_date: paginationReferenceDate.value
   }
 })
 
@@ -256,6 +260,7 @@ const {
           countrySlug.value,
           stateSlug.value,
           regionSlug.value,
+          paginationReferenceDate.value,
           currentCursor.value?.date_uuid ?? 'start',
           currentCursor.value?.start_at ?? 'start'
         ].join('-'),
@@ -266,6 +271,7 @@ const {
               query: {
                 geolist_region: geolistRegion.value,
                 limit: PAGE_SIZE,
+                start: paginationReferenceDate.value,
                 ...(currentCursor.value
                     ? {
                       last_event_date_uuid: currentCursor.value.date_uuid,
@@ -298,7 +304,8 @@ const nextCursor = computed(() => {
 
   return {
     date_uuid: data.last_event_date_uuid,
-    start_at: data.last_event_start_at
+    start_at: data.last_event_start_at,
+    reference_date: data.pagination_reference_date
   }
 })
 
@@ -331,6 +338,7 @@ const nextPageLink = computed(() => {
     },
     query: {
       page: page.value + 1,
+      start: nextCursor.value.reference_date,
       last_event_date_uuid: nextCursor.value.date_uuid,
       last_event_start_at: nextCursor.value.start_at
     }
