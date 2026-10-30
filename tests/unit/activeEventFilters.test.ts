@@ -221,7 +221,8 @@ describe('active event filters', () => {
     await vi.advanceTimersByTimeAsync(1000)
     expect(api).toHaveBeenCalledTimes(3)
     params = new URL(api.mock.calls[2]![0], 'https://example.test').searchParams
-    expect([...params.keys()].sort()).toEqual(['limit', 'portal'])
+    expect([...params.keys()].sort()).toEqual(['limit', 'portal', 'start'])
+    expect(params.getAll('start')).toHaveLength(1)
     expect(filters.eventPortalUuid).toBe('portal')
     expect(wrapper.find('.active-event-filters').exists()).toBe(false)
   })

@@ -2,6 +2,7 @@ import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { useFiltersStore } from '~/stores/filtersStore'
 import { getCurrentGeoPosition } from '~/utils/geoLocation'
+import type { EventPaginationCursor } from '~/types/calendarEvent'
 
 interface BuildOptions {
     filterSnapshot?: EventQuerySnapshot
@@ -10,11 +11,7 @@ interface BuildOptions {
     venueUuids?: string
     limit?: number
     referenceDate?: string
-    cursor?: {
-        date_uuid: string
-        start_at: string
-        reference_date: string
-    } | null
+    cursor?: EventPaginationCursor | null
 }
 
 export function useEventQueryParams() {
@@ -81,16 +78,22 @@ export function useEventQueryParams() {
         if (options.includePagination) {
             params.append('limit', String(options.limit ?? 20))
 
-            params.append(
-                'start',
-                options.cursor?.reference_date ?? options.referenceDate ?? ''
-            )
-
             if (options.cursor) {
                 params.append('last_event_date_uuid', options.cursor.date_uuid)
                 params.append('last_event_start_at', options.cursor.start_at)
             }
         }
+
+        const filterStart = options.includeFilters === false
+            ? undefined
+            : snapshot.eventDateRange.startDate || undefined
+        const start = options.includePagination
+            ? options.cursor?.reference_date ?? filterStart ?? options.referenceDate
+            : filterStart
+        if (start) {
+            params.append('start', start)
+        }
+
         if (options.venueUuids) {
             params.append('venue_uuids', options.venueUuids)
         }
@@ -109,10 +112,6 @@ export function useEventQueryParams() {
 
         if (snapshot.eventSearch) {
             params.append('search', snapshot.eventSearch)
-        }
-
-        if (snapshot.eventDateRange.startDate) {
-            params.append('start', snapshot.eventDateRange.startDate)
         }
 
         if (snapshot.eventDateRange.endDate) {

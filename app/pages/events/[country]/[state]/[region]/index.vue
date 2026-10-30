@@ -25,7 +25,7 @@
     <main>
       <article
           v-for="event in events"
-          :key="event.uuid"
+          :key="event.date_uuid"
           class="event-card"
       >
         <img
@@ -127,8 +127,9 @@
 
 <script setup lang="ts">
 import { imageUrl } from '~/utils/image'
-import type { CalendarEventsResponse } from '~/types/calendarEvent'
+import type { CalendarEventsResponse, EventPaginationCursor } from '~/types/calendarEvent'
 import type { GeoListRegionResponse } from '~/types/geolist'
+import { formatDateInputValue } from '~/utils/eventDateRange'
 
 defineI18nRoute({
   paths: {
@@ -145,9 +146,11 @@ const localePath = useLocalePath()
 
 const PAGE_SIZE = 20
 
-const start = new Date().toISOString().slice(0, 10)
+const defaultReferenceDate = useState('events-pagination-reference-date', () =>
+    formatDateInputValue(new Date())
+)
 const paginationReferenceDate = computed(() =>
-    stringQueryParam('start') || start
+    stringQueryParam('start') || defaultReferenceDate.value
 )
 
 interface TypeSummaryResponse {
@@ -177,7 +180,7 @@ function stringQueryParam(name: string) {
   return value ? String(value) : ''
 }
 
-const currentCursor = computed(() => {
+const currentCursor = computed<EventPaginationCursor | null>(() => {
   const dateUuid = stringQueryParam('last_event_date_uuid')
   const startAt = stringQueryParam('last_event_start_at')
 
@@ -232,16 +235,16 @@ const regionName = computed(() =>
 const {
   data: summaryData
 } = await useAsyncData<TypeSummaryResponse>(
-    () => `event-summary-${countrySlug.value}-${stateSlug.value}-${regionSlug.value}-${start}`,
+    () => `event-summary-${countrySlug.value}-${stateSlug.value}-${regionSlug.value}-${paginationReferenceDate.value}`,
     () =>
-        $api('/api/events/type-summary', {
+        $api<TypeSummaryResponse>('/api/events/type-summary', {
           query: {
-            start,
+            start: paginationReferenceDate.value,
             geolist_region: geolistRegion.value,
           }
         }),
     {
-      watch: [countrySlug, stateSlug, regionSlug]
+      watch: [countrySlug, stateSlug, regionSlug, paginationReferenceDate]
     }
 )
 
@@ -286,6 +289,7 @@ const {
         countrySlug,
         stateSlug,
         regionSlug,
+        paginationReferenceDate,
         currentCursor
       ]
     }
@@ -295,10 +299,10 @@ const events = computed(() =>
     eventsData.value?.data.events ?? []
 )
 
-const nextCursor = computed(() => {
+const nextCursor = computed<EventPaginationCursor | null>(() => {
   const data = eventsData.value?.data
 
-  if (!data?.last_event_date_uuid || !data.last_event_start_at) {
+  if (!data?.last_event_date_uuid || !data.last_event_start_at || !data.pagination_reference_date) {
     return null
   }
 
@@ -320,6 +324,9 @@ const firstPageLink = computed(() =>
         country: countrySlug.value,
         state: stateSlug.value,
         region: regionSlug.value
+      },
+      query: {
+        start: paginationReferenceDate.value
       }
     })
 )

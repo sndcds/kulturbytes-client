@@ -59,6 +59,12 @@ export interface CalendarEvent {
         | 'rescheduled'
 }
 
+export interface EventPaginationCursor {
+    date_uuid: string
+    start_at: string
+    reference_date: string
+}
+
 export interface CalendarEventsData {
     events: CalendarEvent[]
     last_event_date_uuid: string | null
