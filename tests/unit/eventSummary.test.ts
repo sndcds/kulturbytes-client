@@ -95,6 +95,25 @@ describe('summary lifecycle', () => {
     expect(store.totalEventCount).toBe(2)
     expect(store.error).toBeNull()
   })
+
+  it('refreshes the summary when switching portal geometry, including the default', async () => {
+    vi.useFakeTimers()
+    const filters = useFiltersStore()
+    filters.eventPortalUuid = 'portal'
+    api.mockResolvedValue(summary(10))
+    const store = useEventSummaryStore()
+    await store.loadSummary()
+    filters.setEventPortalGeometryUuid('other-geometry')
+    await vi.advanceTimersByTimeAsync(0)
+    expect(api).toHaveBeenCalledTimes(2)
+    const params = new URL(api.mock.calls[1]![0], 'https://example.test').searchParams
+    expect(params.get('portal')).toBe('portal')
+    expect(params.get('geometry')).toBe('other-geometry')
+    filters.setEventPortalGeometryUuid(null)
+    await vi.advanceTimersByTimeAsync(0)
+    expect(api).toHaveBeenCalledTimes(3)
+    expect(new URL(api.mock.calls[2]![0], 'https://example.test').searchParams.has('geometry')).toBe(false)
+  })
 })
 
 describe('applied filter snapshots', () => {

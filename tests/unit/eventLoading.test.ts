@@ -239,4 +239,22 @@ describe('event request lifecycle', () => {
     await vi.advanceTimersByTimeAsync(1000)
     expect(api).toHaveBeenCalledTimes(4)
   })
+
+  it('reloads the first page immediately when the portal geometry changes', async () => {
+    const filters = useFiltersStore()
+    filters.eventPortalUuid = 'portal'
+    api.mockResolvedValueOnce(page(20)).mockResolvedValue(page())
+    await render()
+    filters.setEventPortalGeometryUuid('other-geometry')
+    await flushPromises()
+    expect(api).toHaveBeenCalledTimes(2)
+    const params = new URL(api.mock.calls[1]![0], 'https://example.test').searchParams
+    expect(params.get('portal')).toBe('portal')
+    expect(params.get('geometry')).toBe('other-geometry')
+    expect(params.has('last_event_date_uuid')).toBe(false)
+    filters.setEventPortalGeometryUuid(null)
+    await flushPromises()
+    expect(api).toHaveBeenCalledTimes(3)
+    expect(new URL(api.mock.calls[2]![0], 'https://example.test').searchParams.has('geometry')).toBe(false)
+  })
 })

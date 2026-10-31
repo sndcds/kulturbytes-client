@@ -300,6 +300,7 @@ watch(
       const immediateFields = [
         'eventCategories', 'eventLocationFlag', 'eventTypeIds', 'eventGenreIds',
         'eventPriceType', 'eventPriceCurrency', 'eventMaxPrice', 'eventPortalUuid',
+        'eventPortalGeometryUuid',
       ] as const
       const immediateChange = immediateFields.some(field =>
           JSON.stringify(current[field]) !== JSON.stringify(previous[field])
