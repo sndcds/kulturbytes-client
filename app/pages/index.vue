@@ -88,7 +88,7 @@ const { decodeEventFilter } = useEventFilterEncoding()
 const { clearPortal } = usePortal()
 
 const docsUrl = computed(() =>
-    `https://docs.kulturbytes.de/${locale.value}/`
+    `https://docs.kulturbytes.de/${locale.value}/discover`
 )
 
 function activateSearch() {
