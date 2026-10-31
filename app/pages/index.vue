@@ -1,32 +1,42 @@
 <template>
 
-  <!--CTABanner
+  <CTABanner
       v-show="!filtersOpen"
       :title="t('home.intro.title')"
       image-url="images/kulturbytes-logo-typo-2-lines-white-red.svg"
       image-max-width="400px"
       image-align="left"
       image-vertical-align="bottom"
-      background-image="/images/bg/kbts-bg-2026-09.svg"
-      mobile-background-image="/images/bg/kbts-bg-2026-09.svg"
+      background-image="/images/bg/kbts-bg-2026-11.svg"
+      mobile-background-image="/images/bg/kbts-bg-2026-11.svg"
       :links="[
+    {
+      label: t('home.intro.docs'),
+      to: docsUrl,
+      external: true,
+      target: '_blank'
+    },
     {
       label: t('home.intro.contact'),
       to: localePath('contact')
     },
-    {
+    /* {
       label: t('home.intro.support'),
       to: {
         path: localePath('about'),
         hash: '#support-kulturbytes'
       }
-    },
+    }, */
     {
       label: t('home.intro.organize'),
       to: {
         path: localePath('about'),
         hash: '#for-organizers'
       }
+    },
+    {
+      label: t('filter.search'),
+      onClick: activateSearch
     }
   ]"
       background-color="#334"
@@ -34,7 +44,7 @@
       text-color="#eee"
       cta-color="#eee"
   >
-    <template #description>
+    <!--template #description>
       <i18n-t keypath="home.intro.description">
         <template #link>
           <a
@@ -52,8 +62,8 @@
           </a>
         </template>
       </i18n-t>
-    </template>
-  </CTABanner-->
+    </template-->
+  </CTABanner>
 
   <EventsView />
 
@@ -76,6 +86,14 @@ const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 const { decodeEventFilter } = useEventFilterEncoding()
 const { clearPortal } = usePortal()
+
+const docsUrl = computed(() =>
+    `https://docs.kulturbytes.de/${locale.value}/`
+)
+
+function activateSearch() {
+  filtersOpenRoute.value = route.path
+}
 
 function activateEventsPage() {
   clearPortal()

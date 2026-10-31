@@ -4,8 +4,10 @@ import { ArrowRight } from '@lucide/vue'
 
 interface CtaLink {
   label: string
-  to: string | Record<string, unknown>
+  to?: string | Record<string, unknown>
   external?: boolean
+  target?: string
+  onClick?: () => void
 }
 
 type ImageAlign = 'left' | 'center' | 'right'
@@ -106,31 +108,54 @@ const style = computed(() => ({
     <div class="cta-banner__content">
       <div class="cta-banner__text">
         <!--h1>{{ title }}</h1-->
-
         <div class="cta-banner__description">
           <slot name="description" />
         </div>
       </div>
 
       <nav class="cta-banner__actions">
-        <NuxtLink
-            v-for="link in links"
-            :key="link.label"
-            :to="link.to"
-            class="cta-banner__action"
-        >
-          <span class="cta-banner__action-label">
-            {{ link.label }}
+        <template v-for="link in links" :key="link.label">
+
+          <span
+              v-if="link.onClick"
+              class="cta-banner__action"
+              @click="link.onClick"
+          >
+            <span class="cta-banner__action-label">
+              {{ link.label }}
+            </span>
+
+            <ArrowRight
+                class="cta-banner__arrow"
+                :size="32"
+                :stroke-width="1.5"
+                aria-hidden="true"
+            />
           </span>
 
-          <ArrowRight
-              class="cta-banner__arrow"
-              :size="32"
-              :stroke-width="1.5"
-              aria-hidden="true"
-          />
-        </NuxtLink>
+          <NuxtLink
+              v-else
+              :to="link.to"
+              :external="link.external"
+              :target="link.target"
+              :rel="link.target === '_blank' ? 'noopener noreferrer' : undefined"
+              class="cta-banner__action"
+          >
+            <span class="cta-banner__action-label">
+              {{ link.label }}
+            </span>
+
+            <ArrowRight
+                class="cta-banner__arrow"
+                :size="32"
+                :stroke-width="1.5"
+                aria-hidden="true"
+            />
+          </NuxtLink>
+
+        </template>
       </nav>
+
     </div>
   </section>
 </template>
@@ -205,7 +230,7 @@ const style = computed(() => ({
 
   &__actions {
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 0rem;
   }
 
   &__action {
@@ -220,7 +245,12 @@ const style = computed(() => ({
     text-decoration: none;
     border-top: 1px solid color-mix(in srgb, currentColor 35%, transparent);
 
+    &:first-child {
+      border-top: 0;
+    }
+
     &:hover {
+      cursor: pointer;
       .cta-banner__arrow {
         transform: translateX(0.5rem);
       }
@@ -242,7 +272,7 @@ const style = computed(() => ({
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 767px) {
   .cta-banner {
     grid-template-columns: 1fr;
     background-image: var(--cta-banner-mobile-background-image);
@@ -268,7 +298,7 @@ const style = computed(() => ({
     }
 
     &__actions {
-      margin-top: 2rem;
+      margin-top: 0rem;
     }
 
     &__action {
