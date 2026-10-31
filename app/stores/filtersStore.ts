@@ -67,6 +67,10 @@ export const useFiltersStore = defineStore(
         const eventPriceCurrency = ref<string>('EUR')
         const eventMaxPrice = ref<number | null>(10)
         const eventPortalUuid = ref<string | null>(null)
+        // null lets the API choose the portal's default geometry.
+        const eventPortalGeometryUuid = ref<string | null>(
+            '786507f2-e513-4060-badf-2ab0cf6388d3'
+        )
 
         // Portal mode
         const eventPortalIdentifier = ref<string | null>(null)
@@ -107,6 +111,10 @@ export const useFiltersStore = defineStore(
 
         function setFilter(type: FilterType | null) {
             filterType.value = type
+        }
+
+        function setEventPortalGeometryUuid(uuid: string | null) {
+            eventPortalGeometryUuid.value = uuid
         }
 
         function resetFilters() {
@@ -285,6 +293,8 @@ export const useFiltersStore = defineStore(
             eventPriceCurrency,
             eventMaxPrice,
             eventPortalUuid,
+            eventPortalGeometryUuid,
+            setEventPortalGeometryUuid,
 
             eventPortalIdentifier,
 

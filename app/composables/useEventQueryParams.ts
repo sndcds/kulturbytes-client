@@ -35,6 +35,7 @@ export function useEventQueryParams() {
         eventMaxPrice,
         eventPriceCurrency,
         eventPortalUuid,
+        eventPortalGeometryUuid,
     } = storeToRefs(filters)
 
     const watchedFilters = computed(() => ({
@@ -55,6 +56,7 @@ export function useEventQueryParams() {
         eventMaxPrice: eventMaxPrice.value,
         eventPriceCurrency: eventPriceCurrency.value,
         eventPortalUuid: eventPortalUuid.value,
+        eventPortalGeometryUuid: eventPortalGeometryUuid.value,
     }))
 
     // Capture all fields before any asynchronous geolocation work.
@@ -104,6 +106,9 @@ export function useEventQueryParams() {
 
         if (snapshot.eventPortalUuid) {
             params.append('portal', snapshot.eventPortalUuid)
+            if (snapshot.eventPortalGeometryUuid !== null) {
+                params.append('geometry', snapshot.eventPortalGeometryUuid)
+            }
         }
 
         if (snapshot.eventCategories?.length) {

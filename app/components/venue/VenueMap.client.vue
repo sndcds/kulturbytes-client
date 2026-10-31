@@ -290,6 +290,7 @@ const height = props.height
 let mapInstance: MapLibreMapType | null = null
 let boundaryRequest: AbortController | null = null
 let boundaryRequestVersion = 0
+let venueRequestVersion = 0
 const boundaryCache = new Map<string, PortalBoundaryFeature>()
 
 function isPortalBoundaryFeature(
@@ -363,7 +364,10 @@ function displayPortalBoundary(
   }
 }
 
-async function syncPortalBoundary(portalUuid: string | null) {
+async function syncPortalBoundary(
+    portalUuid: string | null,
+    geometryUuid: string | null
+) {
   const map = mapInstance
 
   boundaryRequestVersion += 1
@@ -381,7 +385,8 @@ async function syncPortalBoundary(portalUuid: string | null) {
     return
   }
 
-  const cachedBoundary = boundaryCache.get(portalUuid)
+  const cacheKey = JSON.stringify([portalUuid, geometryUuid])
+  const cachedBoundary = boundaryCache.get(cacheKey)
   if (cachedBoundary) {
     displayPortalBoundary(map, cachedBoundary)
     return
@@ -394,7 +399,10 @@ async function syncPortalBoundary(portalUuid: string | null) {
   try {
     const response = await $api<ApiResponse<unknown>>(
         `/api/portal/${encodeURIComponent(portalUuid)}/geojson`,
-        { signal: controller.signal }
+        {
+          query: geometryUuid === null ? {} : { geometry: geometryUuid },
+          signal: controller.signal,
+        }
     )
 
     if (!isPortalBoundaryFeature(response.data)) {
@@ -402,12 +410,13 @@ async function syncPortalBoundary(portalUuid: string | null) {
       return
     }
 
-    boundaryCache.set(portalUuid, response.data)
+    boundaryCache.set(cacheKey, response.data)
 
     if (
         controller.signal.aborted
         || requestVersion !== boundaryRequestVersion
         || activePortalUuid.value !== portalUuid
+        || filtersStore.eventPortalGeometryUuid !== geometryUuid
         || mapInstance !== map
     ) {
       return
@@ -428,7 +437,7 @@ async function syncPortalBoundary(portalUuid: string | null) {
 async function onMapLoaded(map:MapLibreMapType) {
   await initializeLayers(map)
   mapInstance = map
-  void syncPortalBoundary(activePortalUuid.value)
+  void syncPortalBoundary(activePortalUuid.value, filtersStore.eventPortalGeometryUuid)
   await loadVenues(map)
   map.on(
       'moveend',
@@ -441,12 +450,19 @@ async function onMapLoaded(map:MapLibreMapType) {
   map.on('pitchend', () => saveMapView(map))
 }
 
-watch(activePortalUuid, portalUuid => {
-  void syncPortalBoundary(portalUuid)
-})
+watch(
+    [activePortalUuid, () => filtersStore.eventPortalGeometryUuid],
+    ([portalUuid, geometryUuid]) => {
+      void syncPortalBoundary(portalUuid, geometryUuid)
+      if (mapInstance) {
+        void loadVenues(mapInstance)
+      }
+    }
+)
 
 onBeforeUnmount(() => {
   boundaryRequestVersion += 1
+  venueRequestVersion += 1
   boundaryRequest?.abort()
   boundaryRequest = null
 
@@ -473,6 +489,7 @@ function saveMapView(map: MapLibreMapType) {
 }
 
 async function loadVenues(map: MapLibreMapType) {
+  const requestVersion = ++venueRequestVersion
   const bounds = map.getBounds()
 
   const bbox = [
@@ -489,9 +506,14 @@ async function loadVenues(map: MapLibreMapType) {
 
     if (filtersStore.eventPortalUuid) {
       query.portal = filtersStore.eventPortalUuid
+      if (filtersStore.eventPortalGeometryUuid !== null) {
+        query.geometry = filtersStore.eventPortalGeometryUuid
+      }
     }
 
     const response = await $api<unknown>('/api/venues/geojson', { query })
+    if (requestVersion !== venueRequestVersion || mapInstance !== map) return
+
     const transformed = transformVenueData(
         (response as ApiResponse<unknown>)?.data ?? response
     )
