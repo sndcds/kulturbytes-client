@@ -49,6 +49,12 @@
     "show": "Vis billede {index} af {count}",
     "position": "Billede {index} af {count}"
   },
+  "portal": {
+    "choose_area": "Vælg område",
+    "entire_area": "Hele området",
+    "geometries_error": "Områderne kunne ikke indlæses.",
+    "retry": "Prøv igen"
+  },
   "map": {
     "website_link": "Hjemmeside",
     "details_link": "Detaljer"

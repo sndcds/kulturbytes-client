@@ -49,6 +49,12 @@
     "show": "Bild {index} von {count} anzeigen",
     "position": "Bild {index} von {count}"
   },
+  "portal": {
+    "choose_area": "Bereich auswählen",
+    "entire_area": "Gesamter Bereich",
+    "geometries_error": "Die Bereiche konnten nicht geladen werden.",
+    "retry": "Erneut versuchen"
+  },
   "map": {
     "website_link": "Webseite",
     "details_link": "Details"
