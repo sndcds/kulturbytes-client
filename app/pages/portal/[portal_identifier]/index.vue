@@ -43,13 +43,23 @@
           :max-width="240"
           :max-height="200"
       />
+      <div v-if="geometriesError" class="portal-geometries-error" role="status">
+        <p>{{ t('portal.geometries_error') }}</p>
+        <button type="button" class="kbts-button" @click="refreshGeometries()">
+          {{ t('portal.retry') }}
+        </button>
+      </div>
+      <PortalGeometrySelector v-else :geometry="portalGeometries?.geometry ?? null" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import LogoImage from '~/components/ui/LogoImage.vue'
+import PortalGeometrySelector from '~/components/portal/PortalGeometrySelector.vue'
 import { useThemeStore } from '~/stores/themeStore'
+import type { ApiResponse } from '~/types/api'
+import type { PortalGeometries } from '~/types/portal'
 import { imageUrl } from '~/utils/image'
 import { ogLocale } from '~/utils/locale'
 import { truncateText } from '~/utils/text'
@@ -71,6 +81,7 @@ const config = useRuntimeConfig()
 const { locale, t } = useI18n()
 const { renderMarkdown } = useMarkdown()
 const { activatePortal } = usePortal()
+const { $api } = useNuxtApp()
 const themeStore = useThemeStore()
 
 const portalUuid = computed(() => {
@@ -101,6 +112,19 @@ if (error.value) {
     fatal: true,
   })
 }
+
+const { data: portalGeometries, error: geometriesError, refresh: refreshGeometries } = await useAsyncData(
+    () => `portal-geometries-${portal.value?.uuid ?? ''}`,
+    async (_nuxtApp, { signal }) => {
+      const uuid = portal.value?.uuid
+      if (!uuid) return { geometry: null }
+      const response = await $api<ApiResponse<PortalGeometries>>(
+          `/api/portal/${encodeURIComponent(uuid)}/geometries`,
+          { signal }
+      )
+      return response.data
+    }
+)
 
 const descriptionHtml = computed(() =>
     renderMarkdown(portal.value?.description ?? '')
@@ -153,3 +177,9 @@ useSeoMeta({
   robots: computed(() => portal.value ? 'index,follow' : 'noindex'),
 })
 </script>
+
+<style scoped>
+.portal-geometries-error {
+  order: 70;
+}
+</style>

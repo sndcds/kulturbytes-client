@@ -27,6 +27,22 @@ export interface PortalBoundaryProperties {
     uuid: string
 }
 
+export interface PortalGeometry {
+    uuid: string
+    name: string
+    description: string
+    order: number
+    admin_level: number | null
+    type: string | null
+    geometry: Polygon | MultiPolygon | null
+    child_types: { type: string, count: number }[]
+    childs: PortalGeometry[]
+}
+
+export interface PortalGeometries {
+    geometry: PortalGeometry | null
+}
+
 export type PortalBoundaryFeature = Feature<
     Polygon | MultiPolygon,
     {

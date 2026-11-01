@@ -49,6 +49,12 @@
     "show": "Show image {index} of {count}",
     "position": "Image {index} of {count}"
   },
+  "portal": {
+    "choose_area": "Choose an area",
+    "entire_area": "Entire area",
+    "geometries_error": "The areas could not be loaded.",
+    "retry": "Try again"
+  },
   "map": {
     "website_link": "Website",
     "details_link": "Details"
