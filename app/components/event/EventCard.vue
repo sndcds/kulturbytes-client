@@ -65,6 +65,7 @@ const priceLabel = computed(() => {
   >
     <div class="kbts-events-view-grid-image">
       <div class="kbts-events-view-image-clip">
+        image_path: {{ event.image_path }}
         <div
             class="kbts-events-view-image"
             :class="{ 'has-placeholder': !event.image_path }"

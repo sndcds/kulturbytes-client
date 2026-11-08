@@ -502,7 +502,10 @@ async function loadVenues(map: MapLibreMapType) {
   const { $api } = useNuxtApp()
 
   try {
-    const query: Record<string, string> = { bbox }
+    const query: Record<string, string> = {
+      bbox,
+      scopes: 'shared'
+    }
 
     if (filtersStore.eventPortalUuid) {
       query.portal = filtersStore.eventPortalUuid
