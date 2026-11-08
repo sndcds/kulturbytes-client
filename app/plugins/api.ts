@@ -2,11 +2,6 @@ export default defineNuxtPlugin(() => {
 
     const config = useRuntimeConfig()
 
-    console.log('[API] Runtime configuration:', {
-        apiBase: config.public.apiBase,
-        siteUrl: config.public.siteUrl
-    })
-
     const api = $fetch.create({
         baseURL: config.public.apiBase,
 
