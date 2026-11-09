@@ -6,8 +6,6 @@
     <!--pre v-if="apiResponse">{{ apiResponse.data.last_event_date_uuid }}</pre>
     <pre v-if="apiResponse">{{ apiResponse.data.last_event_start_at }}</pre-->
 
-    apiBase: {{ apiBase }}
-
     <div class="kbts-events-view-grid">
       <EventCard
           v-for="event in events"
