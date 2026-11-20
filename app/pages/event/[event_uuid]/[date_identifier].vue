@@ -258,7 +258,7 @@
 
         <!-- Ticket infos -->
         <Accordion
-            v-if="showTicketFlags"
+            v-if="event.ticket_flags?.length"
         >
           <template #icon><Info :size="18"/></template>
           <template #title>{{ t('event.ticket_info') }}</template>
