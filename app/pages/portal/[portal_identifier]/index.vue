@@ -1,3 +1,4 @@
+
 <template>
   <div
       v-if="portal"
@@ -12,8 +13,8 @@
           <div
               class="kbts-venue-view-image-inner"
               :style="{
-                backgroundImage: `url(${imageUrl(portal.main_image_url, 960, '16:9')})`
-              }"
+              backgroundImage: `url(${imageUrl(portal.main_image_url, 960, '16:9')})`
+            }"
               role="img"
               :aria-label="portal.name"
           />
@@ -43,26 +44,45 @@
           :max-width="240"
           :max-height="200"
       />
-      <div v-if="geometriesError" class="portal-geometries-error" role="status">
+
+      <div
+          v-if="geometriesError"
+          class="portal-geometries-error"
+          role="status"
+      >
         <p>{{ t('portal.geometries_error') }}</p>
-        <button type="button" class="kbts-button" @click="refreshGeometries()">
+
+        <button
+            type="button"
+            class="kbts-button"
+            @click="refreshGeometries()"
+        >
           {{ t('portal.retry') }}
         </button>
       </div>
-      <PortalGeometrySelector v-else :geometry="portalGeometries?.geometry ?? null" />
+
+      <!-- TODO: Importance high: Geometry selection by user! -->
+      <!-- <PortalGeometrySelector
+        v-else
+        :geometry="portalGeometries?.geometry ?? null"
+      /> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import LogoImage from '~/components/ui/LogoImage.vue'
-import PortalGeometrySelector from '~/components/portal/PortalGeometrySelector.vue'
+
 import { useThemeStore } from '~/stores/themeStore'
+import { useFiltersStore } from '~/stores/filtersStore'
+
 import type { ApiResponse } from '~/types/api'
 import type { PortalGeometries } from '~/types/portal'
+
 import { imageUrl } from '~/utils/image'
 import { ogLocale } from '~/utils/locale'
 import { truncateText } from '~/utils/text'
+
 
 defineI18nRoute({
   paths: {
@@ -76,17 +96,34 @@ definePageMeta({
   filters: false,
 })
 
+
+/* -------------------------------------------------------------------------- */
+/* Dependencies                                                               */
+/* -------------------------------------------------------------------------- */
+
 const route = useRoute()
 const config = useRuntimeConfig()
+
 const { locale, t } = useI18n()
 const { renderMarkdown } = useMarkdown()
 const { activatePortal } = usePortal()
+
 const { $api } = useNuxtApp()
+
 const themeStore = useThemeStore()
+const filtersStore = useFiltersStore()
+
+
+/* -------------------------------------------------------------------------- */
+/* Portal                                                                     */
+/* -------------------------------------------------------------------------- */
 
 const portalUuid = computed(() => {
   const value = route.params.portal_identifier
-  return Array.isArray(value) ? value[0] ?? '' : value?.toString() ?? ''
+
+  return Array.isArray(value)
+      ? value[0] ?? ''
+      : value?.toString() ?? ''
 })
 
 if (!portalUuid.value) {
@@ -97,44 +134,103 @@ if (!portalUuid.value) {
   })
 }
 
-const { data: portal, error } = await useAsyncData(
+const {
+  data: portal,
+  error: portalError,
+} = await useAsyncData(
     () => `portal-${portalUuid.value}`,
-    () => activatePortal(portalUuid.value),
-    {
-      watch: [portalUuid],
-    }
+    () => activatePortal(portalUuid.value)
 )
 
-if (error.value) {
+if (portalError.value) {
   throw createError({
-    statusCode: error.value.statusCode ?? 500,
-    statusMessage: error.value.statusMessage ?? 'Failed to load portal',
+    statusCode: portalError.value.statusCode ?? 500,
+    statusMessage: portalError.value.statusMessage ?? 'Failed to load portal',
     fatal: true,
   })
 }
 
-const { data: portalGeometries, error: geometriesError, refresh: refreshGeometries } = await useAsyncData(
+
+/* -------------------------------------------------------------------------- */
+/* Portal geometry                                                            */
+/* -------------------------------------------------------------------------- */
+
+// Clear the previous selection whenever the portal changes.
+watch(
+    portalUuid,
+    () => {
+      filtersStore.setEventPortalGeometryUuid(null)
+    }
+)
+
+const {
+  data: portalGeometries,
+  error: geometriesError,
+  refresh: refreshGeometries,
+} = await useAsyncData(
     () => `portal-geometries-${portal.value?.uuid ?? ''}`,
     async (_nuxtApp, { signal }) => {
       const uuid = portal.value?.uuid
-      if (!uuid) return { geometry: null }
+
+      if (!uuid) {
+        return { geometry: null }
+      }
+
       const response = await $api<ApiResponse<PortalGeometries>>(
           `/api/portal/${encodeURIComponent(uuid)}/geometries`,
           { signal }
       )
+
       return response.data
     }
 )
 
+// Find the root geometry.
+const rootGeometry = computed(() => {
+  const geometries = portalGeometries.value?.geometry
+
+  if (!Array.isArray(geometries)) {
+    return null
+  }
+
+  return geometries.find(
+      geometry => geometry.parent_uuid === null
+  ) ?? null
+})
+
+// Set the root geometry whenever the page is entered or its data changes.
+watch(
+    [portalUuid, rootGeometry],
+    ([, geometry]) => {
+      filtersStore.setEventPortalGeometryUuid(
+          geometry?.uuid ?? null
+      )
+    },
+    { immediate: true }
+)
+
+
+/* -------------------------------------------------------------------------- */
+/* Content                                                                    */
+/* -------------------------------------------------------------------------- */
+
 const descriptionHtml = computed(() =>
     renderMarkdown(portal.value?.description ?? '')
 )
+
+
+/* -------------------------------------------------------------------------- */
+/* SEO                                                                        */
+/* -------------------------------------------------------------------------- */
+
 const canonicalUrl = computed(() =>
     new URL(route.path, config.public.siteUrl).href
 )
+
 const description = computed(() =>
     truncateText(portal.value?.description, 160)
 )
+
 const seoImage = computed(() =>
     portal.value?.main_image_url
         ? imageUrl(portal.value.main_image_url, 1200, '16:9')

@@ -107,7 +107,8 @@ export function useEventQueryParams() {
         if (snapshot.eventPortalUuid) {
             params.append('portal', snapshot.eventPortalUuid)
             if (snapshot.eventPortalGeometryUuid !== null) {
-                params.append('geometry', snapshot.eventPortalGeometryUuid)
+                // TODO: Importance high: Geometry selection by user!
+                // params.append('geometry', snapshot.eventPortalGeometryUuid)
             }
         }
 

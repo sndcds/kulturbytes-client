@@ -68,9 +68,7 @@ export const useFiltersStore = defineStore(
         const eventMaxPrice = ref<number | null>(10)
         const eventPortalUuid = ref<string | null>(null)
         // null lets the API choose the portal's default geometry.
-        const eventPortalGeometryUuid = ref<string | null>(
-            '786507f2-e513-4060-badf-2ab0cf6388d3'
-        )
+        const eventPortalGeometryUuid = ref<string | null>(null)
 
         // Portal mode
         const eventPortalIdentifier = ref<string | null>(null)
