@@ -68,10 +68,8 @@ const priceLabel = computed(() => {
         <div
             class="kbts-events-view-image"
             :class="{ 'has-placeholder': !event.image_path }"
-            :style="event.image_path ? {
-              backgroundImage: `url(${imageUrl(event.image_path, 480, '16:9')})`
-            } : {}"
         >
+          <img v-if="event.image_path" :src="imageUrl(event.image_path, 480, '16:9')" :alt="event.title" :title="event.title">
           <Image
               v-if="!event.image_path"
               class="x_image_icon"
@@ -182,13 +180,17 @@ const priceLabel = computed(() => {
 .kbts-events-view-image {
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
   transition: transform .2s ease;
-
+  aspect-ratio: 16 / 9;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
 
   &.has-placeholder {
     background: #888888;
