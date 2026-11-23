@@ -71,18 +71,12 @@
 </template>
 
 <script setup lang="ts">
+
 import LogoImage from '~/components/ui/LogoImage.vue'
-
 import { useThemeStore } from '~/stores/themeStore'
-import { useFiltersStore } from '~/stores/filtersStore'
-
-import type { ApiResponse } from '~/types/api'
-import type { PortalGeometries } from '~/types/portal'
-
 import { imageUrl } from '~/utils/image'
 import { ogLocale } from '~/utils/locale'
 import { truncateText } from '~/utils/text'
-
 
 defineI18nRoute({
   paths: {
@@ -96,10 +90,9 @@ definePageMeta({
   filters: false,
 })
 
-
-/* -------------------------------------------------------------------------- */
-/* Dependencies                                                               */
-/* -------------------------------------------------------------------------- */
+//------------------------------------------------------------------------------
+// Dependencies
+//------------------------------------------------------------------------------
 
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -108,15 +101,11 @@ const { locale, t } = useI18n()
 const { renderMarkdown } = useMarkdown()
 const { activatePortal } = usePortal()
 
-const { $api } = useNuxtApp()
-
 const themeStore = useThemeStore()
-const filtersStore = useFiltersStore()
 
-
-/* -------------------------------------------------------------------------- */
-/* Portal                                                                     */
-/* -------------------------------------------------------------------------- */
+//------------------------------------------------------------------------------
+// Portal
+//------------------------------------------------------------------------------
 
 const portalUuid = computed(() => {
   const value = route.params.portal_identifier
@@ -150,78 +139,31 @@ if (portalError.value) {
   })
 }
 
-
-/* -------------------------------------------------------------------------- */
-/* Portal geometry                                                            */
-/* -------------------------------------------------------------------------- */
-
-// Clear the previous selection whenever the portal changes.
-watch(
-    portalUuid,
-    () => {
-      filtersStore.setEventPortalGeometryUuid(null)
-    }
-)
+//------------------------------------------------------------------------------
+// Portal geometry
+//------------------------------------------------------------------------------
 
 const {
-  data: portalGeometries,
-  error: geometriesError,
-  refresh: refreshGeometries,
-} = await useAsyncData(
-    () => `portal-geometries-${portal.value?.uuid ?? ''}`,
-    async (_nuxtApp, { signal }) => {
-      const uuid = portal.value?.uuid
-
-      if (!uuid) {
-        return { geometry: null }
-      }
-
-      const response = await $api<ApiResponse<PortalGeometries>>(
-          `/api/portal/${encodeURIComponent(uuid)}/geometries`,
-          { signal }
-      )
-
-      return response.data
-    }
+  portalGeometries,
+  rootGeometry,
+  geometriesError,
+  refreshGeometries,
+  pending: geometriesPending,
+} = usePortalRootGeometry(
+    computed(() => portal.value?.uuid ?? null)
 )
 
-// Find the root geometry.
-const rootGeometry = computed(() => {
-  const geometries = portalGeometries.value?.geometry
-
-  if (!Array.isArray(geometries)) {
-    return null
-  }
-
-  return geometries.find(
-      geometry => geometry.parent_uuid === null
-  ) ?? null
-})
-
-// Set the root geometry whenever the page is entered or its data changes.
-watch(
-    [portalUuid, rootGeometry],
-    ([, geometry]) => {
-      filtersStore.setEventPortalGeometryUuid(
-          geometry?.uuid ?? null
-      )
-    },
-    { immediate: true }
-)
-
-
-/* -------------------------------------------------------------------------- */
-/* Content                                                                    */
-/* -------------------------------------------------------------------------- */
+//------------------------------------------------------------------------------
+// Content
+//------------------------------------------------------------------------------
 
 const descriptionHtml = computed(() =>
     renderMarkdown(portal.value?.description ?? '')
 )
 
-
-/* -------------------------------------------------------------------------- */
-/* SEO                                                                        */
-/* -------------------------------------------------------------------------- */
+//------------------------------------------------------------------------------
+// SEO
+//------------------------------------------------------------------------------
 
 const canonicalUrl = computed(() =>
     new URL(route.path, config.public.siteUrl).href

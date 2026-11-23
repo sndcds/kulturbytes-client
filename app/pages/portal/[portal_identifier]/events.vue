@@ -3,9 +3,14 @@
 </template>
 
 <script setup lang="ts">
+
 import EventsView from '~/components/event/EventsView.vue'
 import { useFiltersStore } from '~/stores/filtersStore'
 import { ogLocale } from '~/utils/locale'
+
+//------------------------------------------------------------------------------
+// Routing
+//------------------------------------------------------------------------------
 
 defineI18nRoute({
   paths: {
@@ -19,36 +24,132 @@ definePageMeta({
   filters: 'events'
 })
 
+//------------------------------------------------------------------------------
+// Dependencies
+//------------------------------------------------------------------------------
+
 const filtersStore = useFiltersStore()
+
 const route = useRoute()
 const localePath = useLocalePath()
 const config = useRuntimeConfig()
+
 const { t, locale } = useI18n()
 const { decodeEventFilter } = useEventFilterEncoding()
 const { activatePortal } = usePortal()
-const portalReady = ref(false)
+
+//------------------------------------------------------------------------------
+// Portal
+//------------------------------------------------------------------------------
 
 const portalIdentifier = computed(() => {
   const value = route.params.portal_identifier
-  return Array.isArray(value) ? value[0] ?? '' : value?.toString() ?? ''
+
+  return Array.isArray(value)
+      ? value[0] ?? ''
+      : value?.toString() ?? ''
 })
+
 const portalUuid = computed(() => filtersStore.eventPortalUuid)
 
+const portalReady = ref(false)
+
+//------------------------------------------------------------------------------
+// Portal geometry
+//------------------------------------------------------------------------------
+
+const {
+  geometriesError,
+  refreshGeometries,
+} = usePortalRootGeometry(
+    computed(() => filtersStore.eventPortalUuid)
+)
+
+//------------------------------------------------------------------------------
+// Activation
+//------------------------------------------------------------------------------
+
+let activationId = 0
+let initialActivationReceived = false
+
 async function activateEventsPortal() {
+  const currentActivationId = ++activationId
+
   portalReady.value = false
-  await activatePortal(portalIdentifier.value)
-  filtersStore.setFilter('events')
-  portalReady.value = Boolean(filtersStore.eventPortalUuid)
+
+  if (!portalIdentifier.value) {
+    filtersStore.setEventPortalGeometryUuid(null)
+    return
+  }
+
+  try {
+    await activatePortal(portalIdentifier.value)
+
+    if (currentActivationId !== activationId) {
+      return
+    }
+
+    filtersStore.setFilter('events')
+
+    const uuid = filtersStore.eventPortalUuid
+
+    if (!uuid) {
+      filtersStore.setEventPortalGeometryUuid(null)
+      return
+    }
+
+    // Load the geometry for the newly activated portal.
+    await refreshGeometries()
+
+    if (currentActivationId !== activationId) {
+      return
+    }
+
+    // Allow the composable's geometry watcher to update the store.
+    await nextTick()
+
+    if (currentActivationId !== activationId) {
+      return
+    }
+
+    // An explicit geometry in the URL filter takes precedence
+    // over the default root geometry.
+    applyFilterFromQuery()
+
+    portalReady.value = true
+
+  } catch (error) {
+    if (currentActivationId === activationId) {
+      console.error('Failed activating events portal:', error)
+      portalReady.value = false
+    }
+  }
 }
 
+// Initial activation.
 await activateEventsPortal()
-onActivated(activateEventsPortal)
-watch(portalIdentifier, activateEventsPortal)
-applyFilterFromQuery()
 
-onUnmounted(() => {
-  filtersStore.setFilter(null)
+// Reactivation when returning to a cached page.
+onActivated(() => {
+  if (!initialActivationReceived) {
+    initialActivationReceived = true
+    return
+  }
+
+  void activateEventsPortal()
 })
+
+// React when navigating to another portal.
+watch(
+    portalIdentifier,
+    () => {
+      void activateEventsPortal()
+    }
+)
+
+//------------------------------------------------------------------------------
+// URL filter
+//------------------------------------------------------------------------------
 
 function applyFilterFromQuery() {
   const filter = Array.isArray(route.query.filter)
@@ -62,22 +163,47 @@ function applyFilterFromQuery() {
   try {
     const decodedFilter = decodeEventFilter(filter)
     const payload = JSON.parse(decodedFilter)
+
     filtersStore.applyEventFilterPayload(payload)
+
   } catch (error) {
-    console.error('Failed applying event filter from query:', error)
+    console.error(
+        'Failed applying event filter from query:',
+        error
+    )
   }
 }
 
-const pageUrl = computed(() => `${config.public.siteUrl}${route.fullPath}`)
+//------------------------------------------------------------------------------
+// Cleanup
+//------------------------------------------------------------------------------
+
+onUnmounted(() => {
+  activationId++
+
+  filtersStore.setEventPortalGeometryUuid(null)
+  filtersStore.setFilter(null)
+})
+
+//------------------------------------------------------------------------------
+// SEO
+//------------------------------------------------------------------------------
+
+const pageUrl = computed(() =>
+    `${config.public.siteUrl}${route.fullPath}`
+)
+
 const pageTitle = computed(() => t('events.title'))
 const seoTitle = computed(() => t('events.seo.title'))
 const description = computed(() => t('events.seo.description'))
 
 const headData = computed(() => ({
   title: pageTitle.value,
+
   htmlAttrs: {
     lang: locale.value
   },
+
   link: [
     {
       key: 'canonical',
@@ -85,6 +211,7 @@ const headData = computed(() => ({
       href: pageUrl.value
     }
   ],
+
   script: [
     {
       type: 'application/ld+json',
@@ -144,4 +271,5 @@ useSeoMeta({
 
   robots: 'index,follow'
 })
+
 </script>
