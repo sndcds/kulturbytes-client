@@ -189,7 +189,7 @@
     "venue": "Sted",
     "space": "Lokale",
     "meeting_point": "Mødested",
-    "organized_by": "Arranget af",
+    "published_by": "Oprettet af",
     "to_online_event": "Åbn online begivenhed",
     "registration": {
       "label": "Tilmelding",

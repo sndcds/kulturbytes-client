@@ -189,7 +189,7 @@
     "venue": "Venue",
     "space": "Space",
     "meeting_point": "Meeting point",
-    "organized_by": "Organized by",
+    "published_by": "Published by",
     "to_online_event": "Open online event",
     "registration": {
       "label": "Registration",

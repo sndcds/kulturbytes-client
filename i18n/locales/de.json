@@ -189,7 +189,7 @@
     "venue": "Ort",
     "space": "Raum",
     "meeting_point": "Treffpunkt",
-    "organized_by": "Veranstaltet von",
+    "published_by": "Erstellt von",
     "to_online_event": "Online Veranstaltung öffnen",
     "registration": {
       "label": "Anmeldung",

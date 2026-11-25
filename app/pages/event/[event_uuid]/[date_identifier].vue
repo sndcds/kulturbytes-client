@@ -225,7 +225,7 @@
           class="kbts-event-view-organizer"
        >
         <span class="kbts-event-view-label">
-          {{ t('event.organized_by') }}
+          {{ t('event.published_by') }}
         </span><br>
         <a
             v-if="eventOrganizer?.webLink"
